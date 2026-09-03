@@ -153,6 +153,13 @@ export class AcademicController {
     return this.academic.updateBatch(id, dto as any);
   }
 
+  @Delete('batches/:id')
+  @Roles(...ADMINS)
+  @Audit('batch.delete', 'Batch')
+  deleteBatch(@Param('id') id: string, @CurrentUser() user: AuthUser) {
+    return this.academic.deleteBatch(id, user);
+  }
+
   @Get('enrollments')
   @Roles(...READERS)
   listEnrollments(

@@ -260,6 +260,33 @@ export class AcademicService {
     return this.prisma.batch.update({ where: { id }, data });
   }
 
+  /**
+   * Removing a section takes its enrolments with it, so a section that still
+   * holds learners is refused — they would otherwise lose their place without
+   * anyone being told. Live sessions and timetable entries are detached: they
+   * record something that was scheduled, and outlive the section.
+   */
+  async deleteBatch(id: string, actor: AuthUser) {
+    const existing = await this.prisma.batch.findUniqueOrThrow({
+      where: { id },
+      include: { _count: { select: { enrollments: true } } },
+    });
+    assertSiteAllowed(actor, existing.siteId);
+
+    if (existing._count.enrollments > 0) {
+      throw new BadRequestException(
+        `This section still has ${existing._count.enrollments} learner(s). Move them to another section first.`,
+      );
+    }
+
+    await this.prisma.$transaction(async (tx) => {
+      await tx.liveSession.updateMany({ where: { batchId: id }, data: { batchId: null } });
+      await tx.calendarEvent.updateMany({ where: { batchId: id }, data: { batchId: null } });
+      await tx.batch.delete({ where: { id } });
+    });
+    return { ok: true };
+  }
+
   // ────────────────────────  Enrollments ────────────────────────
 
   listEnrollments(filter: { courseId?: string; studentId?: string; batchId?: string }) {

@@ -82,10 +82,21 @@ export class CoursesService {
     const course = await this.prisma.course.findUnique({ where: { id } });
     if (!course) throw new NotFoundException('Subject not found.');
 
+    // A certificate is the record of an award and names the subject it was
+    // awarded in, so it cannot outlive it and must not be quietly destroyed.
+    const certificates = await this.prisma.certificate.count({ where: { courseId: id } });
+    if (certificates > 0) {
+      throw new BadRequestException(
+        `${course.title} cannot be deleted: ${certificates} certificate(s) have been issued for it. ` +
+          'Archive the subject instead.',
+      );
+    }
+
     return this.prisma.$transaction(async (tx) => {
       await tx.liveSession.updateMany({ where: { courseId: id }, data: { courseId: null } });
       await tx.question.updateMany({ where: { courseId: id }, data: { courseId: null } });
       await tx.calendarEvent.updateMany({ where: { courseId: id }, data: { courseId: null } });
+      await tx.announcement.updateMany({ where: { courseId: id }, data: { courseId: null } });
       await tx.course.delete({ where: { id } });
       return { id, deleted: true };
     });

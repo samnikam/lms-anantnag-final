@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { format, isSameDay, isToday } from 'date-fns';
-import { CalendarPlus, Pencil, Plus, Trash2 } from 'lucide-react';
+import { addDays, endOfWeek, format, isSameDay, isToday, startOfWeek } from 'date-fns';
+import { CalendarPlus, ChevronLeft, ChevronRight, LayoutGrid, List, Pencil, Plus, Trash2 } from 'lucide-react';
 import clsx from 'clsx';
 import { api, errorMessage } from '../lib/api';
 import { useAuth } from '../lib/auth';
@@ -53,6 +53,12 @@ export function TimetablePage() {
   const { user } = useAuth();
   const qc = useQueryClient();
   const [typeFilter, setTypeFilter] = useState('');
+  const [view, setView] = useState<'week' | 'list'>('week');
+  // Weeks start Monday: a school week does not begin on Sunday.
+  const [weekStart, setWeekStart] = useState(() =>
+    startOfWeek(new Date(), { weekStartsOn: 1 }),
+  );
+  const [prefill, setPrefill] = useState<{ date: string; startTime: string } | null>(null);
   const [editing, setEditing] = useState<any | null>(null);
   const [creating, setCreating] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState<any | null>(null);
@@ -62,10 +68,22 @@ export function TimetablePage() {
     queryFn: async () => (await api.get<any>('/calendar/permissions')).data,
   });
 
+  const range =
+    view === 'week'
+      ? {
+          from: weekStart.toISOString(),
+          to: endOfWeek(weekStart, { weekStartsOn: 1 }).toISOString(),
+        }
+      : {};
+
   const { data, isLoading, error, refetch } = useQuery({
-    queryKey: ['calendar', typeFilter],
+    queryKey: ['calendar', typeFilter, view, weekStart.toISOString()],
     queryFn: async () =>
-      (await api.get<any[]>('/calendar', { params: { type: typeFilter || undefined } })).data,
+      (
+        await api.get<any[]>('/calendar', {
+          params: { type: typeFilter || undefined, ...range },
+        })
+      ).data,
   });
 
   const remove = useMutation({
@@ -96,16 +114,74 @@ export function TimetablePage() {
         title="Timetable"
         description={ROLE_BLURB[user!.role] ?? 'Classes, exams and deadlines.'}
         actions={
-          canManage && (
-            <button type="button" className="btn-primary" onClick={() => setCreating(true)}>
-              <CalendarPlus className="h-4 w-4" aria-hidden />
-              Add entry
-            </button>
-          )
+          <>
+            <div className="flex overflow-hidden rounded-md border border-slate-300">
+              <button
+                type="button"
+                onClick={() => setView('week')}
+                className={clsx(
+                  'flex items-center gap-1.5 px-3 py-2 text-sm font-medium',
+                  view === 'week' ? 'bg-brand-700 text-white' : 'bg-white text-ink-soft hover:bg-slate-50',
+                )}
+              >
+                <LayoutGrid className="h-4 w-4" aria-hidden />
+                Week
+              </button>
+              <button
+                type="button"
+                onClick={() => setView('list')}
+                className={clsx(
+                  'flex items-center gap-1.5 border-l border-slate-300 px-3 py-2 text-sm font-medium',
+                  view === 'list' ? 'bg-brand-700 text-white' : 'bg-white text-ink-soft hover:bg-slate-50',
+                )}
+              >
+                <List className="h-4 w-4" aria-hidden />
+                Agenda
+              </button>
+            </div>
+
+            {canManage && (
+              <button type="button" className="btn-primary" onClick={() => setCreating(true)}>
+                <CalendarPlus className="h-4 w-4" aria-hidden />
+                Add entry
+              </button>
+            )}
+          </>
         }
       />
 
       <Card className="mb-6">
+        {view === 'week' && (
+          <div className="mb-3 flex flex-wrap items-center gap-2 border-b border-slate-200 pb-3">
+            <button
+              type="button"
+              className="btn-secondary"
+              onClick={() => setWeekStart(addDays(weekStart, -7))}
+            >
+              <ChevronLeft className="h-4 w-4" aria-hidden />
+              Previous
+            </button>
+            <p className="px-2 text-sm font-medium text-ink">
+              {format(weekStart, 'dd MMM')} – {format(endOfWeek(weekStart, { weekStartsOn: 1 }), 'dd MMM yyyy')}
+            </p>
+            <button
+              type="button"
+              className="btn-secondary"
+              onClick={() => setWeekStart(addDays(weekStart, 7))}
+            >
+              Next
+              <ChevronRight className="h-4 w-4" aria-hidden />
+            </button>
+            <button
+              type="button"
+              className="btn-secondary"
+              onClick={() => setWeekStart(startOfWeek(new Date(), { weekStartsOn: 1 }))}
+            >
+              This week
+            </button>
+          </div>
+        )}
+
         <div className="flex flex-wrap items-center gap-2">
           <button
             type="button"
@@ -133,7 +209,22 @@ export function TimetablePage() {
         </div>
       )}
 
-      {!days.length ? (
+      {view === 'week' ? (
+        <WeekGrid
+          weekStart={weekStart}
+          events={data ?? []}
+          canManage={canManage}
+          onEdit={(e) => setEditing(e)}
+          onDelete={(e) => setConfirmDelete(e)}
+          onAddAt={(day, hour) => {
+            setPrefill({
+              date: format(day, 'yyyy-MM-dd'),
+              startTime: `${String(hour).padStart(2, '0')}:00`,
+            });
+            setCreating(true);
+          }}
+        />
+      ) : !days.length ? (
         <EmptyState
           title="Nothing scheduled"
           description={
@@ -210,14 +301,17 @@ export function TimetablePage() {
       <EntryModal
         open={creating || !!editing}
         event={editing}
+        prefill={prefill}
         scopedSiteId={perms?.scopedToSiteId ?? null}
         onClose={() => {
           setCreating(false);
           setEditing(null);
+          setPrefill(null);
         }}
         onDone={() => {
           setCreating(false);
           setEditing(null);
+          setPrefill(null);
           qc.invalidateQueries({ queryKey: ['calendar'] });
         }}
       />
@@ -254,12 +348,14 @@ export function TimetablePage() {
 function EntryModal({
   open,
   event,
+  prefill,
   scopedSiteId,
   onClose,
   onDone,
 }: {
   open: boolean;
   event: any | null;
+  prefill?: { date: string; startTime: string } | null;
   scopedSiteId: string | null;
   onClose: () => void;
   onDone: () => void;
@@ -337,10 +433,14 @@ function EntryModal({
             : '',
         siteId: event.siteId ?? '',
       });
+    } else if (prefill) {
+      // Opened by double-clicking a slot, so the day and hour are already known.
+      const end = String(Number(prefill.startTime.slice(0, 2)) + 1).padStart(2, '0') + ':00';
+      setForm({ ...EMPTY, date: prefill.date, startTime: prefill.startTime, endTime: end });
     } else {
       setForm({ ...EMPTY, date: format(new Date(), 'yyyy-MM-dd') });
     }
-  }, [open, event]);
+  }, [open, event, prefill]);
 
   const save = useMutation({
     mutationFn: async () => {
@@ -763,5 +863,180 @@ function ClassPicker({
         </div>
       )}
     </Field>
+  );
+}
+
+/** Colour per entry type, used by both the grid and the agenda. */
+const TYPE_STYLE: Record<string, { block: string; dot: string }> = {
+  CLASS: { block: 'bg-brand-50 border-brand-300 text-brand-900', dot: 'bg-brand-500' },
+  EXAM: { block: 'bg-red-50 border-red-300 text-red-900', dot: 'bg-red-500' },
+  DEADLINE: { block: 'bg-amber-50 border-amber-300 text-amber-900', dot: 'bg-amber-500' },
+  HOLIDAY: { block: 'bg-emerald-50 border-emerald-300 text-emerald-900', dot: 'bg-emerald-500' },
+  EVENT: { block: 'bg-slate-100 border-slate-300 text-slate-800', dot: 'bg-slate-400' },
+};
+
+const minutesOf = (d: Date) => d.getHours() * 60 + d.getMinutes();
+
+/**
+ * A week at a glance: days across, hours down. A school reads its timetable
+ * this way — a vertical list hides the shape of the day, and free periods with
+ * it.
+ */
+function WeekGrid({
+  weekStart,
+  events,
+  canManage,
+  onEdit,
+  onDelete,
+  onAddAt,
+}: {
+  weekStart: Date;
+  events: any[];
+  canManage: boolean;
+  onEdit: (e: any) => void;
+  onDelete: (e: any) => void;
+  onAddAt: (day: Date, hour: number) => void;
+}) {
+  const days = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
+
+  // Fit the grid to the day actually taught, with a sensible school default.
+  const starts = events.map((e) => minutesOf(new Date(e.startAt)));
+  const ends = events.map((e) => minutesOf(new Date(e.endAt)));
+  const from = Math.min(8 * 60, ...(starts.length ? starts : [8 * 60]));
+  const to = Math.max(17 * 60, ...(ends.length ? ends : [17 * 60]));
+  const startHour = Math.floor(from / 60);
+  const endHour = Math.ceil(to / 60);
+  const hours = Array.from({ length: endHour - startHour }, (_, i) => startHour + i);
+  const span = (endHour - startHour) * 60;
+
+  return (
+    <Card className="overflow-hidden p-0">
+      <div className="overflow-x-auto">
+        <div className="min-w-[820px]">
+          {/* Day headings */}
+          <div className="grid grid-cols-[56px_repeat(7,1fr)] border-b border-slate-200 bg-slate-50">
+            <div />
+            {days.map((d) => (
+              <div
+                key={d.toISOString()}
+                className={clsx(
+                  'border-l border-slate-200 px-2 py-2 text-center',
+                  isToday(d) && 'bg-brand-50',
+                )}
+              >
+                <p className="text-[11px] uppercase tracking-wide text-slate-500">
+                  {format(d, 'EEE')}
+                </p>
+                <p
+                  className={clsx(
+                    'text-sm tabular-nums',
+                    isToday(d) ? 'font-semibold text-brand-800' : 'text-ink',
+                  )}
+                >
+                  {format(d, 'd MMM')}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          {/* Hour rows with entries laid over them */}
+          <div className="relative grid grid-cols-[56px_repeat(7,1fr)]">
+            <div>
+              {hours.map((h) => (
+                <div
+                  key={h}
+                  className="h-16 border-b border-slate-100 pr-2 text-right text-[11px] tabular-nums text-slate-400"
+                >
+                  {String(h).padStart(2, '0')}:00
+                </div>
+              ))}
+            </div>
+
+            {days.map((day) => {
+              const dayEvents = events.filter((e) => isSameDay(new Date(e.startAt), day));
+
+              return (
+                <div
+                  key={day.toISOString()}
+                  className={clsx(
+                    'relative border-l border-slate-200',
+                    isToday(day) && 'bg-brand-50/30',
+                  )}
+                >
+                  {hours.map((h) => (
+                    <div
+                      key={h}
+                      className="h-16 border-b border-slate-100"
+                      onDoubleClick={canManage ? () => onAddAt(day, h) : undefined}
+                      title={canManage ? 'Double-click to add an entry here' : undefined}
+                    />
+                  ))}
+
+                  {dayEvents.map((e, i) => {
+                    const s = new Date(e.startAt);
+                    const en = new Date(e.endAt);
+                    const top = ((minutesOf(s) - startHour * 60) / span) * 100;
+                    const height = Math.max(
+                      ((minutesOf(en) - minutesOf(s)) / span) * 100,
+                      4.5,
+                    );
+                    // Overlapping entries share the column rather than hiding
+                    // one another.
+                    const clash = dayEvents.filter(
+                      (o) =>
+                        new Date(o.startAt) < en && new Date(o.endAt) > s,
+                    );
+                    const idx = clash.indexOf(e);
+                    const width = 100 / Math.max(clash.length, 1);
+                    const style = TYPE_STYLE[e.type] ?? TYPE_STYLE.EVENT;
+
+                    return (
+                      <button
+                        key={e.id}
+                        type="button"
+                        onClick={() => (canManage ? onEdit(e) : undefined)}
+                        className={clsx(
+                          'absolute overflow-hidden rounded border px-1.5 py-1 text-left text-[11px] leading-tight transition-shadow',
+                          style.block,
+                          canManage && 'hover:shadow-md',
+                        )}
+                        style={{
+                          top: `${top}%`,
+                          height: `${height}%`,
+                          left: `calc(${idx * width}% + 2px)`,
+                          width: `calc(${width}% - 4px)`,
+                        }}
+                        title={`${e.title} · ${format(s, 'HH:mm')}–${format(en, 'HH:mm')}`}
+                      >
+                        <span className="block truncate font-semibold">{e.title}</span>
+                        <span className="block truncate opacity-80">
+                          {format(s, 'HH:mm')}
+                          {e.schoolClass?.name ? ` · ${e.schoolClass.name}` : ''}
+                          {e.batch?.name ? ` · ${e.batch.name}` : ''}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      <div className="flex flex-wrap items-center gap-4 border-t border-slate-200 px-4 py-2">
+        {Object.entries(TYPE_STYLE).map(([type, style]) => (
+          <span key={type} className="flex items-center gap-1.5 text-xs text-slate-500">
+            <span className={clsx('h-2 w-2 rounded-full', style.dot)} />
+            {type.toLowerCase()}
+          </span>
+        ))}
+        {canManage && (
+          <span className="ml-auto text-xs text-slate-400">
+            Double-click an empty slot to add an entry
+          </span>
+        )}
+      </div>
+    </Card>
   );
 }

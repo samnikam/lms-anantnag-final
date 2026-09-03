@@ -32,7 +32,10 @@ export class AddClassSubjectDto {
 }
 
 export class EnrollInClassDto {
-  @IsString() studentId!: string;
+  /** A class takes a roomful of learners, so admitting them one at a time is
+   *  the wrong unit of work. studentId is kept for existing callers. */
+  @IsOptional() @IsString() studentId?: string;
+  @IsOptional() @IsArray() @IsString({ each: true }) studentIds?: string[];
   @IsOptional() @IsString() batchId?: string;
 }
 

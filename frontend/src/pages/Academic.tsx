@@ -350,10 +350,21 @@ function EnrolmentRegister() {
     queryFn: async () => (await api.get<any[]>('/batches')).data,
   });
 
+  // One row per learner by default: a learner in a class holds an enrolment
+  // per subject, so the raw list repeats them a dozen times and reads as noise.
+  const [byLearner, setByLearner] = useState(true);
+
   const { data: rows, isLoading } = useQuery({
-    queryKey: ['enrollments', courseId],
+    queryKey: ['enrollments', courseId, byLearner],
     queryFn: async () =>
-      (await api.get<any[]>('/enrollments', { params: { courseId: courseId || undefined } })).data,
+      (
+        await api.get<any[]>('/enrollments', {
+          params: {
+            courseId: courseId || undefined,
+            groupBy: byLearner ? 'student' : undefined,
+          },
+        })
+      ).data,
   });
 
   const { data: history } = useQuery({
@@ -392,6 +403,31 @@ function EnrolmentRegister() {
       className="mt-6"
       title="Enrolment register"
       action={
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="flex overflow-hidden rounded-md border border-slate-300 text-sm">
+            <button
+              type="button"
+              onClick={() => setByLearner(true)}
+              className={
+                byLearner
+                  ? 'bg-brand-700 px-3 py-1 text-white'
+                  : 'bg-white px-3 py-1 text-ink-soft hover:bg-slate-50'
+              }
+            >
+              By learner
+            </button>
+            <button
+              type="button"
+              onClick={() => setByLearner(false)}
+              className={
+                !byLearner
+                  ? 'bg-brand-700 px-3 py-1 text-white'
+                  : 'border-l border-slate-300 bg-white px-3 py-1 text-ink-soft hover:bg-slate-50'
+              }
+            >
+              By subject
+            </button>
+          </div>
         <select
           className="input max-w-[16rem] py-1 text-sm"
           value={courseId}
@@ -405,12 +441,40 @@ function EnrolmentRegister() {
             </option>
           ))}
         </select>
+        </div>
       }
     >
       {isLoading ? (
         <Loading />
       ) : !rows?.length ? (
         <EmptyState title="No enrolments yet" description="Enrol a learner or a whole batch above." />
+      ) : byLearner ? (
+        <Table headers={['Learner', 'Subjects', 'Section', 'Status', 'Enrolled']}>
+          {rows.slice(0, 200).map((e: any) => (
+            <tr key={e.student.id}>
+              <td className="td font-medium">{e.student.fullName}</td>
+              <td className="td text-slate-600">
+                <p>
+                  {e.subjects.length} subject{e.subjects.length === 1 ? '' : 's'}
+                </p>
+                <p className="text-xs text-slate-500">
+                  {e.subjects
+                    .map((c: any) => c.title)
+                    .slice(0, 4)
+                    .join(', ')}
+                  {e.subjects.length > 4 ? ` +${e.subjects.length - 4} more` : ''}
+                </p>
+              </td>
+              <td className="td text-slate-600">{e.batch?.name ?? '—'}</td>
+              <td className="td">
+                <StatusBadge status={e.status} />
+              </td>
+              <td className="td text-slate-600">
+                {new Date(e.enrolledAt).toLocaleDateString('en-IN')}
+              </td>
+            </tr>
+          ))}
+        </Table>
       ) : (
         <Table headers={['Learner', 'Course', 'Batch', 'Status', 'Enrolled', '']}>
           {rows.slice(0, 100).map((e) => (

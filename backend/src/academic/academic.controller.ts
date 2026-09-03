@@ -121,7 +121,8 @@ export class AcademicController {
     @Body() dto: EnrollInClassDto,
     @CurrentUser('id') actorId: string,
   ) {
-    return this.academic.enrollStudentInClass(dto.studentId, id, dto.batchId, actorId);
+    const ids = dto.studentIds?.length ? dto.studentIds : dto.studentId ? [dto.studentId] : [];
+    return this.academic.enrollStudentsInClass(ids, id, dto.batchId, actorId);
   }
 
   @Get('batches')
@@ -166,8 +167,10 @@ export class AcademicController {
     @Query('courseId') courseId?: string,
     @Query('studentId') studentId?: string,
     @Query('batchId') batchId?: string,
+    @Query('classId') classId?: string,
+    @Query('groupBy') groupBy?: string,
   ) {
-    return this.academic.listEnrollments({ courseId, studentId, batchId });
+    return this.academic.listEnrollments({ courseId, studentId, batchId, classId }, groupBy);
   }
 
   @Post('enrollments')

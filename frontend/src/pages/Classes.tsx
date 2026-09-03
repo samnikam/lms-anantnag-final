@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { GraduationCap, Pencil, Plus, Trash2, UserPlus } from 'lucide-react';
+import clsx from 'clsx';
 import { api, errorMessage } from '../lib/api';
 import {
   Badge,
@@ -718,7 +719,7 @@ function EnrolInClassModal({
   onClose: () => void;
   onDone: () => void;
 }) {
-  const [studentId, setStudentId] = useState('');
+  const [picked, setPicked] = useState<string[]>([]);
   const [batchId, setBatchId] = useState('');
   const [search, setSearch] = useState('');
 
@@ -733,26 +734,36 @@ function EnrolInClassModal({
     enabled: !!schoolClass,
   });
 
+  // Who is already in this class, so nobody is offered twice.
+  const { data: roster } = useQuery({
+    queryKey: ['class-roster', schoolClass?.id],
+    queryFn: async () =>
+      (await api.get<any[]>('/enrollments', { params: { classId: schoolClass.id } })).data,
+    enabled: !!schoolClass,
+  });
+
+  const alreadyIn = new Set((roster ?? []).map((e: any) => e.student.id));
+
   const enrol = useMutation({
     mutationFn: async () =>
       (
         await api.post<any>(`/classes/${schoolClass.id}/enroll`, {
-          studentId,
+          studentIds: picked,
           batchId: batchId || undefined,
         })
       ).data,
-    onSuccess: () => {
-      setStudentId('');
-      setBatchId('');
-    },
+    onSuccess: () => setPicked([]),
   });
+
+  const toggle = (id: string) =>
+    setPicked((p) => (p.includes(id) ? p.filter((x) => x !== id) : [...p, id]));
 
   const noSubjects = (schoolClass?.subjects?.length ?? 0) === 0;
 
   return (
     <Modal
       open={!!schoolClass}
-      title={`Enrol a learner into ${schoolClass?.name ?? ''}`}
+      title={`Add learners to ${schoolClass?.name ?? ''}`}
       onClose={() => {
         enrol.reset();
         onClose();
@@ -772,10 +783,12 @@ function EnrolInClassModal({
           <button
             type="button"
             className="btn-primary"
-            disabled={!studentId || noSubjects || enrol.isPending}
+            disabled={!picked.length || noSubjects || enrol.isPending}
             onClick={() => enrol.mutate()}
           >
-            {enrol.isPending ? 'Enrolling…' : 'Enrol'}
+            {enrol.isPending
+              ? 'Adding…'
+              : `Add ${picked.length || ''} learner${picked.length === 1 ? '' : 's'}`.trim()}
           </button>
         </>
       }
@@ -788,12 +801,12 @@ function EnrolInClassModal({
       ) : (
         <>
           <p className="mb-4 text-sm text-ink-soft">
-            The learner is enrolled into all {schoolClass.subjects.length} subject
+            Each learner you add is enrolled into all {schoolClass.subjects.length} subject
             {schoolClass.subjects.length === 1 ? '' : 's'} this class studies:{' '}
             {schoolClass.subjects.map((s: any) => s.course.title).join(', ')}.
           </p>
 
-          <Field label="Find a learner">
+          <Field label="Find learners">
             <input
               className="input"
               placeholder="Search by name or email…"
@@ -802,16 +815,40 @@ function EnrolInClassModal({
             />
           </Field>
 
-          <Field label="Learner">
-            <select className="input" value={studentId} onChange={(e) => setStudentId(e.target.value)}>
-              <option value="">Select…</option>
-              {students?.items?.map((s: any) => (
-                <option key={s.id} value={s.id}>
-                  {s.fullName}
-                  {s.email ? ` — ${s.email}` : ''}
-                </option>
-              ))}
-            </select>
+          <Field
+            label={`Learners${picked.length ? ` — ${picked.length} selected` : ''}`}
+            hint="Tick everyone joining this class. A class takes a roomful, not one at a time."
+          >
+            <div className="max-h-64 divide-y divide-slate-100 overflow-y-auto rounded-md border border-slate-200">
+              {!students?.items?.length && (
+                <p className="p-3 text-sm text-slate-500">No learners match that search.</p>
+              )}
+              {students?.items?.map((s: any) => {
+                const enrolled = alreadyIn.has(s.id);
+                return (
+                  <label
+                    key={s.id}
+                    className={clsx(
+                      'flex items-center gap-3 px-3 py-2 text-sm',
+                      enrolled ? 'bg-slate-50 text-slate-400' : 'cursor-pointer hover:bg-brand-50',
+                    )}
+                  >
+                    <input
+                      type="checkbox"
+                      className="h-4 w-4"
+                      disabled={enrolled}
+                      checked={enrolled || picked.includes(s.id)}
+                      onChange={() => toggle(s.id)}
+                    />
+                    <span className="flex-1">
+                      <span className="font-medium">{s.fullName}</span>
+                      {s.email ? <span className="text-slate-500"> — {s.email}</span> : null}
+                    </span>
+                    {enrolled && <span className="text-xs">already in this class</span>}
+                  </label>
+                );
+              })}
+            </div>
           </Field>
 
           {schoolClass.batches?.length > 0 && (
@@ -831,9 +868,16 @@ function EnrolInClassModal({
 
           {enrol.isError && <p className="text-sm text-red-600">{errorMessage(enrol.error)}</p>}
           {enrol.isSuccess && (
-            <p className="text-sm text-emerald-700">
-              Enrolled into {enrol.data.enrolled} subject(s). Pick another learner, or press Done.
-            </p>
+            <div className="mt-3 text-sm">
+              <p className="text-emerald-700">
+                Added {enrol.data.admitted} learner(s) to {schoolClass.name}.
+              </p>
+              {enrol.data.failed?.length > 0 && (
+                <p className="mt-1 text-amber-700">
+                  {enrol.data.failed.length} could not be added: {enrol.data.failed[0].message}
+                </p>
+              )}
+            </div>
           )}
         </>
       )}

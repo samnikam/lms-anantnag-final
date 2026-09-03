@@ -189,6 +189,30 @@ export class AcademicService {
    * Enrolling subject by subject is how a class of thirty becomes an
    * afternoon of clicking, and how one subject quietly gets missed.
    */
+  /** Enrols a whole group in one action and reports what happened to each. */
+  async enrollStudentsInClass(
+    studentIds: string[],
+    classId: string,
+    batchId: string | undefined,
+    actorId: string,
+  ) {
+    const results = [];
+    for (const studentId of studentIds) {
+      try {
+        const one = await this.enrollStudentInClass(studentId, classId, batchId, actorId);
+        results.push({ studentId, ok: true, enrolled: one.enrolled });
+      } catch (e: any) {
+        // One learner failing must not cost the rest their places.
+        results.push({ studentId, ok: false, message: e?.message ?? 'Could not enrol.' });
+      }
+    }
+    return {
+      admitted: results.filter((r) => r.ok).length,
+      failed: results.filter((r) => !r.ok),
+      results,
+    };
+  }
+
   async enrollStudentInClass(
     studentId: string,
     classId: string,
@@ -289,9 +313,52 @@ export class AcademicService {
 
   // ────────────────────────  Enrollments ────────────────────────
 
-  listEnrollments(filter: { courseId?: string; studentId?: string; batchId?: string }) {
+  /**
+   * A learner enrolled in a class holds one enrolment per subject, so the flat
+   * list repeats them once per subject and reads as noise. groupBy=student
+   * returns one row per learner with their subjects gathered underneath, which
+   * is how a register is actually read.
+   */
+  async listEnrollments(
+    filter: { courseId?: string; studentId?: string; batchId?: string; classId?: string },
+    groupBy?: string,
+  ) {
+    const rows = await this.enrollmentRows(filter);
+    if (groupBy !== 'student') return rows;
+
+    const byStudent = new Map<string, any>();
+    for (const row of rows) {
+      const seen = byStudent.get(row.student.id);
+      if (seen) {
+        seen.subjects.push(row.course);
+        if (row.batch && !seen.batch) seen.batch = row.batch;
+        continue;
+      }
+      byStudent.set(row.student.id, {
+        student: row.student,
+        batch: row.batch,
+        status: row.status,
+        enrolledAt: row.enrolledAt,
+        subjects: [row.course],
+      });
+    }
+    return [...byStudent.values()];
+  }
+
+  private enrollmentRows(filter: {
+    courseId?: string;
+    studentId?: string;
+    batchId?: string;
+    classId?: string;
+  }) {
+    const { classId, ...rest } = filter;
     return this.prisma.enrollment.findMany({
-      where: filter,
+      where: {
+        ...rest,
+        // A class does not own enrolments directly: it owns the subjects, and
+        // learners are enrolled into those.
+        ...(classId ? { course: { classSubjects: { some: { classId } } } } : {}),
+      },
       include: {
         student: { select: { id: true, fullName: true, email: true } },
         course: { select: { id: true, title: true, code: true } },

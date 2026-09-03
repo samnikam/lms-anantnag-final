@@ -29,7 +29,10 @@ export function UsersPage() {
   const qc = useQueryClient();
   const [search, setSearch] = useState('');
   const [role, setRole] = useState('');
-  const [creating, setCreating] = useState(false);
+  // Naming the role in the action is the difference between "what is a user?"
+  // and knowing exactly what you are about to do.
+  const [creating, setCreating] = useState<Role | null>(null);
+  const [choosing, setChoosing] = useState(false);
   const [linking, setLinking] = useState(false);
   const [resetting, setResetting] = useState<any | null>(null);
 
@@ -56,9 +59,16 @@ export function UsersPage() {
               <Link2 className="h-4 w-4" aria-hidden />
               Link parent
             </button>
-            <button type="button" className="btn-primary" onClick={() => setCreating(true)}>
+            <button type="button" className="btn-secondary" onClick={() => setCreating('TEACHER')}>
               <Plus className="h-4 w-4" aria-hidden />
-              New user
+              Add teacher
+            </button>
+            <button type="button" className="btn-primary" onClick={() => setCreating('STUDENT')}>
+              <Plus className="h-4 w-4" aria-hidden />
+              Add student
+            </button>
+            <button type="button" className="btn-secondary" onClick={() => setChoosing(true)}>
+              Someone else…
             </button>
           </>
         }
@@ -135,11 +145,20 @@ export function UsersPage() {
         </Card>
       )}
 
+      <RoleChooserModal
+        open={choosing}
+        onClose={() => setChoosing(false)}
+        onPick={(r) => {
+          setChoosing(false);
+          setCreating(r);
+        }}
+      />
+
       <CreateUserModal
-        open={creating}
-        onClose={() => setCreating(false)}
+        role={creating}
+        onClose={() => setCreating(null)}
         onDone={() => {
-          setCreating(false);
+          setCreating(null);
           qc.invalidateQueries({ queryKey: ['users'] });
         }}
       />
@@ -149,7 +168,70 @@ export function UsersPage() {
   );
 }
 
-function CreateUserModal({ open, onClose, onDone }: { open: boolean; onClose: () => void; onDone: () => void }) {
+/** One line on what each role is for, so the choice is not a guess. */
+const ROLE_PURPOSE: Partial<Record<Role, string>> = {
+  STUDENT: 'Attends classes, sits assignments and exams.',
+  TEACHER: 'Teaches subjects, marks attendance and grades work.',
+  PARENT: "Follows one or more learners' attendance and progress.",
+  ACADEMIC_ADMIN: 'Runs one school — its classes, timetable and staff.',
+  CONTENT_MANAGER: 'Writes and publishes lessons and resources.',
+  SUPER_ADMIN: 'Full access across every school.',
+  DEPT_OVERSIGHT: 'Reads utilization reports. Changes nothing.',
+};
+
+function RoleChooserModal({
+  open,
+  onClose,
+  onPick,
+}: {
+  open: boolean;
+  onClose: () => void;
+  onPick: (role: Role) => void;
+}) {
+  const { data: allowedRoles } = useQuery({
+    queryKey: ['assignable-roles'],
+    queryFn: async () => (await api.get<Role[]>('/users/assignable-roles')).data,
+    enabled: open,
+  });
+
+  return (
+    <Modal
+      open={open}
+      title="Who are you adding?"
+      onClose={onClose}
+      footer={
+        <button type="button" className="btn-secondary" onClick={onClose}>
+          Cancel
+        </button>
+      }
+    >
+      <div className="space-y-2">
+        {(allowedRoles ?? []).map((r) => (
+          <button
+            key={r}
+            type="button"
+            className="w-full rounded-md border border-slate-200 px-4 py-3 text-left hover:border-brand-400 hover:bg-brand-50"
+            onClick={() => onPick(r)}
+          >
+            <p className="font-medium text-ink">Add {ROLE_LABELS[r].toLowerCase()}</p>
+            <p className="text-xs text-slate-500">{ROLE_PURPOSE[r]}</p>
+          </button>
+        ))}
+      </div>
+    </Modal>
+  );
+}
+
+function CreateUserModal({
+  role,
+  onClose,
+  onDone,
+}: {
+  role: Role | null;
+  onClose: () => void;
+  onDone: () => void;
+}) {
+  const open = !!role;
   const [form, setForm] = useState({
     fullName: '',
     email: '',
@@ -158,6 +240,11 @@ function CreateUserModal({ open, onClose, onDone }: { open: boolean; onClose: ()
     siteId: '',
     password: '',
   });
+
+  // The role is chosen before the form opens, so it is stated, not asked again.
+  useEffect(() => {
+    if (role) setForm((f) => ({ ...f, role }));
+  }, [role]);
 
   // The server decides which roles this admin may assign; the form mirrors it
   // so an Academic Admin is never shown an option that would be rejected.
@@ -189,7 +276,7 @@ function CreateUserModal({ open, onClose, onDone }: { open: boolean; onClose: ()
   return (
     <Modal
       open={open}
-      title="New user"
+      title={`Add ${role ? ROLE_LABELS[role].toLowerCase() : 'person'}`}
       onClose={onClose}
       footer={
         <>
@@ -202,7 +289,7 @@ function CreateUserModal({ open, onClose, onDone }: { open: boolean; onClose: ()
             disabled={!form.fullName || form.password.length < 8 || create.isPending}
             onClick={() => create.mutate()}
           >
-            Create user
+            Add {role ? ROLE_LABELS[role].toLowerCase() : 'person'}
           </button>
         </>
       }
@@ -221,8 +308,12 @@ function CreateUserModal({ open, onClose, onDone }: { open: boolean; onClose: ()
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <Field label="Role">
-          <select className="input" value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value as Role })}>
+        <Field label="Role" hint={role ? ROLE_PURPOSE[role] : undefined}>
+          <select
+            className="input"
+            value={form.role}
+            onChange={(e) => setForm({ ...form, role: e.target.value as Role })}
+          >
             {(allowedRoles ?? ['STUDENT']).map((r) => (
               <option key={r} value={r}>
                 {ROLE_LABELS[r]}

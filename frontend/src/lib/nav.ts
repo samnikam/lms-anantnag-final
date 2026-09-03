@@ -22,11 +22,17 @@ import {
 } from 'lucide-react';
 import type { Role } from './auth';
 
-/** Sidebar sections, in the order they appear. */
+/**
+ * Sidebar sections, in the order they appear — which is the order the portal
+ * is actually used in. An admin sets up schools, then the year, then classes,
+ * then subjects, then the people; only after that does a timetable or a
+ * register mean anything. Grouping the screens by what they are rather than
+ * by when they are needed left an admin guessing where to start.
+ */
 export const NAV_GROUPS = [
   'main',
-  'learning',
-  'administration',
+  'setup',
+  'teaching',
   'insights',
   'communication',
   'system',
@@ -36,8 +42,8 @@ export type NavGroup = (typeof NAV_GROUPS)[number];
 
 export const GROUP_LABELS: Record<NavGroup, string | null> = {
   main: null, // Dashboard sits above the first heading
-  learning: 'Learning',
-  administration: 'Administration',
+  setup: 'Set up · in this order',
+  teaching: 'Teaching & learning',
   insights: 'Insights',
   communication: 'Communication',
   system: 'System',
@@ -56,6 +62,11 @@ export interface NavItem {
    * the whole catalogue. The label should say which.
    */
   labelByRole?: Partial<Record<Role, string>>;
+  /**
+   * Per-role placement. Subjects are something an admin sets up before a
+   * timetable can exist, but something a teacher simply teaches from.
+   */
+  groupByRole?: Partial<Record<Role, NavGroup>>;
 }
 
 const ALL: Role[] = [
@@ -76,7 +87,8 @@ export const NAV_ITEMS: NavItem[] = [
     to: '/courses',
     label: 'Subjects',
     icon: BookOpen,
-    group: 'learning',
+    group: 'teaching',
+    groupByRole: { SUPER_ADMIN: 'setup', ACADEMIC_ADMIN: 'setup' },
     roles: ['SUPER_ADMIN', 'ACADEMIC_ADMIN', 'TEACHER', 'CONTENT_MANAGER'],
     labelByRole: { TEACHER: 'My Subjects' },
   },
@@ -84,7 +96,7 @@ export const NAV_ITEMS: NavItem[] = [
     to: '/my-learning',
     label: 'My Learning',
     icon: GraduationCap,
-    group: 'learning',
+    group: 'teaching',
     roles: ['STUDENT'],
   },
   {
@@ -92,14 +104,14 @@ export const NAV_ITEMS: NavItem[] = [
     label: 'Content Library',
     labelByRole: { ACADEMIC_ADMIN: 'Content' },
     icon: LibraryBig,
-    group: 'learning',
+    group: 'teaching',
     roles: ['SUPER_ADMIN', 'ACADEMIC_ADMIN', 'TEACHER', 'CONTENT_MANAGER'],
   },
   {
     to: '/live',
     label: 'Live & Broadcast',
     icon: Video,
-    group: 'learning',
+    group: 'teaching',
     roles: ['SUPER_ADMIN', 'ACADEMIC_ADMIN', 'TEACHER', 'STUDENT'],
     labelByRole: { TEACHER: 'My Live Classes', STUDENT: 'Join Live Class' },
   },
@@ -107,7 +119,7 @@ export const NAV_ITEMS: NavItem[] = [
     to: '/calendar',
     label: 'Timetable',
     icon: CalendarDays,
-    group: 'learning',
+    group: 'teaching',
     roles: ['SUPER_ADMIN', 'ACADEMIC_ADMIN', 'TEACHER', 'STUDENT', 'PARENT'],
     labelByRole: { TEACHER: 'My Timetable', PARENT: "Child's Timetable" },
   },
@@ -115,7 +127,7 @@ export const NAV_ITEMS: NavItem[] = [
     to: '/attendance',
     label: 'Attendance',
     icon: ListChecks,
-    group: 'learning',
+    group: 'teaching',
     roles: ['SUPER_ADMIN', 'ACADEMIC_ADMIN', 'TEACHER', 'STUDENT'],
     labelByRole: { TEACHER: 'Mark Attendance', STUDENT: 'My Attendance' },
   },
@@ -123,7 +135,7 @@ export const NAV_ITEMS: NavItem[] = [
     to: '/assignments',
     label: 'Assignments',
     icon: ClipboardList,
-    group: 'learning',
+    group: 'teaching',
     roles: ['SUPER_ADMIN', 'ACADEMIC_ADMIN', 'TEACHER', 'STUDENT'],
     labelByRole: { TEACHER: 'Grading', STUDENT: 'My Assignments' },
   },
@@ -131,7 +143,7 @@ export const NAV_ITEMS: NavItem[] = [
     to: '/quizzes',
     label: 'Quizzes & Exams',
     icon: FileCheck2,
-    group: 'learning',
+    group: 'teaching',
     roles: ['SUPER_ADMIN', 'ACADEMIC_ADMIN', 'TEACHER', 'STUDENT'],
     labelByRole: { TEACHER: 'Question Bank & Exams', STUDENT: 'My Quizzes' },
   },
@@ -139,7 +151,7 @@ export const NAV_ITEMS: NavItem[] = [
     to: '/certificates',
     label: 'Certificates',
     icon: FileBadge,
-    group: 'learning',
+    group: 'teaching',
     roles: ['SUPER_ADMIN', 'ACADEMIC_ADMIN', 'STUDENT'],
     labelByRole: { STUDENT: 'My Certificates' },
   },
@@ -147,34 +159,34 @@ export const NAV_ITEMS: NavItem[] = [
   // ── Administration ────────────────────────────────────────────────────
   {
     to: '/users',
-    label: 'Users & Roles',
+    label: 'People',
     icon: Users,
-    group: 'administration',
+    group: 'setup',
     roles: ['SUPER_ADMIN', 'ACADEMIC_ADMIN'],
     // An Academic Admin manages teaching staff and learners, never administrators.
-    labelByRole: { ACADEMIC_ADMIN: 'Users' },
+    labelByRole: { ACADEMIC_ADMIN: 'Teachers & Learners' },
   },
   {
     to: '/classes',
     label: 'Classes',
     icon: GraduationCap,
-    group: 'administration',
+    group: 'setup',
     roles: ['SUPER_ADMIN', 'ACADEMIC_ADMIN'],
   },
   {
     to: '/academic',
-    label: 'Academic Structure',
+    label: 'Year & Enrolment',
     icon: UserSquare2,
-    group: 'administration',
+    group: 'setup',
     roles: ['SUPER_ADMIN', 'ACADEMIC_ADMIN'],
   },
   {
     to: '/sites',
-    label: 'Sites & Devices',
+    label: 'Schools & Devices',
     icon: Building2,
-    group: 'administration',
+    group: 'setup',
     roles: ['SUPER_ADMIN', 'ACADEMIC_ADMIN', 'DEPT_OVERSIGHT'],
-    labelByRole: { ACADEMIC_ADMIN: 'Sites & Classrooms', DEPT_OVERSIGHT: 'Site Monitoring' },
+    labelByRole: { ACADEMIC_ADMIN: 'My School & Classrooms', DEPT_OVERSIGHT: 'Site Monitoring' },
   },
 
   // ── Insights ──────────────────────────────────────────────────────────
@@ -208,7 +220,19 @@ export function navFor(role: Role): NavItem[] {
   return NAV_ITEMS.filter((item) => item.roles.includes(role)).map((item) => ({
     ...item,
     label: item.labelByRole?.[role] ?? item.label,
+    group: item.groupByRole?.[role] ?? item.group,
   }));
+}
+
+/**
+ * Within "Set up", order by what has to exist first: a school, then the year
+ * it runs, then its classes, then what those classes study, then the people.
+ */
+const SETUP_ORDER = ['/sites', '/academic', '/classes', '/courses', '/users'];
+
+function order(group: NavGroup, items: NavItem[]): NavItem[] {
+  if (group !== 'setup') return items;
+  return [...items].sort((a, b) => SETUP_ORDER.indexOf(a.to) - SETUP_ORDER.indexOf(b.to));
 }
 
 /** Groups the role's items in section order, dropping sections it cannot see. */
@@ -217,6 +241,6 @@ export function navSectionsFor(role: Role): Array<{ group: NavGroup; label: stri
   return NAV_GROUPS.map((group) => ({
     group,
     label: GROUP_LABELS[group],
-    items: items.filter((i) => i.group === group),
+    items: order(group, items.filter((i) => i.group === group)),
   })).filter((section) => section.items.length > 0);
 }

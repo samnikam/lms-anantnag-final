@@ -73,6 +73,25 @@ export class CoursesService {
   }
 
   /**
+   * Content, enrolments and class assignments go with the subject. A broadcast
+   * that already happened, a question in the bank and a timetable entry outlive
+   * it, so those are detached rather than destroyed — deleting a subject should
+   * not erase the record of a lesson that was taught.
+   */
+  async remove(id: string) {
+    const course = await this.prisma.course.findUnique({ where: { id } });
+    if (!course) throw new NotFoundException('Subject not found.');
+
+    return this.prisma.$transaction(async (tx) => {
+      await tx.liveSession.updateMany({ where: { courseId: id }, data: { courseId: null } });
+      await tx.question.updateMany({ where: { courseId: id }, data: { courseId: null } });
+      await tx.calendarEvent.updateMany({ where: { courseId: id }, data: { courseId: null } });
+      await tx.course.delete({ where: { id } });
+      return { id, deleted: true };
+    });
+  }
+
+  /**
    * Content workflow: DRAFT → IN_REVIEW → PUBLISHED → ARCHIVED.
    * Publishing requires at least one lesson so students never land on an empty course.
    */

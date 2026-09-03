@@ -23,7 +23,10 @@ export function CoursesPage() {
   const [state, setState] = useState('');
   const [creating, setCreating] = useState(false);
   const [showCode, setShowCode] = useState(false);
+  const [editing, setEditing] = useState<any | null>(null);
+  const [confirmDelete, setConfirmDelete] = useState<any | null>(null);
   const [form, setForm] = useState({ code: '', title: '', category: '', description: '' });
+  const [editForm, setEditForm] = useState({ title: '', description: '' });
 
   // A subject needs a unique code in the database, but nobody should have to
   // invent one. It follows the name unless the user chooses to set it.
@@ -60,7 +63,32 @@ export function CoursesPage() {
     },
   });
 
+  const rename = useMutation({
+    mutationFn: async () =>
+      (
+        await api.patch(`/courses/${editing.id}`, {
+          title: editForm.title,
+          description: editForm.description || undefined,
+        })
+      ).data,
+    onSuccess: () => {
+      setEditing(null);
+      qc.invalidateQueries({ queryKey: ['courses'] });
+    },
+  });
+
+  const remove = useMutation({
+    mutationFn: async () => (await api.delete(`/courses/${confirmDelete.id}`)).data,
+    onSuccess: () => {
+      setConfirmDelete(null);
+      qc.invalidateQueries({ queryKey: ['courses'] });
+    },
+  });
+
   const canAuthor = ['SUPER_ADMIN', 'ACADEMIC_ADMIN', 'TEACHER', 'CONTENT_MANAGER'].includes(user!.role);
+  // Removing a subject takes its content and enrolments with it, so it stays
+  // with the two admin roles answerable for the curriculum.
+  const canRemove = ['SUPER_ADMIN', 'ACADEMIC_ADMIN'].includes(user!.role);
 
   return (
     <>
@@ -104,7 +132,17 @@ export function CoursesPage() {
         <EmptyState title="No subjects found" description="Adjust your filters or add a new subject." />
       ) : (
         <Card>
-          <Table headers={['Subject', 'Category', 'Teachers', 'Modules', 'Learners', 'State']}>
+          <Table
+            headers={[
+              'Subject',
+              'Category',
+              'Teachers',
+              'Modules',
+              'Learners',
+              'State',
+              ...(canAuthor ? [''] : []),
+            ]}
+          >
             {data.items.map((c: any) => (
               <tr key={c.id}>
                 <td className="td">
@@ -122,11 +160,111 @@ export function CoursesPage() {
                 <td className="td">
                   <StatusBadge status={c.state} />
                 </td>
+                {canAuthor && (
+                  <td className="td">
+                    <div className="flex justify-end gap-1">
+                      <button
+                        type="button"
+                        className="rounded p-1 text-brand-700 hover:bg-brand-50"
+                        title="Rename this subject"
+                        aria-label={`Edit ${c.title}`}
+                        onClick={() => {
+                          setEditing(c);
+                          setEditForm({ title: c.title, description: c.description ?? '' });
+                        }}
+                      >
+                        <Pencil className="h-4 w-4" aria-hidden />
+                      </button>
+                      {canRemove && (
+                        <button
+                          type="button"
+                          className="rounded p-1 text-red-600 hover:bg-red-50"
+                          title="Delete this subject"
+                          aria-label={`Delete ${c.title}`}
+                          onClick={() => setConfirmDelete(c)}
+                        >
+                          <Trash2 className="h-4 w-4" aria-hidden />
+                        </button>
+                      )}
+                    </div>
+                  </td>
+                )}
               </tr>
             ))}
           </Table>
         </Card>
       )}
+
+      <Modal
+        open={!!editing}
+        title="Edit subject"
+        onClose={() => setEditing(null)}
+        footer={
+          <>
+            <button type="button" className="btn-secondary" onClick={() => setEditing(null)}>
+              Cancel
+            </button>
+            <button
+              type="button"
+              className="btn-primary"
+              disabled={!editForm.title || rename.isPending}
+              onClick={() => rename.mutate()}
+            >
+              {rename.isPending ? 'Saving…' : 'Save changes'}
+            </button>
+          </>
+        }
+      >
+        <Field label="Subject name">
+          <input
+            className="input"
+            value={editForm.title}
+            onChange={(e) => setEditForm({ ...editForm, title: e.target.value })}
+          />
+        </Field>
+        <Field label="Description" hint="Optional.">
+          <textarea
+            className="input"
+            rows={3}
+            value={editForm.description}
+            onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
+          />
+        </Field>
+        {rename.isError && <p className="text-sm text-red-600">{errorMessage(rename.error)}</p>}
+      </Modal>
+
+      <Modal
+        open={!!confirmDelete}
+        title="Delete this subject?"
+        onClose={() => setConfirmDelete(null)}
+        footer={
+          <>
+            <button type="button" className="btn-secondary" onClick={() => setConfirmDelete(null)}>
+              Cancel
+            </button>
+            <button
+              type="button"
+              className="btn-danger"
+              disabled={remove.isPending}
+              onClick={() => remove.mutate()}
+            >
+              {remove.isPending ? 'Deleting…' : 'Delete subject'}
+            </button>
+          </>
+        }
+      >
+        <p className="text-sm text-ink-soft">
+          <strong>{confirmDelete?.title}</strong> will be removed, along with its{' '}
+          {confirmDelete?._count?.modules ?? 0} module(s) and{' '}
+          {confirmDelete?._count?.enrollments ?? 0} enrolled learner(s). It is also taken off any
+          class that studies it.
+        </p>
+        <p className="mt-2 text-sm text-ink-soft">
+          Past broadcasts, timetable entries and questions in the bank are kept — they simply stop
+          pointing at this subject. This cannot be undone.
+        </p>
+        {remove.isError && <p className="mt-3 text-sm text-red-600">{errorMessage(remove.error)}</p>}
+      </Modal>
 
       <Modal
         open={creating}

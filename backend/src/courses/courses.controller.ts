@@ -76,6 +76,13 @@ export class CoursesController {
     return this.courses.update(id, dto as any);
   }
 
+  @Delete(':id')
+  @Roles(Role.SUPER_ADMIN, Role.ACADEMIC_ADMIN)
+  @Audit('course.delete', 'Course')
+  remove(@Param('id') id: string) {
+    return this.courses.remove(id);
+  }
+
   @Patch(':id/state')
   @Roles(Role.SUPER_ADMIN, Role.ACADEMIC_ADMIN, Role.CONTENT_MANAGER)
   @Audit('course.set_state', 'Course')

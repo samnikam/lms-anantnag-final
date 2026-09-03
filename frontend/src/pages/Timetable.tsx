@@ -37,10 +37,18 @@ const ROLE_BLURB: Record<string, string> = {
   DEPT_OVERSIGHT: 'Scheduled academic events.',
 };
 
+/**
+ * Holidays are all-day by nature: asking for a start and end time makes the
+ * form unfillable for the one entry that has no clock times.
+ */
+const ALL_DAY_TYPES = ['HOLIDAY'];
+const isAllDay = (type: string) => ALL_DAY_TYPES.includes(type);
+
 const EMPTY = {
   title: '',
   type: 'CLASS' as string,
   date: '',
+  endDate: '',
   startTime: '09:00',
   endTime: '10:00',
   courseId: '',
@@ -423,6 +431,7 @@ function EntryModal({
         title: event.title ?? '',
         type: event.type ?? 'CLASS',
         date: format(start, 'yyyy-MM-dd'),
+        endDate: format(end, 'yyyy-MM-dd'),
         startTime: format(start, 'HH:mm'),
         endTime: format(end, 'HH:mm'),
         courseId: event.courseId ?? '',
@@ -447,8 +456,14 @@ function EntryModal({
       const payload = {
         title: form.title,
         type: form.type,
-        startAt: new Date(`${form.date}T${form.startTime}`).toISOString(),
-        endAt: new Date(`${form.date}T${form.endTime}`).toISOString(),
+        startAt: new Date(
+          `${form.date}T${isAllDay(form.type) ? '00:00' : form.startTime}`,
+        ).toISOString(),
+        endAt: new Date(
+          isAllDay(form.type)
+            ? `${form.endDate || form.date}T23:59`
+            : `${form.date}T${form.endTime}`,
+        ).toISOString(),
         courseId: form.courseId || undefined,
         classId: form.audience.startsWith('class:') ? form.audience.slice(6) : undefined,
         batchId: form.audience.startsWith('batch:') ? form.audience.slice(6) : undefined,
@@ -511,13 +526,20 @@ function EntryModal({
 
   // A subject left over from a previous class would be silently wrong.
   useEffect(() => {
+    if (isAllDay(form.type) && form.courseId) setForm((f) => ({ ...f, courseId: '' }));
+  }, [form.type, form.courseId]);
+
+  useEffect(() => {
     if (!form.courseId) return;
     if (!selectedClass?.subjects?.length) return;
     const allowed = selectedClass.subjects.some((s: any) => s.course.id === form.courseId);
     if (!allowed) setForm((f) => ({ ...f, courseId: '' }));
   }, [form.audience, selectedClass, form.courseId]);
 
-  const timesValid = form.startTime < form.endTime;
+  const allDay = isAllDay(form.type);
+  const timesValid = allDay
+    ? !form.endDate || form.endDate >= form.date
+    : form.startTime < form.endTime;
 
   return (
     <Modal
@@ -593,30 +615,58 @@ function EntryModal({
                 onChange={(e) => setForm({ ...form, date: e.target.value })}
               />
             </Field>
-            <Field label="From">
-              <input
-                className="input"
-                type="time"
-                value={form.startTime}
-                onChange={(e) => setForm({ ...form, startTime: e.target.value })}
-              />
-            </Field>
-            <Field label="To" error={!timesValid ? 'Must be after the start time.' : undefined}>
-              <input
-                className="input"
-                type="time"
-                value={form.endTime}
-                onChange={(e) => setForm({ ...form, endTime: e.target.value })}
-              />
-            </Field>
+            {allDay ? (
+              <Field
+                label="Last day"
+                hint="Leave empty for a single day."
+                error={!timesValid ? 'Must be on or after the first day.' : undefined}
+              >
+                <input
+                  className="input"
+                  type="date"
+                  min={form.date || undefined}
+                  value={form.endDate}
+                  onChange={(e) => setForm({ ...form, endDate: e.target.value })}
+                />
+              </Field>
+            ) : (
+              <>
+                <Field label="From">
+                  <input
+                    className="input"
+                    type="time"
+                    value={form.startTime}
+                    onChange={(e) => setForm({ ...form, startTime: e.target.value })}
+                  />
+                </Field>
+                <Field
+                  label="To"
+                  error={!timesValid ? 'Must be after the start time.' : undefined}
+                >
+                  <input
+                    className="input"
+                    type="time"
+                    value={form.endTime}
+                    onChange={(e) => setForm({ ...form, endTime: e.target.value })}
+                  />
+                </Field>
+              </>
+            )}
           </div>
+
+          {allDay && (
+            <p className="-mt-2 mb-4 text-xs text-slate-500">
+              A holiday runs all day, so there are no start and end times to fill in.
+            </p>
+          )}
 
           <p className="mb-3 mt-5 text-xs font-semibold uppercase tracking-wide text-slate-500">
             Who is it for?
           </p>
 
-          <PickerWithCreate
-            label="Subject"
+          {!allDay && (
+            <PickerWithCreate
+              label="Subject"
             hint={
               selectedClass?.subjects?.length
                 ? `Subjects ${selectedClass.name} studies. Leave as “Any subject” for a holiday or a general notice.`
@@ -630,8 +680,9 @@ function EntryModal({
             createPlaceholder="e.g. Mathematics — Class 10"
             onCreate={(name) => createSubject.mutate(name)}
             creating={createSubject.isPending}
-            createError={createSubject.isError ? errorMessage(createSubject.error) : undefined}
-          />
+              createError={createSubject.isError ? errorMessage(createSubject.error) : undefined}
+            />
+          )}
 
           <ClassPicker
             value={form.audience}
@@ -899,9 +950,15 @@ function WeekGrid({
 }) {
   const days = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
 
+  const spansWholeDay = (e: any) =>
+    isAllDay(e.type) || new Date(e.endAt).getTime() - new Date(e.startAt).getTime() >= 23 * 3600e3;
+
+  const allDayEvents = events.filter(spansWholeDay);
+  const timed = events.filter((e) => !spansWholeDay(e));
+
   // Fit the grid to the day actually taught, with a sensible school default.
-  const starts = events.map((e) => minutesOf(new Date(e.startAt)));
-  const ends = events.map((e) => minutesOf(new Date(e.endAt)));
+  const starts = timed.map((e) => minutesOf(new Date(e.startAt)));
+  const ends = timed.map((e) => minutesOf(new Date(e.endAt)));
   const from = Math.min(8 * 60, ...(starts.length ? starts : [8 * 60]));
   const to = Math.max(17 * 60, ...(ends.length ? ends : [17 * 60]));
   const startHour = Math.floor(from / 60);
@@ -939,6 +996,43 @@ function WeekGrid({
             ))}
           </div>
 
+          {allDayEvents.length > 0 && (
+            <div className="grid grid-cols-[56px_repeat(7,1fr)] border-b border-slate-200">
+              <div className="py-1 pr-2 text-right text-[10px] uppercase tracking-wide text-slate-400">
+                all day
+              </div>
+              {days.map((day) => {
+                const onThisDay = allDayEvents.filter(
+                  (e) =>
+                    day >= new Date(new Date(e.startAt).setHours(0, 0, 0, 0)) &&
+                    day <= new Date(new Date(e.endAt).setHours(23, 59, 59, 999)),
+                );
+                return (
+                  <div key={day.toISOString()} className="space-y-1 border-l border-slate-200 p-1">
+                    {onThisDay.map((e) => {
+                      const style = TYPE_STYLE[e.type] ?? TYPE_STYLE.EVENT;
+                      return (
+                        <button
+                          key={e.id}
+                          type="button"
+                          onClick={() => (canManage ? onEdit(e) : undefined)}
+                          className={clsx(
+                            'block w-full truncate rounded border px-1.5 py-0.5 text-left text-[11px] font-medium',
+                            style.block,
+                            canManage && 'hover:shadow',
+                          )}
+                          title={e.title}
+                        >
+                          {e.title}
+                        </button>
+                      );
+                    })}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
           {/* Hour rows with entries laid over them */}
           <div className="relative grid grid-cols-[56px_repeat(7,1fr)]">
             <div>
@@ -953,7 +1047,7 @@ function WeekGrid({
             </div>
 
             {days.map((day) => {
-              const dayEvents = events.filter((e) => isSameDay(new Date(e.startAt), day));
+              const dayEvents = timed.filter((e) => isSameDay(new Date(e.startAt), day));
 
               return (
                 <div

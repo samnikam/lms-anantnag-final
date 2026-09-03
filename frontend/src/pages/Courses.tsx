@@ -78,7 +78,17 @@ export function CoursesPage() {
   });
 
   const remove = useMutation({
-    mutationFn: async () => (await api.delete(`/courses/${confirmDelete.id}`)).data,
+    mutationFn: async () => {
+      try {
+        return (await api.delete(`/courses/${confirmDelete.id}`)).data;
+      } catch (e: any) {
+        // Someone else removed it, or this list is stale. The subject is gone
+        // either way, which is what was asked for — refresh rather than show a
+        // dead end the user cannot act on.
+        if (e?.response?.status === 404) return { alreadyGone: true };
+        throw e;
+      }
+    },
     onSuccess: () => {
       setConfirmDelete(null);
       qc.invalidateQueries({ queryKey: ['courses'] });

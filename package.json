@@ -15,7 +15,8 @@
     "db:migrate": "npm --workspace backend run db:migrate",
     "db:seed": "npm --workspace backend run db:seed",
     "db:backup": "bash scripts/backup.sh",
-    "db:restore": "bash scripts/restore.sh"
+    "db:restore": "bash scripts/restore.sh",
+    "db:purge-test-data": "docker compose exec -T postgres psql -U lms -d lms_portal -v ON_ERROR_STOP=1 -f - < scripts/purge-test-data.sql"
   },
   "devDependencies": {
     "concurrently": "^9.1.0"

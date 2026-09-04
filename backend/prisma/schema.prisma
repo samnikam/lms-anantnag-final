@@ -231,6 +231,7 @@ model User {
 
   @@index([role, status])
   @@index([siteId])
+  classEnrollments ClassEnrollment[] @relation("ClassLearner")
 }
 
 model RefreshToken {
@@ -382,12 +383,35 @@ model SchoolClass {
   batches  Batch[]
   events   CalendarEvent[]
   subjects ClassSubject[]
+  learners ClassEnrollment[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@unique([academicYearId, siteId, name])
   @@index([siteId])
+}
+
+/// A learner belongs to a class at a school, and studies whatever that class
+/// studies. This is the record of that membership, held independently of the
+/// per-subject enrolments derived from it — so a class can admit learners
+/// before its subjects are decided, and a subject added later reaches everyone
+/// already in the class.
+model ClassEnrollment {
+  id        String      @id @default(uuid())
+  classId   String
+  class     SchoolClass @relation(fields: [classId], references: [id], onDelete: Cascade)
+  studentId String
+  student   User        @relation("ClassLearner", fields: [studentId], references: [id], onDelete: Cascade)
+  batchId   String?
+  batch     Batch?      @relation(fields: [batchId], references: [id])
+
+  status     EnrollmentStatus @default(ACTIVE)
+  enrolledAt DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
+
+  @@unique([classId, studentId])
+  @@index([studentId])
 }
 
 /// Which subjects a class studies, and who teaches each one.
@@ -425,6 +449,7 @@ model Batch {
   active         Boolean      @default(true)
 
   enrollments  Enrollment[]
+  classLearners ClassEnrollment[]
   liveSessions LiveSession[]
   assignments  Assignment[]
 

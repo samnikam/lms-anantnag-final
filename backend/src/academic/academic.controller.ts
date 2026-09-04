@@ -125,6 +125,24 @@ export class AcademicController {
     return this.academic.enrollStudentsInClass(ids, id, dto.batchId, actorId);
   }
 
+  /** The roll of a class — who is in it, whatever it studies. */
+  @Get('classes/:id/students')
+  @Roles(...READERS)
+  classLearners(@Param('id') id: string) {
+    return this.academic.listClassLearners(id);
+  }
+
+  @Delete('classes/:id/students/:studentId')
+  @Roles(...ADMINS)
+  @Audit('class.remove_student', 'ClassEnrollment')
+  removeClassLearner(
+    @Param('id') id: string,
+    @Param('studentId') studentId: string,
+    @CurrentUser() actor: AuthUser,
+  ) {
+    return this.academic.removeClassLearner(id, studentId, actor);
+  }
+
   @Get('batches')
   @Roles(...READERS)
   listBatches(

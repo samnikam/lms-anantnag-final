@@ -59,6 +59,9 @@ export class AcademicService {
           },
           orderBy: { createdAt: 'asc' },
         },
+        // The roll is the number a school cares about: how many learners are
+        // in the class, not how many subject enrolments they add up to.
+        _count: { select: { learners: true } },
       },
       orderBy: [{ level: 'asc' }, { name: 'asc' }],
     });
@@ -160,7 +163,25 @@ export class AcademicService {
       });
     }
 
-    return link;
+    // The class studies this now, so everyone on its roll studies it too —
+    // including learners admitted before the subject was decided.
+    const roll = await this.prisma.classEnrollment.findMany({
+      where: { classId, status: EnrollmentStatus.ACTIVE },
+      select: { studentId: true, batchId: true },
+    });
+    for (const learner of roll) {
+      await this.prisma.enrollment.upsert({
+        where: { studentId_courseId: { studentId: learner.studentId, courseId: data.courseId } },
+        create: {
+          studentId: learner.studentId,
+          courseId: data.courseId,
+          batchId: learner.batchId,
+        },
+        update: { status: EnrollmentStatus.ACTIVE },
+      });
+    }
+
+    return { ...link, enrolledExistingLearners: roll.length };
   }
 
   async removeSubjectFromClass(classId: string, courseId: string, actor: AuthUser) {
@@ -224,15 +245,18 @@ export class AcademicService {
       include: { subjects: { select: { courseId: true } }, batches: { select: { id: true } } },
     });
 
-    if (cls.subjects.length === 0) {
-      throw new BadRequestException(
-        'This class has no subjects yet. Add its subjects first, then enrol learners.',
-      );
-    }
-
     // Default to the class's only section when one exists, so the learner is
     // not left unattached to any group.
     const targetBatch = batchId ?? (cls.batches.length === 1 ? cls.batches[0].id : undefined);
+
+    // A learner is admitted to the class itself. Whether the class has decided
+    // its subjects yet is a separate question — one that should not stop a
+    // school from filling its roll.
+    await this.prisma.classEnrollment.upsert({
+      where: { classId_studentId: { classId, studentId } },
+      create: { classId, studentId, batchId: targetBatch },
+      update: { status: EnrollmentStatus.ACTIVE, batchId: targetBatch },
+    });
 
     const results = [];
     for (const { courseId } of cls.subjects) {
@@ -254,7 +278,41 @@ export class AcademicService {
       results.push(enrollment);
     }
 
-    return { enrolled: results.length, className: cls.name, batchId: targetBatch };
+    return {
+      enrolled: results.length,
+      className: cls.name,
+      batchId: targetBatch,
+      // Told plainly so the UI can say "in the class, no subjects yet".
+      classHasSubjects: cls.subjects.length > 0,
+    };
+  }
+
+  /** Everyone on the roll of a class, whatever its subjects. */
+  listClassLearners(classId: string) {
+    return this.prisma.classEnrollment.findMany({
+      where: { classId },
+      include: {
+        student: { select: { id: true, fullName: true, email: true, mobile: true, status: true } },
+        batch: { select: { id: true, name: true } },
+      },
+      orderBy: { student: { fullName: 'asc' } },
+    });
+  }
+
+  /** Takes a learner off the roll, and out of the subjects that came with it. */
+  async removeClassLearner(classId: string, studentId: string, actor: AuthUser) {
+    const cls = await this.prisma.schoolClass.findUniqueOrThrow({
+      where: { id: classId },
+      include: { subjects: { select: { courseId: true } } },
+    });
+    assertSiteAllowed(actor, cls.siteId);
+
+    await this.prisma.classEnrollment.deleteMany({ where: { classId, studentId } });
+    await this.prisma.enrollment.updateMany({
+      where: { studentId, courseId: { in: cls.subjects.map((s) => s.courseId) } },
+      data: { status: EnrollmentStatus.WITHDRAWN },
+    });
+    return { removed: true };
   }
 
   // ───────────────────────────  Batches ───────────────────────────

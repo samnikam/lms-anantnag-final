@@ -192,6 +192,8 @@ export function ClassesPage() {
                 </div>
               </div>
 
+              <LearnersPanel schoolClass={c} onChanged={invalidate} />
+
               {c.batches.length ? (
                 <Table headers={['Section', 'Learners']}>
                   {c.batches.map((b: any) => (
@@ -737,8 +739,7 @@ function EnrolInClassModal({
   // Who is already in this class, so nobody is offered twice.
   const { data: roster } = useQuery({
     queryKey: ['class-roster', schoolClass?.id],
-    queryFn: async () =>
-      (await api.get<any[]>('/enrollments', { params: { classId: schoolClass.id } })).data,
+    queryFn: async () => (await api.get<any[]>(`/classes/${schoolClass.id}/students`)).data,
     enabled: !!schoolClass,
   });
 
@@ -783,7 +784,7 @@ function EnrolInClassModal({
           <button
             type="button"
             className="btn-primary"
-            disabled={!picked.length || noSubjects || enrol.isPending}
+            disabled={!picked.length || enrol.isPending}
             onClick={() => enrol.mutate()}
           >
             {enrol.isPending
@@ -793,18 +794,20 @@ function EnrolInClassModal({
         </>
       }
     >
-      {noSubjects ? (
-        <div className="rounded-md border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
-          This class has no subjects yet. Add its subjects first — enrolling a learner means
-          enrolling them into what the class studies.
-        </div>
-      ) : (
+      {(
         <>
-          <p className="mb-4 text-sm text-ink-soft">
-            Each learner you add is enrolled into all {schoolClass.subjects.length} subject
-            {schoolClass.subjects.length === 1 ? '' : 's'} this class studies:{' '}
-            {schoolClass.subjects.map((s: any) => s.course.title).join(', ')}.
-          </p>
+          {noSubjects ? (
+            <div className="mb-4 rounded-md border border-slate-200 bg-slate-50 p-3 text-sm text-ink-soft">
+              This class has no subjects yet — that is fine. Learners join the class now, and any
+              subject you add later is picked up by everyone already on the roll.
+            </div>
+          ) : (
+            <p className="mb-4 text-sm text-ink-soft">
+              Each learner joins {schoolClass.name} and studies all {schoolClass.subjects.length}{' '}
+              subject{schoolClass.subjects.length === 1 ? '' : 's'} it takes:{' '}
+              {schoolClass.subjects.map((s: any) => s.course.title).join(', ')}.
+            </p>
+          )}
 
           <Field label="Find learners">
             <input
@@ -882,5 +885,66 @@ function EnrolInClassModal({
         </>
       )}
     </Modal>
+  );
+}
+
+/**
+ * The roll of the class. A school thinks of a class as a group of learners
+ * first and a set of subjects second, so the names come before anything else.
+ */
+function LearnersPanel({ schoolClass, onChanged }: { schoolClass: any; onChanged: () => void }) {
+  const [open, setOpen] = useState(false);
+
+  const { data: learners } = useQuery({
+    queryKey: ['class-roster', schoolClass.id],
+    queryFn: async () => (await api.get<any[]>(`/classes/${schoolClass.id}/students`)).data,
+    enabled: open,
+  });
+
+  const remove = useMutation({
+    mutationFn: async (studentId: string) =>
+      (await api.delete(`/classes/${schoolClass.id}/students/${studentId}`)).data,
+    onSuccess: onChanged,
+  });
+
+  const count = schoolClass._count?.learners ?? 0;
+
+  return (
+    <div className="mt-4 border-t border-slate-100 pt-3">
+      <button
+        type="button"
+        className="text-sm font-medium text-brand-700 hover:underline"
+        onClick={() => setOpen((v) => !v)}
+      >
+        {count} learner{count === 1 ? '' : 's'} on the roll {open ? '▾' : '▸'}
+      </button>
+
+      {open &&
+        (learners?.length ? (
+          <Table headers={['Learner', 'Contact', 'Section', '']}>
+            {learners.map((l: any) => (
+              <tr key={l.id}>
+                <td className="td font-medium">{l.student.fullName}</td>
+                <td className="td text-slate-600">{l.student.email ?? l.student.mobile ?? '—'}</td>
+                <td className="td text-slate-600">{l.batch?.name ?? '—'}</td>
+                <td className="td">
+                  <button
+                    type="button"
+                    className="rounded p-1 text-red-600 hover:bg-red-50"
+                    title={`Take ${l.student.fullName} off this class`}
+                    onClick={() => remove.mutate(l.student.id)}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </Table>
+        ) : (
+          <p className="mt-2 text-sm text-slate-500">
+            Nobody on the roll yet. Use “Add learners” above.
+          </p>
+        ))}
+    </div>
   );
 }

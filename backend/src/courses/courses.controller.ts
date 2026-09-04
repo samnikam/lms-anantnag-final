@@ -22,7 +22,15 @@ import {
   UpdateResourceDto,
 } from './dto';
 
+/** May write lessons, resources and other teaching material. */
 const AUTHORS = [Role.SUPER_ADMIN, Role.ACADEMIC_ADMIN, Role.TEACHER, Role.CONTENT_MANAGER] as const;
+
+/**
+ * May create or rename a subject. The scheme of studies belongs to the academic
+ * office: a teacher teaching Mathematics should not be able to invent a subject
+ * outside it, or rename the one the whole school is enrolled in.
+ */
+const CURRICULUM = [Role.SUPER_ADMIN, Role.ACADEMIC_ADMIN, Role.CONTENT_MANAGER] as const;
 const ALL = [
   Role.SUPER_ADMIN,
   Role.ACADEMIC_ADMIN,
@@ -63,14 +71,14 @@ export class CoursesController {
   }
 
   @Post()
-  @Roles(...AUTHORS)
+  @Roles(...CURRICULUM)
   @Audit('course.create', 'Course')
   create(@Body() dto: CreateCourseDto) {
     return this.courses.create(dto as any);
   }
 
   @Patch(':id')
-  @Roles(...AUTHORS)
+  @Roles(...CURRICULUM)
   @Audit('course.update', 'Course')
   update(@Param('id') id: string, @Body() dto: UpdateCourseDto) {
     return this.courses.update(id, dto as any);

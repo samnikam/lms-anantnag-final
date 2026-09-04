@@ -232,6 +232,9 @@ model User {
   @@index([role, status])
   @@index([siteId])
   classEnrollments ClassEnrollment[] @relation("ClassLearner")
+  substitutionsRequested SubstitutionRequest[] @relation("SubstitutionRequester")
+  substitutionsCovering  SubstitutionRequest[] @relation("SubstitutionCover")
+  substitutionsDecided   SubstitutionRequest[] @relation("SubstitutionDecider")
 }
 
 model RefreshToken {
@@ -1035,6 +1038,7 @@ model CalendarEvent {
 
   @@index([startAt])
   @@index([classId])
+  substitutions SubstitutionRequest[]
 }
 
 // ───────────────── Helpdesk / grievance escalation ─────────────────
@@ -1098,4 +1102,39 @@ model Setting {
   key       String   @id
   value     Json
   updatedAt DateTime @updatedAt
+}
+
+enum SubstitutionStatus {
+  PENDING
+  APPROVED
+  DECLINED
+  CANCELLED
+}
+
+/// A teacher cannot change the master timetable — that belongs to the academic
+/// office. When they cannot take a period, they ask for it to be covered, and
+/// the academic admin decides. This is that request.
+model SubstitutionRequest {
+  id        String @id @default(uuid())
+  eventId   String
+  event     CalendarEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  teacherId String
+  teacher   User   @relation("SubstitutionRequester", fields: [teacherId], references: [id], onDelete: Cascade)
+
+  reason String
+
+  status      SubstitutionStatus @default(PENDING)
+  /// Who the academic admin put in their place, once decided.
+  coverId     String?
+  cover       User?              @relation("SubstitutionCover", fields: [coverId], references: [id])
+  decidedById String?
+  decidedBy   User?              @relation("SubstitutionDecider", fields: [decidedById], references: [id])
+  decidedAt   DateTime?
+  decisionNote String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([teacherId, status])
+  @@index([status])
 }

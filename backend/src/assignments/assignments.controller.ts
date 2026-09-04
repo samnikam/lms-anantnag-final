@@ -7,6 +7,7 @@ import { Roles } from '../common/decorators/roles.decorator';
 import { Audit } from '../common/decorators/audit.decorator';
 import { AuthUser, CurrentUser } from '../common/decorators/current-user.decorator';
 import { UsersService } from '../users/users.service';
+import { TeacherScope } from '../common/teacher-scope';
 import { AssignmentsService } from './assignments.service';
 
 class CreateAssignmentDto {
@@ -48,6 +49,7 @@ export class AssignmentsController {
   constructor(
     private assignments: AssignmentsService,
     private users: UsersService,
+    private teacherScope: TeacherScope,
   ) {}
 
   @Get()
@@ -85,20 +87,30 @@ export class AssignmentsController {
   @Post()
   @Roles(Role.SUPER_ADMIN, Role.ACADEMIC_ADMIN, Role.TEACHER)
   @Audit('assignment.create', 'Assignment')
-  create(@Body() dto: CreateAssignmentDto, @CurrentUser('id') createdById: string) {
-    return this.assignments.create({ ...dto, createdById } as any);
+  async create(@Body() dto: CreateAssignmentDto, @CurrentUser() actor: AuthUser) {
+    // A teacher sets work in the subjects they were given, not in any subject.
+    await this.teacherScope.assertCourseAllowed(actor, (dto as any).courseId);
+    return this.assignments.create({ ...dto, createdById: actor.id } as any);
   }
 
   @Patch(':id')
   @Roles(Role.SUPER_ADMIN, Role.ACADEMIC_ADMIN, Role.TEACHER)
-  update(@Param('id') id: string, @Body() dto: UpdateAssignmentDto) {
+  async update(
+    @Param('id') id: string,
+    @Body() dto: UpdateAssignmentDto,
+    @CurrentUser() actor: AuthUser,
+  ) {
+    const existing = await this.assignments.findOne(id);
+    await this.teacherScope.assertCourseAllowed(actor, (existing as any).courseId);
     return this.assignments.update(id, dto as any);
   }
 
   @Post(':id/publish')
   @Roles(Role.SUPER_ADMIN, Role.ACADEMIC_ADMIN, Role.TEACHER)
   @Audit('assignment.publish', 'Assignment')
-  publish(@Param('id') id: string) {
+  async publish(@Param('id') id: string, @CurrentUser() actor: AuthUser) {
+    const existing = await this.assignments.findOne(id);
+    await this.teacherScope.assertCourseAllowed(actor, (existing as any).courseId);
     return this.assignments.publish(id);
   }
 

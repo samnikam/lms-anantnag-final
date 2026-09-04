@@ -17,6 +17,7 @@ import { Audit } from '../common/decorators/audit.decorator';
 import { AuthUser, CurrentUser } from '../common/decorators/current-user.decorator';
 import { UsersService } from '../users/users.service';
 import { resolveSiteFilter } from '../common/site-scope';
+import { TeacherScope } from '../common/teacher-scope';
 import { AttendanceService } from './attendance.service';
 
 class MarkEntry {
@@ -54,6 +55,7 @@ export class AttendanceController {
   constructor(
     private attendance: AttendanceService,
     private users: UsersService,
+    private teacherScope: TeacherScope,
   ) {}
 
   @Get()
@@ -96,23 +98,30 @@ export class AttendanceController {
 
   @Get('classes/:classId/roster')
   @Roles(Role.SUPER_ADMIN, Role.ACADEMIC_ADMIN, Role.TEACHER)
-  classRoster(@Param('classId') classId: string, @Query('date') date?: string) {
+  async classRoster(
+    @Param('classId') classId: string,
+    @CurrentUser() actor: AuthUser,
+    @Query('date') date?: string,
+  ) {
+    await this.teacherScope.assertClassAllowed(actor, classId);
     return this.attendance.classRoster(classId, date ? new Date(date) : new Date());
   }
 
   @Post('classes/:classId/mark')
   @Roles(Role.SUPER_ADMIN, Role.ACADEMIC_ADMIN, Role.TEACHER)
   @Audit('attendance.mark_class', 'Attendance')
-  markClass(
+  async markClass(
     @Param('classId') classId: string,
     @Body() dto: MarkClassDto,
-    @CurrentUser('id') markedById: string,
+    @CurrentUser() actor: AuthUser,
   ) {
+    // A teacher takes the register for their own classes, not the school's.
+    await this.teacherScope.assertClassAllowed(actor, classId);
     return this.attendance.markClassRegister(
       classId,
       dto.date ?? new Date(),
       dto.entries,
-      markedById,
+      actor.id,
     );
   }
 

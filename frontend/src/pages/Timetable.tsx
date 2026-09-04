@@ -14,6 +14,8 @@ import {
   Loading,
   Modal,
   PageHeader,
+  StatusBadge,
+  Table,
 } from '../components/ui';
 
 const EVENT_TYPES = ['CLASS', 'EXAM', 'DEADLINE', 'HOLIDAY', 'EVENT'] as const;
@@ -67,6 +69,10 @@ export function TimetablePage() {
     startOfWeek(new Date(), { weekStartsOn: 1 }),
   );
   const [prefill, setPrefill] = useState<{ date: string; startTime: string } | null>(null);
+  // A teacher cannot edit the timetable, so opening a period offers the one
+  // thing they can do about it: ask for it to be covered.
+  const [requestingCover, setRequestingCover] = useState<any | null>(null);
+  const isTeacher = user?.role === 'TEACHER';
   const [editing, setEditing] = useState<any | null>(null);
   const [creating, setCreating] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState<any | null>(null);
@@ -221,8 +227,8 @@ export function TimetablePage() {
         <WeekGrid
           weekStart={weekStart}
           events={data ?? []}
-          canManage={canManage}
-          onEdit={(e) => setEditing(e)}
+          canManage={canManage || isTeacher}
+          onEdit={(e) => (canManage ? setEditing(e) : isTeacher ? setRequestingCover(e) : undefined)}
           onDelete={(e) => setConfirmDelete(e)}
           onAddAt={(day, hour) => {
             setPrefill({
@@ -305,6 +311,10 @@ export function TimetablePage() {
           ))}
         </div>
       )}
+
+      <RequestCoverModal event={requestingCover} onClose={() => setRequestingCover(null)} />
+
+      {(canManage || isTeacher) && <SubstitutionsPanel role={user!.role} />}
 
       <EntryModal
         open={creating || !!editing}
@@ -1132,5 +1142,256 @@ function WeekGrid({
         )}
       </div>
     </Card>
+  );
+}
+
+/**
+ * Cover requests. The master timetable belongs to the academic office, so a
+ * teacher who cannot take a period asks for it to be covered rather than
+ * editing the schedule — and the office decides who takes it.
+ */
+function SubstitutionsPanel({ role }: { role: string }) {
+  const qc = useQueryClient();
+  const isTeacher = role === 'TEACHER';
+  const [deciding, setDeciding] = useState<any | null>(null);
+  const [coverId, setCoverId] = useState('');
+  const [note, setNote] = useState('');
+
+  const { data: requests, isLoading } = useQuery({
+    queryKey: ['substitutions'],
+    queryFn: async () => (await api.get<any[]>('/substitutions')).data,
+  });
+
+  const { data: teachers } = useQuery({
+    queryKey: ['users', 'teachers'],
+    queryFn: async () =>
+      (await api.get<any>('/users', { params: { role: 'TEACHER', limit: 200 } })).data,
+    enabled: !!deciding,
+  });
+
+  const done = () => {
+    setDeciding(null);
+    setCoverId('');
+    setNote('');
+    qc.invalidateQueries({ queryKey: ['substitutions'] });
+  };
+
+  const cancel = useMutation({
+    mutationFn: async (id: string) => (await api.patch(`/substitutions/${id}/cancel`)).data,
+    onSuccess: done,
+  });
+
+  const decide = useMutation({
+    mutationFn: async (approve: boolean) =>
+      (
+        await api.patch(`/substitutions/${deciding.id}/decide`, {
+          approve,
+          coverId: approve ? coverId || undefined : undefined,
+          note: note || undefined,
+        })
+      ).data,
+    onSuccess: done,
+  });
+
+  const pending = (requests ?? []).filter((r: any) => r.status === 'PENDING');
+
+  return (
+    <>
+      <Card
+        className="mt-6"
+        title={isTeacher ? 'My cover requests' : 'Cover requests'}
+        action={
+          pending.length > 0 ? (
+            <Badge tone="warn">{pending.length} awaiting a decision</Badge>
+          ) : undefined
+        }
+      >
+        {isLoading ? (
+          <Loading />
+        ) : !requests?.length ? (
+          <p className="text-sm text-slate-500">
+            {isTeacher
+              ? 'None yet. Open a period on your timetable to ask for it to be covered.'
+              : 'No teacher has asked for a period to be covered.'}
+          </p>
+        ) : (
+          <Table
+            headers={
+              isTeacher
+                ? ['Period', 'When', 'Reason', 'Status', '']
+                : ['Period', 'When', 'Teacher', 'Reason', 'Status', '']
+            }
+          >
+            {requests.map((r: any) => (
+              <tr key={r.id}>
+                <td className="td font-medium">{r.event.title}</td>
+                <td className="td text-slate-600">
+                  {format(new Date(r.event.startAt), 'EEE d MMM, HH:mm')}
+                </td>
+                {!isTeacher && <td className="td text-slate-600">{r.teacher.fullName}</td>}
+                <td className="td text-slate-600">{r.reason}</td>
+                <td className="td">
+                  <StatusBadge status={r.status} />
+                  {r.cover && (
+                    <span className="block text-xs text-slate-500">
+                      covered by {r.cover.fullName}
+                    </span>
+                  )}
+                </td>
+                <td className="td text-right">
+                  {r.status !== 'PENDING' ? null : isTeacher ? (
+                    <button
+                      type="button"
+                      className="btn-secondary text-xs"
+                      onClick={() => cancel.mutate(r.id)}
+                    >
+                      Withdraw
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      className="btn-secondary text-xs"
+                      onClick={() => setDeciding(r)}
+                    >
+                      Decide
+                    </button>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </Table>
+        )}
+      </Card>
+
+      <Modal
+        open={!!deciding}
+        title="Who covers this period?"
+        onClose={() => setDeciding(null)}
+        footer={
+          <>
+            <button
+              type="button"
+              className="btn-secondary"
+              disabled={decide.isPending}
+              onClick={() => decide.mutate(false)}
+            >
+              Decline
+            </button>
+            <button
+              type="button"
+              className="btn-primary"
+              disabled={!coverId || decide.isPending}
+              onClick={() => decide.mutate(true)}
+            >
+              {decide.isPending ? 'Saving…' : 'Approve cover'}
+            </button>
+          </>
+        }
+      >
+        {deciding && (
+          <>
+            <p className="mb-4 text-sm text-ink-soft">
+              <strong>{deciding.teacher.fullName}</strong> cannot take{' '}
+              <strong>{deciding.event.title}</strong> on{' '}
+              {format(new Date(deciding.event.startAt), 'EEEE d MMMM, HH:mm')}.
+            </p>
+            <p className="mb-4 rounded-md border border-slate-200 bg-slate-50 p-3 text-sm text-ink-soft">
+              {deciding.reason}
+            </p>
+
+            <Field label="Teacher covering" hint="Required to approve.">
+              <select className="input" value={coverId} onChange={(e) => setCoverId(e.target.value)}>
+                <option value="">Select a teacher…</option>
+                {teachers?.items
+                  ?.filter((t: any) => t.id !== deciding.teacher.id)
+                  .map((t: any) => (
+                    <option key={t.id} value={t.id}>
+                      {t.fullName}
+                    </option>
+                  ))}
+              </select>
+            </Field>
+
+            <Field label="Note" hint="Sent to the teacher. Useful when declining.">
+              <textarea
+                className="input"
+                rows={2}
+                value={note}
+                onChange={(e) => setNote(e.target.value)}
+              />
+            </Field>
+
+            {decide.isError && (
+              <p className="mt-2 text-sm text-red-600">{errorMessage(decide.error)}</p>
+            )}
+          </>
+        )}
+      </Modal>
+    </>
+  );
+}
+
+/** A teacher asks for one period to be covered. */
+function RequestCoverModal({
+  event,
+  onClose,
+}: {
+  event: any | null;
+  onClose: () => void;
+}) {
+  const qc = useQueryClient();
+  const [reason, setReason] = useState('');
+
+  const ask = useMutation({
+    mutationFn: async () =>
+      (await api.post('/substitutions', { eventId: event.id, reason })).data,
+    onSuccess: () => {
+      setReason('');
+      qc.invalidateQueries({ queryKey: ['substitutions'] });
+      onClose();
+    },
+  });
+
+  return (
+    <Modal
+      open={!!event}
+      title="Ask for this period to be covered"
+      onClose={onClose}
+      footer={
+        <>
+          <button type="button" className="btn-secondary" onClick={onClose}>
+            Cancel
+          </button>
+          <button
+            type="button"
+            className="btn-primary"
+            disabled={reason.trim().length < 4 || ask.isPending}
+            onClick={() => ask.mutate()}
+          >
+            {ask.isPending ? 'Sending…' : 'Send request'}
+          </button>
+        </>
+      }
+    >
+      {event && (
+        <>
+          <p className="mb-4 text-sm text-ink-soft">
+            <strong>{event.title}</strong> —{' '}
+            {format(new Date(event.startAt), 'EEEE d MMMM, HH:mm')}. The academic admin decides who
+            takes it; the timetable is not changed until they do.
+          </p>
+          <Field label="Why can you not take it?" hint="The academic admin sees this.">
+            <textarea
+              className="input"
+              rows={3}
+              placeholder="e.g. Attending the district science fair"
+              value={reason}
+              onChange={(e) => setReason(e.target.value)}
+            />
+          </Field>
+          {ask.isError && <p className="text-sm text-red-600">{errorMessage(ask.error)}</p>}
+        </>
+      )}
+    </Modal>
   );
 }

@@ -24,10 +24,11 @@ import type { Role } from './auth';
 
 /**
  * Sidebar sections, in the order they appear — which is the order the portal
- * is actually used in. An admin sets up schools, then the year, then classes,
- * then subjects, then the people; only after that does a timetable or a
- * register mean anything. Grouping the screens by what they are rather than
- * by when they are needed left an admin guessing where to start.
+ * is actually used in. Institution Setup runs schools, then the year, then
+ * classes, then subjects, then the people; only after that does a timetable or
+ * a register mean anything, so its items carry a step number. Grouping the
+ * screens by what they are rather than by when they are needed left an admin
+ * guessing where to start.
  */
 export const NAV_GROUPS = [
   'main',
@@ -42,8 +43,8 @@ export type NavGroup = (typeof NAV_GROUPS)[number];
 
 export const GROUP_LABELS: Record<NavGroup, string | null> = {
   main: null, // Dashboard sits above the first heading
-  setup: 'Set up · step by step',
-  teaching: 'Teaching & learning',
+  setup: 'Institution Setup',
+  teaching: 'Teaching & Learning',
   insights: 'Insights',
   communication: 'Communication',
   system: 'System',

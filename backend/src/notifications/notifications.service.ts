@@ -150,6 +150,19 @@ export class NotificationsService {
    * all schools is read everywhere. Someone attached to a school therefore
    * sees both, and never another school's business.
    */
+  /** Clears one of a person's own notifications. */
+  async dismiss(userId: string, id: string) {
+    const { count } = await this.prisma.notification.deleteMany({ where: { id, userId } });
+    if (count === 0) throw new NotFoundException('Notification not found.');
+    return { id, deleted: true };
+  }
+
+  /** Clears the lot. */
+  async clearAll(userId: string) {
+    const { count } = await this.prisma.notification.deleteMany({ where: { userId } });
+    return { deleted: count };
+  }
+
   /** Takes a notice down. Whoever wrote it, or the school it speaks for. */
   async removeAnnouncement(id: string, actor: { id: string; role: Role; siteId?: string | null }) {
     const notice = await this.prisma.announcement.findUnique({ where: { id } });

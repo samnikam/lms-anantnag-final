@@ -42,6 +42,16 @@ export class NotificationsController {
     return this.notifications.markAllRead(userId);
   }
 
+  @Delete('notifications/clear-all')
+  clearAll(@CurrentUser('id') userId: string) {
+    return this.notifications.clearAll(userId);
+  }
+
+  @Delete('notifications/:id')
+  dismiss(@Param('id') id: string, @CurrentUser('id') userId: string) {
+    return this.notifications.dismiss(userId, id);
+  }
+
   @Get('announcements')
   listAnnouncements(
     @CurrentUser() actor: AuthUser,

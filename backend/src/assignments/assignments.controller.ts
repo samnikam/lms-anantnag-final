@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Role } from '@prisma/client';
 import { Type } from 'class-transformer';
@@ -103,6 +103,15 @@ export class AssignmentsController {
     const existing = await this.assignments.findOne(id);
     await this.teacherScope.assertCourseAllowed(actor, (existing as any).courseId);
     return this.assignments.update(id, dto as any);
+  }
+
+  @Delete(':id')
+  @Roles(Role.SUPER_ADMIN, Role.ACADEMIC_ADMIN, Role.TEACHER)
+  @Audit('assignment.delete', 'Assignment')
+  async remove(@Param('id') id: string, @CurrentUser() actor: AuthUser) {
+    const existing = await this.assignments.findOne(id);
+    await this.teacherScope.assertCourseAllowed(actor, (existing as any).courseId);
+    return this.assignments.remove(id);
   }
 
   @Post(':id/publish')

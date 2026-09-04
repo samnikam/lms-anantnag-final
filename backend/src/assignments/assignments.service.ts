@@ -1,4 +1,4 @@
-import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma, SubmissionStatus } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { NotificationsService } from '../notifications/notifications.service';
@@ -180,5 +180,16 @@ export class AssignmentsService {
       },
       orderBy: { submittedAt: 'desc' },
     });
+  }
+
+  /** Removes an assignment and the work submitted against it. */
+  async remove(id: string) {
+    const found = await this.prisma.assignment.findUnique({
+      where: { id },
+      include: { _count: { select: { submissions: true } } },
+    });
+    if (!found) throw new NotFoundException('Assignment not found.');
+    await this.prisma.assignment.delete({ where: { id } });
+    return { id, deleted: true, submissionsRemoved: found._count.submissions };
   }
 }

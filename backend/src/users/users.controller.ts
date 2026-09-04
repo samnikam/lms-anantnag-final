@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { LinkStatus, Role } from '@prisma/client';
 import { Roles } from '../common/decorators/roles.decorator';
@@ -78,6 +78,13 @@ export class UsersController {
     @CurrentUser() actor: AuthUser,
   ) {
     return this.users.update(id, dto, actor.role, actor);
+  }
+
+  @Delete(':id')
+  @Roles(Role.SUPER_ADMIN)
+  @Audit('user.delete', 'User')
+  remove(@Param('id') id: string, @CurrentUser() actor: AuthUser) {
+    return this.users.remove(id, actor);
   }
 
   @Patch(':id/status')

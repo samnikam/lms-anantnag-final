@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { EnrollmentAction, EnrollmentStatus, Prisma, Role } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuthUser } from '../common/decorators/current-user.decorator';
@@ -618,5 +618,25 @@ export class AcademicService {
         `Prerequisite not completed: ${missing.map((m) => m.prerequisite.title).join(', ')}`,
       );
     }
+  }
+
+  /** A year with classes or sections against it is a record, not a mistake. */
+  async deleteYear(id: string) {
+    const year = await this.prisma.academicYear.findUnique({
+      where: { id },
+      include: { _count: { select: { classes: true, batches: true } } },
+    });
+    if (!year) throw new NotFoundException('Academic year not found.');
+    if (year.isCurrent) {
+      throw new BadRequestException('The current academic year cannot be deleted.');
+    }
+    const used = year._count.classes + year._count.batches;
+    if (used > 0) {
+      throw new BadRequestException(
+        `${year.name} has ${year._count.classes} class(es) and ${year._count.batches} section(s). Remove those first.`,
+      );
+    }
+    await this.prisma.academicYear.delete({ where: { id } });
+    return { id, deleted: true };
   }
 }

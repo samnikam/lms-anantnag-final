@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { KeyRound, Link2, Plus } from 'lucide-react';
+import { KeyRound, Link2, Plus, Trash2 } from 'lucide-react';
 import { api, errorMessage } from '../lib/api';
-import { ROLE_LABELS, type Role } from '../lib/auth';
+import { ROLE_LABELS, useAuth, type Role } from '../lib/auth';
 import {
   Card,
   EmptyState,
@@ -26,6 +26,7 @@ const ROLES: Role[] = [
 ];
 
 export function UsersPage() {
+  const { user } = useAuth();
   const qc = useQueryClient();
   const [search, setSearch] = useState('');
   const [role, setRole] = useState('');
@@ -33,6 +34,10 @@ export function UsersPage() {
   // and knowing exactly what you are about to do.
   const [creating, setCreating] = useState<Role | null>(null);
   const [choosing, setChoosing] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState<any | null>(null);
+  // Deleting an account is the Super Admin's alone: suspending keeps the
+  // record, and is what an academic office should reach for.
+  const canDelete = user!.role === 'SUPER_ADMIN';
   const [linking, setLinking] = useState(false);
   const [resetting, setResetting] = useState<any | null>(null);
 
@@ -40,6 +45,14 @@ export function UsersPage() {
     queryKey: ['users', search, role],
     queryFn: async () =>
       (await api.get<any>('/users', { params: { search: search || undefined, role: role || undefined, limit: 50 } })).data,
+  });
+
+  const remove = useMutation({
+    mutationFn: async () => (await api.delete(`/users/${confirmDelete.id}`)).data,
+    onSuccess: () => {
+      setConfirmDelete(null);
+      qc.invalidateQueries({ queryKey: ['users'] });
+    },
   });
 
   const setStatus = useMutation({
@@ -137,6 +150,17 @@ export function UsersPage() {
                     >
                       {u.status === 'ACTIVE' ? 'Suspend' : 'Activate'}
                     </button>
+                    {canDelete && u.id !== user!.id && (
+                      <button
+                        type="button"
+                        className="rounded p-1 text-red-600 hover:bg-red-50"
+                        title={`Delete ${u.fullName}`}
+                        aria-label={`Delete ${u.fullName}`}
+                        onClick={() => setConfirmDelete(u)}
+                      >
+                        <Trash2 className="h-4 w-4" aria-hidden />
+                      </button>
+                    )}
                   </div>
                 </td>
               </tr>
@@ -162,6 +186,51 @@ export function UsersPage() {
           qc.invalidateQueries({ queryKey: ['users'] });
         }}
       />
+      <Modal
+        open={!!confirmDelete}
+        title="Delete this account?"
+        onClose={() => {
+          setConfirmDelete(null);
+          remove.reset();
+        }}
+        footer={
+          <>
+            <button
+              type="button"
+              className="btn-secondary"
+              onClick={() => {
+                setConfirmDelete(null);
+                remove.reset();
+              }}
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              className="btn-danger"
+              disabled={remove.isPending}
+              onClick={() => remove.mutate()}
+            >
+              {remove.isPending ? 'Deleting…' : 'Delete account'}
+            </button>
+          </>
+        }
+      >
+        <p className="text-sm text-ink-soft">
+          <strong>{confirmDelete?.fullName}</strong> ({confirmDelete && ROLE_LABELS[confirmDelete.role as Role]})
+          will be removed, along with their enrolments, submissions and attendance.
+        </p>
+        <p className="mt-2 text-sm text-ink-soft">
+          Registers they marked, audit entries and classes they were in charge of are kept — they
+          simply stop naming this person. This cannot be undone.
+        </p>
+        <p className="mt-3 rounded-md border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
+          Suspending keeps the full record and stops them signing in. Delete only an account created
+          in error.
+        </p>
+        {remove.isError && <p className="mt-3 text-sm text-red-600">{errorMessage(remove.error)}</p>}
+      </Modal>
+
       <LinkParentModal open={linking} onClose={() => setLinking(false)} />
       <ResetPasswordModal user={resetting} onClose={() => setResetting(null)} />
     </>

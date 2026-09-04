@@ -106,6 +106,13 @@ export class SitesController {
     return this.sites.updateClassroom(id, dto);
   }
 
+  @Delete('classrooms/:id')
+  @Roles(Role.SUPER_ADMIN, Role.ACADEMIC_ADMIN)
+  @Audit('classroom.delete', 'Classroom')
+  deleteClassroom(@Param('id') id: string, @CurrentUser() actor: AuthUser) {
+    return this.sites.deleteClassroom(id, actor);
+  }
+
   @Get('devices')
   @Roles(...VIEWERS)
   listDevices(
@@ -135,6 +142,13 @@ export class SitesController {
   @Audit('device.update', 'Device')
   updateDevice(@Param('id') id: string, @Body() dto: UpdateDeviceDto) {
     return this.sites.updateDevice(id, dto);
+  }
+
+  @Delete('devices/:id')
+  @Roles(Role.SUPER_ADMIN, Role.ACADEMIC_ADMIN)
+  @Audit('device.delete', 'Device')
+  deleteDevice(@Param('id') id: string, @CurrentUser() actor: AuthUser) {
+    return this.sites.deleteDevice(id, actor);
   }
 
   /**

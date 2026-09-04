@@ -43,6 +43,13 @@ export class AcademicController {
     return this.academic.createYear(dto);
   }
 
+  @Delete('academic-years/:id')
+  @Roles(Role.SUPER_ADMIN)
+  @Audit('academic_year.delete', 'AcademicYear')
+  deleteYear(@Param('id') id: string) {
+    return this.academic.deleteYear(id);
+  }
+
   @Patch('academic-years/:id/current')
   @Roles(...ADMINS)
   @Audit('academic_year.set_current', 'AcademicYear')

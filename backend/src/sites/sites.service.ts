@@ -2,6 +2,8 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { DeviceStatus, DeviceType, InstitutionType, Prisma } from '@prisma/client';
 import * as argon2 from 'argon2';
 import { PrismaService } from '../prisma/prisma.service';
+import { AuthUser } from '../common/decorators/current-user.decorator';
+import { assertSiteAllowed } from '../common/site-scope';
 
 const CLASSROOM_PUBLIC = {
   id: true,
@@ -302,5 +304,40 @@ export class SitesService {
         ),
       };
     });
+  }
+
+  /** A room goes with its devices; a room that has hosted a class does not. */
+  async deleteClassroom(id: string, actor: AuthUser) {
+    const room = await this.prisma.classroom.findUnique({
+      where: { id },
+      select: { id: true, name: true, siteId: true, _count: { select: { broadcastTargets: true, sessions: true } } },
+    });
+    if (!room) throw new NotFoundException('Classroom not found.');
+    assertSiteAllowed(actor, room.siteId);
+
+    const used = room._count.broadcastTargets + room._count.sessions;
+    if (used > 0) {
+      throw new BadRequestException(
+        `${room.name} has taken part in ${used} broadcast(s). Deleting it would lose that record.`,
+      );
+    }
+
+    await this.prisma.$transaction(async (tx) => {
+      await tx.attendance.updateMany({ where: { classroomId: id }, data: { classroomId: null } });
+      await tx.device.deleteMany({ where: { classroomId: id } });
+      await tx.classroom.delete({ where: { id } });
+    });
+    return { id, deleted: true };
+  }
+
+  async deleteDevice(id: string, actor: AuthUser) {
+    const device = await this.prisma.device.findUnique({
+      where: { id },
+      include: { classroom: { select: { siteId: true } } },
+    });
+    if (!device) throw new NotFoundException('Device not found.');
+    assertSiteAllowed(actor, device.classroom?.siteId ?? null);
+    await this.prisma.device.delete({ where: { id } });
+    return { id, deleted: true };
   }
 }

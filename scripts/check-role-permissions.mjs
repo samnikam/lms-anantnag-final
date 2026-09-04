@@ -299,5 +299,61 @@ ok(
   denied(await call('GET', '/substitutions', tokens.student)),
 );
 
+console.log('\n── Deleting is guarded, and never anonymous ──');
+{
+  const site = (await call('GET', '/sites', tokens.superAdmin)).json[0];
+  const tag = Date.now() % 100000;
+  const room = (
+    await call('POST', '/classrooms', tokens.superAdmin, {
+      siteId: site.id,
+      name: 'Perm probe ' + tag,
+      code: 'PP' + tag,
+    })
+  ).json;
+  const device = (
+    await call('POST', '/devices', tokens.superAdmin, {
+      classroomId: room.id,
+      type: 'OPS_PC',
+      serialNo: 'PP' + tag,
+    })
+  ).json;
+
+  // A route marked @Public() by accident is invisible until something asks.
+  ok(
+    'an anonymous caller cannot delete a device',
+    (await call('DELETE', `/devices/${device.id}`, null)).status === 401,
+  );
+  ok(
+    'a teacher cannot delete a device',
+    denied(await call('DELETE', `/devices/${device.id}`, tokens.teacher)),
+  );
+  ok(
+    'a teacher cannot delete a classroom',
+    denied(await call('DELETE', `/classrooms/${room.id}`, tokens.teacher)),
+  );
+  ok(
+    'an academic admin cannot delete an account',
+    denied(await call('DELETE', '/users/anything', tokens.academicAdmin)),
+  );
+  ok(
+    'a teacher cannot delete an account',
+    denied(await call('DELETE', '/users/anything', tokens.teacher)),
+  );
+  ok(
+    'a student cannot delete an academic year',
+    denied(await call('DELETE', '/academic-years/anything', tokens.student)),
+  );
+
+  ok(
+    'a super admin can delete a device',
+    (await call('DELETE', `/devices/${device.id}`, tokens.superAdmin)).status === 200,
+  );
+  ok(
+    'a super admin can delete a classroom',
+    (await call('DELETE', `/classrooms/${room.id}`, tokens.superAdmin)).status === 200,
+  );
+}
+
+
 console.log(`\n${'='.repeat(60)}\n  ${pass} passed, ${fail} failed\n${'='.repeat(60)}`);
 process.exit(fail ? 1 : 0);

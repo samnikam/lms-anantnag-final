@@ -151,6 +151,63 @@ export class UsersService {
     });
   }
 
+  /**
+   * Removes an account outright.
+   *
+   * Suspending is usually the right call — it keeps the record of what the
+   * person did. Deleting is for an account created in error, so the things that
+   * merely name them (a register they marked, an audit entry, a class they were
+   * in charge of) are detached rather than destroyed, and the work that is
+   * theirs alone goes with them.
+   */
+  async remove(id: string, actor: AuthUser) {
+    const target = await this.prisma.user.findUnique({
+      where: { id },
+      select: { id: true, role: true, siteId: true, fullName: true },
+    });
+    if (!target) throw new NotFoundException('User not found.');
+    if (target.id === actor.id) {
+      throw new BadRequestException('You cannot delete your own account.');
+    }
+    assertCanManageRole(actor.role, target.role);
+    assertSiteAllowed(actor, target.siteId);
+
+    // A live session must keep a host, so one that has already happened blocks
+    // the deletion rather than losing its record.
+    const hosted = await this.prisma.liveSession.count({ where: { hostId: id } });
+    if (hosted > 0) {
+      throw new BadRequestException(
+        `${target.fullName} has hosted ${hosted} live session(s) and cannot be deleted. Suspend the account instead.`,
+      );
+    }
+    const authored = await this.prisma.announcement.count({ where: { authorId: id } });
+    if (authored > 0) {
+      throw new BadRequestException(
+        `${target.fullName} has published ${authored} announcement(s) and cannot be deleted. Suspend the account instead.`,
+      );
+    }
+    const raised = await this.prisma.supportTicket.count({ where: { requesterId: id } });
+    if (raised > 0) {
+      throw new BadRequestException(
+        `${target.fullName} has raised ${raised} support ticket(s) and cannot be deleted. Suspend the account instead.`,
+      );
+    }
+
+    await this.prisma.$transaction(async (tx) => {
+      // Detach what only names them.
+      await tx.schoolClass.updateMany({ where: { classTeacherId: id }, data: { classTeacherId: null } });
+      await tx.classSubject.updateMany({ where: { teacherId: id }, data: { teacherId: null } });
+      await tx.attendance.updateMany({ where: { markedById: id }, data: { markedById: null } });
+      await tx.auditLog.updateMany({ where: { actorId: id }, data: { actorId: null } });
+      await tx.supportTicket.updateMany({ where: { assigneeId: id }, data: { assigneeId: null } });
+      await tx.substitutionRequest.updateMany({ where: { coverId: id }, data: { coverId: null } });
+      await tx.substitutionRequest.updateMany({ where: { decidedById: id }, data: { decidedById: null } });
+      await tx.user.delete({ where: { id } });
+    });
+
+    return { id, deleted: true, fullName: target.fullName };
+  }
+
   async setStatus(id: string, status: UserStatus, actorRole?: Role, actor?: AuthUser) {
     if (actorRole) {
       const target = await this.prisma.user.findUniqueOrThrow({

@@ -128,40 +128,153 @@ function SuperAdminDashboard({ data }: { data: any }) {
 }
 
 function AcademicAdminDashboard({ data }: { data: any }) {
+  const t = data.totals ?? {};
+  const pending = data.attendancePending ?? [];
+
   return (
     <div className="space-y-6">
+      {/* The five figures the set-up sequence builds, in that order. */}
+      <div className="grid gap-4 sm:grid-cols-3 xl:grid-cols-5">
+        <StatCard label="Students" value={t.students ?? 0} />
+        <StatCard label="Teachers" value={t.teachers ?? 0} />
+        <StatCard label="Classes" value={t.classes ?? 0} />
+        <StatCard label="Sections" value={t.sections ?? 0} />
+        <StatCard label="Subjects taught" value={t.subjects ?? 0} />
+      </div>
+
+      {/* What needs attention before the day is out. */}
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <StatCard label="Active sections" value={data.activeBatches} />
-        <StatCard label="Active enrolments" value={data.activeEnrollments} />
-        <StatCard label="Upcoming sessions" value={data.upcomingSessions?.length ?? 0} />
         <StatCard
-          label="Parent links awaiting approval"
-          value={data.pendingParentLinks}
+          label="Registers not yet taken"
+          value={pending.length}
+          tone={pending.length > 0 ? 'warn' : 'good'}
+          hint={pending.length ? 'Today' : 'Every class is marked'}
+        />
+        <StatCard
+          label="Classes without a class teacher"
+          value={data.classesWithoutTeacher ?? 0}
+          tone={data.classesWithoutTeacher > 0 ? 'warn' : 'good'}
+        />
+        <StatCard
+          label="Cover requests"
+          value={data.pendingCover ?? 0}
+          tone={data.pendingCover > 0 ? 'warn' : 'good'}
+          hint={data.pendingCover ? 'Awaiting your decision' : 'Nothing outstanding'}
+        />
+        <StatCard
+          label="Parent links to approve"
+          value={data.pendingParentLinks ?? 0}
           tone={data.pendingParentLinks > 0 ? 'warn' : 'good'}
         />
       </div>
 
-      <Card title="Course completion">
-        {data.courseCompletion?.length ? (
-          <Table headers={['Course', 'Enrolled', 'Completed', 'Completion', 'Certificates']}>
-            {data.courseCompletion.map((row: any) => (
-              <tr key={row.courseId}>
-                <td className="td font-medium">{row.course}</td>
-                <td className="td tabular-nums">{row.enrolled}</td>
-                <td className="td tabular-nums">{row.completed}</td>
-                <td className="td w-48">
-                  <ProgressBar value={row.completionPct} />
-                </td>
-                <td className="td tabular-nums">{row.certificatesIssued}</td>
-              </tr>
-            ))}
-          </Table>
-        ) : (
-          <EmptyState title="No published courses yet" />
-        )}
-      </Card>
+      <div className="grid gap-6 lg:grid-cols-2">
+        <Card
+          title="Today’s classes"
+          action={
+            <Link to="/calendar" className="text-sm text-brand-700">
+              Timetable
+            </Link>
+          }
+        >
+          {data.todaysClasses?.length ? (
+            <Table headers={['Time', 'Period', 'Class']}>
+              {data.todaysClasses.map((c: any) => (
+                <tr key={c.id}>
+                  <td className="td whitespace-nowrap tabular-nums text-slate-500">
+                    {format(new Date(c.startAt), 'HH:mm')}
+                  </td>
+                  <td className="td font-medium">{c.title}</td>
+                  <td className="td text-slate-600">{c.className ?? '—'}</td>
+                </tr>
+              ))}
+            </Table>
+          ) : (
+            <EmptyState
+              title="Nothing scheduled today"
+              description="Add periods on the Timetable."
+            />
+          )}
+        </Card>
 
-      <UpcomingSessions sessions={data.upcomingSessions} />
+        <Card
+          title="Registers still to take"
+          action={
+            <Link to="/attendance" className="text-sm text-brand-700">
+              Attendance
+            </Link>
+          }
+        >
+          {pending.length ? (
+            <Table headers={['Class', 'On roll', 'Class teacher']}>
+              {pending.map((c: any) => (
+                <tr key={c.id}>
+                  <td className="td font-medium">{c.name}</td>
+                  <td className="td tabular-nums">{c.learners}</td>
+                  <td className="td text-slate-600">
+                    {c.classTeacher ?? (
+                      <span className="text-xs text-amber-700">Not assigned</span>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </Table>
+          ) : (
+            <EmptyState
+              title="Every register is taken"
+              description="Nothing outstanding for today."
+            />
+          )}
+        </Card>
+      </div>
+
+      <div className="grid gap-6 lg:grid-cols-2">
+        <Card title="Exams in the next seven days">
+          {data.upcomingExams?.length ? (
+            <Table headers={['When', 'Exam', 'Class']}>
+              {data.upcomingExams.map((e: any) => (
+                <tr key={e.id}>
+                  <td className="td whitespace-nowrap text-slate-500">
+                    {format(new Date(e.startAt), 'EEE d MMM, HH:mm')}
+                  </td>
+                  <td className="td font-medium">{e.title}</td>
+                  <td className="td text-slate-600">{e.className ?? '—'}</td>
+                </tr>
+              ))}
+            </Table>
+          ) : (
+            <EmptyState
+              title="No exams scheduled"
+              description="Add one on the Timetable as an exam entry."
+            />
+          )}
+        </Card>
+
+        <Card
+          title="Recent announcements"
+          action={
+            <Link to="/announcements" className="text-sm text-brand-700">
+              View all
+            </Link>
+          }
+        >
+          {data.announcements?.length ? (
+            <Table headers={['Notice', 'From', 'When']}>
+              {data.announcements.map((a: any) => (
+                <tr key={a.id}>
+                  <td className="td font-medium">{a.title}</td>
+                  <td className="td text-slate-600">{a.author}</td>
+                  <td className="td whitespace-nowrap text-slate-500">
+                    {format(new Date(a.publishedAt), 'dd MMM')}
+                  </td>
+                </tr>
+              ))}
+            </Table>
+          ) : (
+            <EmptyState title="No announcements yet" />
+          )}
+        </Card>
+      </div>
     </div>
   );
 }

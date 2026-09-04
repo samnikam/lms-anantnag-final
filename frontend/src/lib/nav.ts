@@ -102,7 +102,6 @@ export const NAV_ITEMS: NavItem[] = [
   {
     to: '/library',
     label: 'Content Library',
-    labelByRole: { ACADEMIC_ADMIN: 'Content' },
     icon: LibraryBig,
     group: 'teaching',
     roles: ['SUPER_ADMIN', 'ACADEMIC_ADMIN', 'TEACHER', 'CONTENT_MANAGER'],
@@ -163,8 +162,6 @@ export const NAV_ITEMS: NavItem[] = [
     icon: Users,
     group: 'setup',
     roles: ['SUPER_ADMIN', 'ACADEMIC_ADMIN'],
-    // An Academic Admin manages teaching staff and learners, never administrators.
-    labelByRole: { ACADEMIC_ADMIN: 'Teachers & Students' },
   },
   {
     to: '/classes',
@@ -186,7 +183,7 @@ export const NAV_ITEMS: NavItem[] = [
     icon: Building2,
     group: 'setup',
     roles: ['SUPER_ADMIN', 'ACADEMIC_ADMIN', 'DEPT_OVERSIGHT'],
-    labelByRole: { ACADEMIC_ADMIN: 'My School & Classrooms', DEPT_OVERSIGHT: 'Site Monitoring' },
+    labelByRole: { DEPT_OVERSIGHT: 'Site Monitoring' },
   },
 
   // ── Insights ──────────────────────────────────────────────────────────

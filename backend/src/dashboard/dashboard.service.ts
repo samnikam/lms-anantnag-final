@@ -23,7 +23,7 @@ export class DashboardService {
       case Role.SUPER_ADMIN:
         return this.superAdmin();
       case Role.ACADEMIC_ADMIN:
-        return this.academicAdmin();
+        return this.academicAdmin(user.siteId ?? null);
       case Role.TEACHER:
         return this.teacher(user.id);
       case Role.STUDENT:
@@ -70,22 +70,134 @@ export class DashboardService {
     };
   }
 
-  private async academicAdmin() {
-    const [batches, enrollments, completion, upcoming, pendingLinks] = await Promise.all([
-      this.prisma.batch.count({ where: { active: true } }),
-      this.prisma.enrollment.count({ where: { status: EnrollmentStatus.ACTIVE } }),
-      this.reports.completionReport(),
-      this.upcomingSessions(),
+  /**
+   * The academic office's own figures, laid out like the Super Admin's so the
+   * two read the same way — but counting the things an academic admin acts on,
+   * and only for their school when they belong to one.
+   */
+  private async academicAdmin(siteId: string | null) {
+    const site = siteId ? { siteId } : {};
+    const classWhere = { active: true, ...site };
+
+    const dayStart = new Date();
+    dayStart.setHours(0, 0, 0, 0);
+    const dayEnd = new Date(dayStart);
+    dayEnd.setDate(dayEnd.getDate() + 1);
+    const weekEnd = new Date(dayStart);
+    weekEnd.setDate(weekEnd.getDate() + 7);
+
+    const [
+      students,
+      teachers,
+      classes,
+      sections,
+      subjects,
+      todaysClasses,
+      upcomingExams,
+      pendingCover,
+      pendingLinks,
+      announcements,
+    ] = await Promise.all([
+      this.prisma.user.count({ where: { role: Role.STUDENT, status: 'ACTIVE', ...site } }),
+      this.prisma.user.count({ where: { role: Role.TEACHER, status: 'ACTIVE', ...site } }),
+      this.prisma.schoolClass.count({ where: classWhere }),
+      this.prisma.batch.count({ where: { active: true, ...site } }),
+      this.prisma.classSubject.count({ where: { class: classWhere } }),
+      this.prisma.calendarEvent.findMany({
+        where: {
+          startAt: { gte: dayStart, lt: dayEnd },
+          type: { in: ['CLASS', 'EXAM'] },
+          ...(siteId ? { OR: [{ siteId }, { siteId: null }] } : {}),
+        },
+        include: { schoolClass: { select: { name: true } } },
+        orderBy: { startAt: 'asc' },
+      }),
+      this.prisma.calendarEvent.findMany({
+        where: {
+          type: 'EXAM',
+          startAt: { gte: dayStart, lt: weekEnd },
+          ...(siteId ? { OR: [{ siteId }, { siteId: null }] } : {}),
+        },
+        include: { schoolClass: { select: { name: true } } },
+        orderBy: { startAt: 'asc' },
+        take: 10,
+      }),
+      this.prisma.substitutionRequest.count({ where: { status: 'PENDING' } }),
       this.prisma.parentStudentLink.count({ where: { status: 'PENDING' } }),
+      this.prisma.announcement.findMany({
+        where: siteId ? { OR: [{ siteId }, { siteId: null }] } : {},
+        include: { author: { select: { fullName: true } } },
+        orderBy: [{ pinned: 'desc' }, { publishedAt: 'desc' }],
+        take: 5,
+      }),
     ]);
+
+    // Which classes have not had their register taken today: the one thing an
+    // academic admin most needs to chase before the day is out.
+    const rolls = await this.prisma.schoolClass.findMany({
+      where: classWhere,
+      select: {
+        id: true,
+        name: true,
+        _count: { select: { learners: true } },
+        classTeacher: { select: { fullName: true } },
+      },
+      orderBy: [{ level: 'asc' }, { name: 'asc' }],
+    });
+    const markedToday = await this.prisma.attendance.groupBy({
+      by: ['classId'],
+      where: { classId: { in: rolls.map((r) => r.id) }, date: { gte: dayStart, lt: dayEnd } },
+      _count: true,
+    });
+    const marked = new Set(markedToday.map((m) => m.classId));
+    const attendancePending = rolls
+      .filter((r) => r._count.learners > 0 && !marked.has(r.id))
+      .map((r) => ({
+        id: r.id,
+        name: r.name,
+        learners: r._count.learners,
+        classTeacher: r.classTeacher?.fullName ?? null,
+      }));
+
+    const classesWithoutTeacher = rolls.length
+      ? await this.prisma.schoolClass.count({ where: { ...classWhere, classTeacherId: null } })
+      : 0;
 
     return {
       role: Role.ACADEMIC_ADMIN,
-      activeBatches: batches,
-      activeEnrollments: enrollments,
-      courseCompletion: completion.slice(0, 10),
-      upcomingSessions: upcoming,
+      scopedToSiteId: siteId,
+      totals: {
+        students,
+        teachers,
+        classes,
+        sections,
+        subjects,
+      },
+      todaysClasses: todaysClasses.map((e) => ({
+        id: e.id,
+        title: e.title,
+        startAt: e.startAt,
+        endAt: e.endAt,
+        className: e.schoolClass?.name ?? null,
+        type: e.type,
+      })),
+      upcomingExams: upcomingExams.map((e) => ({
+        id: e.id,
+        title: e.title,
+        startAt: e.startAt,
+        className: e.schoolClass?.name ?? null,
+      })),
+      attendancePending,
+      classesWithoutTeacher,
+      pendingCover,
       pendingParentLinks: pendingLinks,
+      announcements: announcements.map((a) => ({
+        id: a.id,
+        title: a.title,
+        author: a.author.fullName,
+        publishedAt: a.publishedAt,
+        pinned: a.pinned,
+      })),
     };
   }
 

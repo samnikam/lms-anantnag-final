@@ -26,7 +26,10 @@ export class UpdateClassDto {
 }
 
 export class AddClassSubjectDto {
-  @IsString() courseId!: string;
+  /** A class takes a whole scheme of subjects, so they are chosen together.
+   *  courseId is kept for existing callers. */
+  @IsOptional() @IsString() courseId?: string;
+  @IsOptional() @IsArray() @IsString({ each: true }) courseIds?: string[];
   @IsOptional() @IsString() teacherId?: string;
   @IsOptional() @IsInt() periodsPerWeek?: number;
 }

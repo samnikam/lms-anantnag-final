@@ -98,7 +98,13 @@ export class AcademicController {
     @Body() dto: AddClassSubjectDto,
     @CurrentUser() actor: AuthUser,
   ) {
-    return this.academic.addSubjectToClass(id, dto, actor);
+    const ids = dto.courseIds?.length ? dto.courseIds : dto.courseId ? [dto.courseId] : [];
+    return this.academic.addSubjectsToClass(
+      id,
+      ids,
+      { teacherId: dto.teacherId, periodsPerWeek: dto.periodsPerWeek },
+      actor,
+    );
   }
 
   @Delete('classes/:id/subjects/:courseId')

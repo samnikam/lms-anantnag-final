@@ -137,6 +137,26 @@ export class AcademicService {
    * the teacher here also assigns them to the course itself, so the teacher's
    * own dashboard and course list agree with the class record.
    */
+  /** Puts a whole scheme of subjects on a class in one action. */
+  async addSubjectsToClass(
+    classId: string,
+    courseIds: string[],
+    data: { teacherId?: string; periodsPerWeek?: number },
+    actor: AuthUser,
+  ) {
+    const added = [];
+    const failed = [];
+    for (const courseId of courseIds) {
+      try {
+        added.push(await this.addSubjectToClass(classId, { ...data, courseId }, actor));
+      } catch (e: any) {
+        // One subject failing must not drop the rest of the scheme.
+        failed.push({ courseId, message: e?.message ?? 'Could not add this subject.' });
+      }
+    }
+    return { added: added.length, failed, subjects: added };
+  }
+
   async addSubjectToClass(
     classId: string,
     data: { courseId: string; teacherId?: string; periodsPerWeek?: number },

@@ -533,7 +533,7 @@ function SectionModal({
  */
 function SubjectsPanel({ schoolClass, onChanged }: { schoolClass: any; onChanged: () => void }) {
   const [adding, setAdding] = useState(false);
-  const [courseId, setCourseId] = useState('');
+  const [pickedCourses, setPickedCourses] = useState<string[]>([]);
   const [teacherId, setTeacherId] = useState('');
   const [newName, setNewName] = useState('');
 
@@ -551,18 +551,21 @@ function SubjectsPanel({ schoolClass, onChanged }: { schoolClass: any; onChanged
 
   const reset = () => {
     setAdding(false);
-    setCourseId('');
+    setPickedCourses([]);
     setTeacherId('');
     setNewName('');
   };
 
+  const toggleCourse = (id: string) =>
+    setPickedCourses((p) => (p.includes(id) ? p.filter((x) => x !== id) : [...p, id]));
+
   const attach = useMutation({
     mutationFn: async () => {
-      let id = courseId;
+      const ids = [...pickedCourses];
 
-      // Creating the subject inline saves a trip to another screen; the code
-      // the database needs is derived rather than demanded.
-      if (!id && newName.trim()) {
+      // Creating a subject inline saves a trip to another screen; the code the
+      // database needs is derived rather than demanded.
+      if (newName.trim()) {
         const base =
           newName.toUpperCase().replace(/[^A-Z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 12) || 'SUBJ';
         const created = (
@@ -571,13 +574,14 @@ function SubjectsPanel({ schoolClass, onChanged }: { schoolClass: any; onChanged
             code: base + '-' + String(Date.now()).slice(-3),
           })
         ).data;
-        id = created.id;
+        ids.push(created.id);
       }
 
       return (
         await api.post(`/classes/${schoolClass.id}/subjects`, {
-          courseId: id,
-          teacherId: teacherId || undefined,
+          courseIds: ids,
+          // One teacher can only be meant when one subject is being added.
+          teacherId: ids.length === 1 ? teacherId || undefined : undefined,
         })
       ).data;
     },
@@ -594,6 +598,7 @@ function SubjectsPanel({ schoolClass, onChanged }: { schoolClass: any; onChanged
   });
 
   const taken = new Set((schoolClass.subjects ?? []).map((s: any) => s.course.id));
+  const available = (courses?.items ?? []).filter((c: any) => !taken.has(c.id));
 
   return (
     <div className="mt-4 rounded-md border border-slate-200 bg-slate-50 p-4">
@@ -643,57 +648,97 @@ function SubjectsPanel({ schoolClass, onChanged }: { schoolClass: any; onChanged
 
       {adding && (
         <div className="mt-4 border-t border-slate-200 pt-4">
-          <Field label="Subject" hint="Pick one already in the portal, or type a new name below.">
-            <select
-              className="input"
-              value={courseId}
-              onChange={(e) => {
-                setCourseId(e.target.value);
-                if (e.target.value) setNewName('');
-              }}
-            >
-              <option value="">Select an existing subject…</option>
-              {courses?.items
-                ?.filter((c: any) => !taken.has(c.id))
-                .map((c: any) => (
-                  <option key={c.id} value={c.id}>
-                    {c.title}
-                  </option>
-                ))}
-            </select>
+          <Field
+            label={`Subjects${pickedCourses.length ? ` — ${pickedCourses.length} selected` : ''}`}
+            hint="Tick every subject this class studies. A class takes a whole scheme, not one at a time."
+          >
+            <div className="max-h-64 divide-y divide-slate-100 overflow-y-auto rounded-md border border-slate-200 bg-white">
+              {available.length === 0 && (
+                <p className="p-3 text-sm text-slate-500">
+                  Every subject in the portal is already on this class. Add a new one below.
+                </p>
+              )}
+              {available.map((c: any) => (
+                <label
+                  key={c.id}
+                  className="flex cursor-pointer items-center gap-3 px-3 py-2 text-sm hover:bg-brand-50"
+                >
+                  <input
+                    type="checkbox"
+                    className="h-4 w-4"
+                    checked={pickedCourses.includes(c.id)}
+                    onChange={() => toggleCourse(c.id)}
+                  />
+                  <span className="flex-1">
+                    <span className="font-medium">{c.title}</span>
+                    <span className="ml-2 text-xs text-slate-500">{c.code}</span>
+                  </span>
+                </label>
+              ))}
+            </div>
           </Field>
 
-          <Field label="…or add a new subject">
+          {available.length > 1 && (
+            <button
+              type="button"
+              className="mb-3 text-xs font-medium text-brand-700 hover:underline"
+              onClick={() =>
+                setPickedCourses(
+                  pickedCourses.length === available.length ? [] : available.map((c: any) => c.id),
+                )
+              }
+            >
+              {pickedCourses.length === available.length ? 'Clear all' : 'Select all subjects'}
+            </button>
+          )}
+
+          {/* A new subject is added alongside whatever is ticked, not instead
+              of it — the two are no longer an either/or. */}
+          <Field label="…and add a new subject not in the list">
             <input
               className="input"
               placeholder="e.g. Mathematics"
               value={newName}
-              onChange={(e) => {
-                setNewName(e.target.value);
-                if (e.target.value) setCourseId('');
-              }}
+              onChange={(e) => setNewName(e.target.value)}
             />
           </Field>
 
-          <Field label="Teacher" hint="Optional now; the teacher can be assigned later.">
-            <select className="input" value={teacherId} onChange={(e) => setTeacherId(e.target.value)}>
-              <option value="">Not assigned yet</option>
-              {teachers?.items?.map((t: any) => (
-                <option key={t.id} value={t.id}>
-                  {t.fullName}
-                </option>
-              ))}
-            </select>
-          </Field>
+          {/* A single teacher can only be meant for a single subject. Adding a
+              scheme means assigning its teachers per subject afterwards. */}
+          {pickedCourses.length + (newName.trim() ? 1 : 0) <= 1 ? (
+            <Field label="Teacher" hint="Optional now; the teacher can be assigned later.">
+              <select
+                className="input"
+                value={teacherId}
+                onChange={(e) => setTeacherId(e.target.value)}
+              >
+                <option value="">Not assigned yet</option>
+                {teachers?.items?.map((t: any) => (
+                  <option key={t.id} value={t.id}>
+                    {t.fullName}
+                  </option>
+                ))}
+              </select>
+            </Field>
+          ) : (
+            <p className="mb-3 text-xs text-slate-500">
+              Assign a teacher to each subject from the list above once they are added — different
+              subjects are taught by different people.
+            </p>
+          )}
 
           <div className="flex gap-2">
             <button
               type="button"
               className="btn-primary"
-              disabled={(!courseId && !newName.trim()) || attach.isPending}
+              disabled={(!pickedCourses.length && !newName.trim()) || attach.isPending}
               onClick={() => attach.mutate()}
             >
-              {attach.isPending ? 'Adding…' : 'Add to class'}
+              {attach.isPending
+                ? 'Adding…'
+                : `Add ${pickedCourses.length + (newName.trim() ? 1 : 0) || ''} subject${
+                    pickedCourses.length + (newName.trim() ? 1 : 0) === 1 ? '' : 's'
+                  } to class`.replace('  ', ' ')}
             </button>
             <button type="button" className="btn-secondary" onClick={reset}>
               Cancel

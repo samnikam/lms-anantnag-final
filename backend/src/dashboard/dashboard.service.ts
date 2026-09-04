@@ -25,7 +25,7 @@ export class DashboardService {
       case Role.ACADEMIC_ADMIN:
         return this.academicAdmin(user.siteId ?? null);
       case Role.TEACHER:
-        return this.teacher(user.id);
+        return this.teacher(user.id, user.siteId ?? null);
       case Role.STUDENT:
         return this.student(user.id);
       case Role.PARENT:
@@ -201,9 +201,107 @@ export class DashboardService {
     };
   }
 
-  private async teacher(teacherId: string) {
+  private async teacher(teacherId: string, siteId: string | null) {
+    // What this teacher holds: the classes they are in charge of or teach a
+    // subject in, at their own school. A subject is shared by every school, so
+    // the class assignment is what ties them to one.
+    const [classSubjects, inCharge] = await Promise.all([
+      this.prisma.classSubject.findMany({
+        where: { teacherId, ...(siteId ? { class: { siteId } } : {}) },
+        include: {
+          course: { select: { id: true, title: true, code: true, state: true } },
+          class: {
+            select: {
+              id: true,
+              name: true,
+              site: { select: { id: true, name: true } },
+              _count: { select: { learners: true } },
+            },
+          },
+        },
+      }),
+      this.prisma.schoolClass.findMany({
+        where: { classTeacherId: teacherId, ...(siteId ? { siteId } : {}) },
+        select: {
+          id: true,
+          name: true,
+          site: { select: { id: true, name: true } },
+          _count: { select: { learners: true } },
+        },
+      }),
+    ]);
+
+    const myClasses = [
+      ...inCharge.map((c) => ({
+        id: c.id,
+        name: c.name,
+        site: c.site.name,
+        learners: c._count.learners,
+        role: 'Class teacher',
+        subject: null as string | null,
+      })),
+      ...classSubjects.map((cs) => ({
+        id: cs.class.id,
+        name: cs.class.name,
+        site: cs.class.site.name,
+        learners: cs.class._count.learners,
+        role: 'Subject teacher',
+        subject: cs.course.title,
+      })),
+    ];
+
+    const mySubjects = [
+      ...new Map(classSubjects.map((cs) => [cs.course.id, cs.course])).values(),
+    ];
+
+    const dayStart = new Date();
+    dayStart.setHours(0, 0, 0, 0);
+    const dayEnd = new Date(dayStart);
+    dayEnd.setDate(dayEnd.getDate() + 1);
+
+    const classIds = [...new Set(myClasses.map((c) => c.id))];
+    const myCourseIds = mySubjects.map((c) => c.id);
+
+    const [todaysPeriods, registersDue, myCover] = await Promise.all([
+      this.prisma.calendarEvent.findMany({
+        where: {
+          startAt: { gte: dayStart, lt: dayEnd },
+          AND: [
+            {
+              OR: [
+                ...(classIds.length ? [{ classId: { in: classIds } }] : []),
+                ...(myCourseIds.length ? [{ courseId: { in: myCourseIds } }] : []),
+                { createdById: teacherId },
+              ],
+            },
+            ...(siteId ? [{ OR: [{ siteId }, { siteId: null }] }] : []),
+          ],
+        },
+        include: { schoolClass: { select: { name: true } } },
+        orderBy: { startAt: 'asc' },
+      }),
+      // Classes of theirs with nobody marked yet today.
+      this.prisma.schoolClass.findMany({
+        where: { id: { in: classIds } },
+        select: { id: true, name: true, _count: { select: { learners: true } } },
+      }),
+      this.prisma.substitutionRequest.count({
+        where: { teacherId, status: 'PENDING' },
+      }),
+    ]);
+
+    const markedToday = await this.prisma.attendance.groupBy({
+      by: ['classId'],
+      where: { classId: { in: classIds }, date: { gte: dayStart, lt: dayEnd } },
+      _count: true,
+    });
+    const marked = new Set(markedToday.map((m) => m.classId));
+    const attendancePending = registersDue
+      .filter((c) => c._count.learners > 0 && !marked.has(c.id))
+      .map((c) => ({ id: c.id, name: c.name, learners: c._count.learners }));
+
     const courses = await this.prisma.course.findMany({
-      where: { teachers: { some: { teacherId } } },
+      where: { OR: [{ teachers: { some: { teacherId } } }, { id: { in: myCourseIds } }] },
       include: { _count: { select: { enrollments: true } } },
     });
 
@@ -225,6 +323,20 @@ export class DashboardService {
 
     return {
       role: Role.TEACHER,
+      school: inCharge[0]?.site.name ?? classSubjects[0]?.class.site.name ?? null,
+      myClasses,
+      mySubjects: mySubjects.map((c) => ({ id: c.id, title: c.title, code: c.code })),
+      totalStudents: myClasses.reduce((sum, c) => sum + c.learners, 0),
+      todaysPeriods: todaysPeriods.map((e) => ({
+        id: e.id,
+        title: e.title,
+        type: e.type,
+        startAt: e.startAt,
+        endAt: e.endAt,
+        className: e.schoolClass?.name ?? null,
+      })),
+      attendancePending,
+      pendingCoverRequests: myCover,
       myCourses: courses.map((c) => ({
         id: c.id,
         title: c.title,

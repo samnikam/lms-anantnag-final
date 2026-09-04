@@ -280,11 +280,30 @@ function AcademicAdminDashboard({ data }: { data: any }) {
 }
 
 function TeacherDashboard({ data }: { data: any }) {
+  const classes = data.myClasses ?? [];
+  const pending = data.attendancePending ?? [];
+
   return (
     <div className="space-y-6">
+      {data.school && (
+        <p className="text-sm text-ink-soft">
+          Showing <strong>{data.school}</strong> only — your classes, your subjects, your periods.
+        </p>
+      )}
+
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <StatCard label="My courses" value={data.myCourses.length} />
-        <StatCard label="Learners" value={data.totalLearners} />
+        <StatCard label="My classes" value={classes.length} />
+        <StatCard label="My subjects" value={data.mySubjects?.length ?? 0} />
+        <StatCard label="My students" value={data.totalStudents ?? 0} />
+        <StatCard
+          label="Registers to take"
+          value={pending.length}
+          tone={pending.length > 0 ? 'warn' : 'good'}
+          hint={pending.length ? 'Today' : 'All marked'}
+        />
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard
           label="Submissions to grade"
           value={data.submissionsToGrade}
@@ -295,28 +314,86 @@ function TeacherDashboard({ data }: { data: any }) {
           value={data.answersAwaitingReview}
           tone={data.answersAwaitingReview > 0 ? 'warn' : 'good'}
         />
+        <StatCard label="Cover requested" value={data.pendingCoverRequests ?? 0} />
+        <StatCard label="Upcoming live classes" value={data.upcomingSessions?.length ?? 0} />
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <Card title="My courses" action={<Link to="/courses" className="text-sm text-brand-700">Manage</Link>}>
-          {data.myCourses.length ? (
-            <ul className="divide-y divide-slate-100">
-              {data.myCourses.map((c: any) => (
-                <li key={c.id} className="flex items-center justify-between py-3">
-                  <div>
-                    <Link to={`/courses/${c.id}`} className="font-medium text-brand-800 hover:underline">
-                      {c.title}
-                    </Link>
-                    <p className="text-xs text-slate-500">
-                      {c.code} · {c.learners} learners
-                    </p>
-                  </div>
-                  <StatusBadge status={c.state} />
-                </li>
+        <Card
+          title="Today’s periods"
+          action={
+            <Link to="/calendar" className="text-sm text-brand-700">
+              My timetable
+            </Link>
+          }
+        >
+          {data.todaysPeriods?.length ? (
+            <Table headers={['Time', 'Period', 'Class']}>
+              {data.todaysPeriods.map((p: any) => (
+                <tr key={p.id}>
+                  <td className="td whitespace-nowrap tabular-nums text-slate-500">
+                    {format(new Date(p.startAt), 'HH:mm')}
+                  </td>
+                  <td className="td font-medium">{p.title}</td>
+                  <td className="td text-slate-600">{p.className ?? '—'}</td>
+                </tr>
               ))}
-            </ul>
+            </Table>
           ) : (
-            <EmptyState title="No courses assigned yet" />
+            <EmptyState
+              title="Nothing on your timetable today"
+              description="The academic admin sets the timetable."
+            />
+          )}
+        </Card>
+
+        <Card
+          title="Registers still to take"
+          action={
+            <Link to="/attendance" className="text-sm text-brand-700">
+              Mark attendance
+            </Link>
+          }
+        >
+          {pending.length ? (
+            <Table headers={['Class', 'On roll']}>
+              {pending.map((c: any) => (
+                <tr key={c.id}>
+                  <td className="td font-medium">{c.name}</td>
+                  <td className="td tabular-nums">{c.learners}</td>
+                </tr>
+              ))}
+            </Table>
+          ) : (
+            <EmptyState
+              title="Every register is taken"
+              description="Nothing outstanding for today."
+            />
+          )}
+        </Card>
+      </div>
+
+      <div className="grid gap-6 lg:grid-cols-2">
+        <Card title="My classes">
+          {classes.length ? (
+            <Table headers={['Class', 'School', 'My role', 'Students']}>
+              {classes.map((c: any, i: number) => (
+                <tr key={`${c.id}-${i}`}>
+                  <td className="td font-medium">{c.name}</td>
+                  <td className="td text-slate-600">{c.site}</td>
+                  <td className="td text-slate-600">
+                    {c.role}
+                    {c.subject ? <span className="block text-xs">{c.subject}</span> : null}
+                  </td>
+                  <td className="td tabular-nums">{c.learners}</td>
+                </tr>
+              ))}
+            </Table>
+          ) : (
+            <EmptyState
+              title="No classes assigned yet"
+              description="The academic admin assigns you to a class and its subjects."
+            />
           )}
         </Card>
 

@@ -75,23 +75,52 @@ export class CalendarService {
       }
 
       case Role.TEACHER: {
-        const [taught, hosted] = await Promise.all([
+        // A subject is shared by every school, so scoping by subject alone put
+        // another school's Mathematics period on this teacher's timetable. What
+        // a teacher holds is a class at a school, and the school bounds it.
+        const [taught, classSubjects, inCharge, hosted] = await Promise.all([
           this.prisma.courseTeacher.findMany({
             where: { teacherId: user.id },
             select: { courseId: true },
+          }),
+          this.prisma.classSubject.findMany({
+            where: { teacherId: user.id },
+            select: { courseId: true, classId: true },
+          }),
+          this.prisma.schoolClass.findMany({
+            where: { classTeacherId: user.id },
+            select: { id: true },
           }),
           this.prisma.liveSession.findMany({
             where: { hostId: user.id },
             select: { id: true },
           }),
         ]);
-        return {
+
+        const courseIds = [
+          ...new Set([...taught.map((t) => t.courseId), ...classSubjects.map((c) => c.courseId)]),
+        ];
+        const classIds = [
+          ...new Set([...classSubjects.map((c) => c.classId), ...inCharge.map((c) => c.id)]),
+        ];
+
+        const mine: Prisma.CalendarEventWhereInput = {
           OR: [
-            { courseId: { in: taught.map((t) => t.courseId) } },
+            // A class they teach or are in charge of is theirs outright.
+            ...(classIds.length ? [{ classId: { in: classIds } }] : []),
+            // A subject they teach, but only at their own school.
+            ...(courseIds.length ? [{ courseId: { in: courseIds } }] : []),
             { sessionId: { in: hosted.map((h) => h.id) } },
             { createdById: user.id },
+            // A holiday or a school-wide notice names no class and no subject.
+            // It is addressed to the school, so it is on everyone's timetable.
+            { AND: [{ classId: null }, { courseId: null }, { batchId: null }] },
           ],
         };
+
+        // Bounded by their own school, plus anything published to every school.
+        if (!user.siteId) return mine;
+        return { AND: [mine, { OR: [{ siteId: user.siteId }, { siteId: null }] }] };
       }
 
       case Role.STUDENT:

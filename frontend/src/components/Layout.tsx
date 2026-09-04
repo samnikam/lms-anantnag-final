@@ -52,7 +52,7 @@ export function Layout() {
                 </p>
               )}
               <div className="space-y-0.5">
-                {section.items.map(({ to, label, icon: Icon }) => (
+                {section.items.map(({ to, label, icon: Icon }, i) => (
                   <NavLink
                     key={to}
                     to={to}
@@ -67,7 +67,16 @@ export function Layout() {
                       )
                     }
                   >
-                    <Icon className="h-4 w-4 shrink-0" aria-hidden />
+                    {/* Set-up screens are numbered: each one needs the one
+                        above it to exist first, and saying so beats leaving an
+                        admin to work out where to start. */}
+                    {section.group === 'setup' ? (
+                      <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-slate-200 text-[10px] font-semibold text-slate-600">
+                        {i + 1}
+                      </span>
+                    ) : (
+                      <Icon className="h-4 w-4 shrink-0" aria-hidden />
+                    )}
                     <span className="truncate">{label}</span>
                   </NavLink>
                 ))}

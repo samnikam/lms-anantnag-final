@@ -50,7 +50,7 @@ export function AcademicPage() {
     <>
       <PageHeader
         title="Academic Structure"
-        description="Academic years, batches and sections, and course enrolment."
+        description="Academic years, class sections, and who is enrolled in what."
         actions={
           <>
             <button type="button" className="btn-secondary" onClick={() => setEnrollingOne(true)}>
@@ -59,11 +59,11 @@ export function AcademicPage() {
             </button>
             <button type="button" className="btn-secondary" onClick={() => setEnrolling(true)}>
               <UserPlus className="h-4 w-4" aria-hidden />
-              Enrol a batch
+              Enrol a section
             </button>
             <button type="button" className="btn-secondary" onClick={() => setCreatingBatch(true)}>
               <Plus className="h-4 w-4" aria-hidden />
-              New batch
+              New section
             </button>
             <button type="button" className="btn-primary" onClick={() => setCreatingYear(true)}>
               <Plus className="h-4 w-4" aria-hidden />
@@ -76,7 +76,7 @@ export function AcademicPage() {
       <div className="grid gap-6 lg:grid-cols-2">
         <Card title="Academic years">
           {years?.length ? (
-            <Table headers={['Year', 'Period', 'Batches', '']}>
+            <Table headers={['Year', 'Period', 'Sections', '']}>
               {years.map((y) => (
                 <tr key={y.id}>
                   <td className="td">
@@ -110,9 +110,9 @@ export function AcademicPage() {
           )}
         </Card>
 
-        <Card title="Batches & sections">
+        <Card title="Sections">
           {batches?.length ? (
-            <Table headers={['Batch', 'Year', 'Site', 'Learners']}>
+            <Table headers={['Section', 'Year', 'School', 'Learners']}>
               {batches.map((b) => (
                 <tr key={b.id}>
                   <td className="td font-medium">{b.name}</td>
@@ -123,7 +123,7 @@ export function AcademicPage() {
               ))}
             </Table>
           ) : (
-            <EmptyState title="No batches yet" />
+            <EmptyState title="No sections yet" />
           )}
         </Card>
       </div>
@@ -227,7 +227,7 @@ function BatchModal({
   return (
     <Modal
       open={open}
-      title="New batch"
+      title="New section"
       onClose={onClose}
       footer={
         <>
@@ -238,7 +238,7 @@ function BatchModal({
             disabled={!form.academicYearId || !form.name || create.isPending}
             onClick={() => create.mutate()}
           >
-            Create batch
+            Create section
           </button>
         </>
       }
@@ -251,7 +251,7 @@ function BatchModal({
           ))}
         </select>
       </Field>
-      <Field label="Batch name" hint="For example, Class 10 — A.">
+      <Field label="Section name" hint="For example, Class 10 — A.">
         <input className="input" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
       </Field>
       <div className="grid gap-4 sm:grid-cols-3">
@@ -292,18 +292,18 @@ function EnrolModal({ open, onClose, batches }: { open: boolean; onClose: () => 
   return (
     <Modal
       open={open}
-      title="Enrol a batch into a course"
+      title="Enrol a section into a subject"
       onClose={onClose}
       footer={
         <>
           <button type="button" className="btn-secondary" onClick={onClose}>Close</button>
           <button type="button" className="btn-primary" disabled={!batchId || !courseId || enrol.isPending} onClick={() => enrol.mutate()}>
-            Enrol batch
+            Enrol section
           </button>
         </>
       }
     >
-      <Field label="Batch">
+      <Field label="Section">
         <select className="input" value={batchId} onChange={(e) => setBatchId(e.target.value)}>
           <option value="">Select…</option>
           {batches.map((b) => (
@@ -311,7 +311,7 @@ function EnrolModal({ open, onClose, batches }: { open: boolean; onClose: () => 
           ))}
         </select>
       </Field>
-      <Field label="Course">
+      <Field label="Subject">
         <select className="input" value={courseId} onChange={(e) => setCourseId(e.target.value)}>
           <option value="">Select…</option>
           {courses?.items?.map((c: any) => (
@@ -432,9 +432,9 @@ function EnrolmentRegister() {
           className="input max-w-[16rem] py-1 text-sm"
           value={courseId}
           onChange={(e) => setCourseId(e.target.value)}
-          aria-label="Filter by course"
+          aria-label="Filter by subject"
         >
-          <option value="">All courses</option>
+          <option value="">All subjects</option>
           {courses?.items?.map((c: any) => (
             <option key={c.id} value={c.id}>
               {c.title}
@@ -447,7 +447,7 @@ function EnrolmentRegister() {
       {isLoading ? (
         <Loading />
       ) : !rows?.length ? (
-        <EmptyState title="No enrolments yet" description="Enrol a learner or a whole batch above." />
+        <EmptyState title="No enrolments yet" description="Enrol a learner or a whole section above." />
       ) : byLearner ? (
         <Table headers={['Learner', 'Subjects', 'Section', 'Status', 'Enrolled']}>
           {rows.slice(0, 200).map((e: any) => (
@@ -476,7 +476,7 @@ function EnrolmentRegister() {
           ))}
         </Table>
       ) : (
-        <Table headers={['Learner', 'Course', 'Batch', 'Status', 'Enrolled', '']}>
+        <Table headers={['Learner', 'Subject', 'Section', 'Status', 'Enrolled', '']}>
           {rows.slice(0, 100).map((e) => (
             <tr key={e.id}>
               <td className="td font-medium">{e.student.fullName}</td>
@@ -494,7 +494,7 @@ function EnrolmentRegister() {
                     type="button"
                     className="rounded p-1.5 text-brand-700 hover:bg-brand-50"
                     aria-label={`Transfer ${e.student.fullName}`}
-                    title="Transfer to another batch"
+                    title="Transfer to another section"
                     onClick={() => {
                       setTransferring(e);
                       setToBatchId('');
@@ -554,11 +554,11 @@ function EnrolmentRegister() {
         }
       >
         <p className="mb-4 text-sm text-ink-soft">
-          The previous batch, the reason and your name are kept on the enrolment history.
+          The previous section, the reason and your name are kept on the enrolment history.
         </p>
-        <Field label="Move to batch">
+        <Field label="Move to section">
           <select className="input" value={toBatchId} onChange={(e) => setToBatchId(e.target.value)}>
-            <option value="">Select a batch…</option>
+            <option value="">Select a section…</option>
             {batches
               ?.filter((b) => b.id !== transferring?.batch?.id)
               .map((b) => (
@@ -638,7 +638,7 @@ function EnrolmentRegister() {
   );
 }
 
-/** Enrols one learner — the batch-wide action cannot express exceptions. */
+/** Enrols one learner — the section-wide action cannot express exceptions. */
 function EnrolStudentModal({
   open,
   onClose,
@@ -726,7 +726,7 @@ function EnrolStudentModal({
       </Field>
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <Field label="Course">
+        <Field label="Subject">
           <select className="input" value={courseId} onChange={(e) => setCourseId(e.target.value)}>
             <option value="">Select…</option>
             {courses?.items?.map((c: any) => (
@@ -736,7 +736,7 @@ function EnrolStudentModal({
             ))}
           </select>
         </Field>
-        <Field label="Batch (optional)">
+        <Field label="Section (optional)">
           <select className="input" value={batchId} onChange={(e) => setBatchId(e.target.value)}>
             <option value="">No batch</option>
             {batches.map((b) => (

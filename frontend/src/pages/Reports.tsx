@@ -219,7 +219,7 @@ function Assessment({ rows }: { rows: any[] }) {
 function Enrollment({ rows }: { rows: any[] }) {
   return (
     <Card title="Enrolments">
-      <Table headers={['Learner', 'Site', 'Course', 'Batch', 'Status']}>
+      <Table headers={['Learner', 'School', 'Subject', 'Section', 'Status']}>
         {rows.map((r, i) => (
           <tr key={i}>
             <td className="td font-medium">{r.student}</td>

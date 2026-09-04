@@ -42,7 +42,7 @@ export type NavGroup = (typeof NAV_GROUPS)[number];
 
 export const GROUP_LABELS: Record<NavGroup, string | null> = {
   main: null, // Dashboard sits above the first heading
-  setup: 'Set up · in this order',
+  setup: 'Set up · step by step',
   teaching: 'Teaching & learning',
   insights: 'Insights',
   communication: 'Communication',
@@ -159,12 +159,12 @@ export const NAV_ITEMS: NavItem[] = [
   // ── Administration ────────────────────────────────────────────────────
   {
     to: '/users',
-    label: 'People',
+    label: 'Teachers & Students',
     icon: Users,
     group: 'setup',
     roles: ['SUPER_ADMIN', 'ACADEMIC_ADMIN'],
     // An Academic Admin manages teaching staff and learners, never administrators.
-    labelByRole: { ACADEMIC_ADMIN: 'Teachers & Learners' },
+    labelByRole: { ACADEMIC_ADMIN: 'Teachers & Students' },
   },
   {
     to: '/classes',
@@ -175,7 +175,7 @@ export const NAV_ITEMS: NavItem[] = [
   },
   {
     to: '/academic',
-    label: 'Year & Enrolment',
+    label: 'Academic Year',
     icon: UserSquare2,
     group: 'setup',
     roles: ['SUPER_ADMIN', 'ACADEMIC_ADMIN'],

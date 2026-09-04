@@ -131,7 +131,7 @@ function AcademicAdminDashboard({ data }: { data: any }) {
   return (
     <div className="space-y-6">
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <StatCard label="Active batches" value={data.activeBatches} />
+        <StatCard label="Active sections" value={data.activeBatches} />
         <StatCard label="Active enrolments" value={data.activeEnrollments} />
         <StatCard label="Upcoming sessions" value={data.upcomingSessions?.length ?? 0} />
         <StatCard

@@ -468,7 +468,7 @@ function SchoolDetailModal({ id, onClose }: { id: string | null; onClose: () => 
             <Detail label="Contact" value={site.contactName ?? '—'} />
             <Detail label="Phone" value={site.contactPhone ?? '—'} />
             <Detail label="Email" value={site.contactEmail ?? '—'} />
-            <Detail label="Batches" value={String(stats.batches)} />
+            <Detail label="Sections" value={String(stats.batches)} />
           </dl>
 
           {site.consigneeAddr && (

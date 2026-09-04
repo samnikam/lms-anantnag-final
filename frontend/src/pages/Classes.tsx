@@ -794,7 +794,9 @@ function EnrolInClassModal({
         </>
       }
     >
-      {(
+      {/* The dialog stays mounted while closed, when there is no class to
+          describe — so nothing inside may reach into it. */}
+      {schoolClass && (
         <>
           {noSubjects ? (
             <div className="mb-4 rounded-md border border-slate-200 bg-slate-50 p-3 text-sm text-ink-soft">

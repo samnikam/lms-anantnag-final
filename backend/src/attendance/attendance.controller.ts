@@ -10,11 +10,13 @@ import {
   IsOptional,
   IsString,
   MinLength,
+  ValidateNested,
 } from 'class-validator';
 import { Roles } from '../common/decorators/roles.decorator';
 import { Audit } from '../common/decorators/audit.decorator';
 import { AuthUser, CurrentUser } from '../common/decorators/current-user.decorator';
 import { UsersService } from '../users/users.service';
+import { resolveSiteFilter } from '../common/site-scope';
 import { AttendanceService } from './attendance.service';
 
 class MarkEntry {
@@ -25,6 +27,11 @@ class MarkEntry {
 
 class MarkSessionDto {
   @IsArray() @ArrayNotEmpty() @Type(() => MarkEntry) entries!: MarkEntry[];
+}
+
+class MarkClassDto {
+  @IsOptional() @Type(() => Date) @IsDate() date?: Date;
+  @IsArray() @ValidateNested({ each: true }) @Type(() => MarkEntry) entries!: MarkEntry[];
 }
 
 class CorrectDto {
@@ -58,10 +65,54 @@ export class AttendanceController {
   /** Everything on a given day that attendance can be taken for. */
   @Get('day')
   @Roles(Role.SUPER_ADMIN, Role.ACADEMIC_ADMIN, Role.TEACHER)
-  day(@CurrentUser() actor: AuthUser, @Query('date') date?: string) {
+  day(
+    @CurrentUser() actor: AuthUser,
+    @Query('date') date?: string,
+    @Query('siteId') siteId?: string,
+  ) {
     return this.attendance.dayRegister(
       date ? new Date(date) : new Date(),
-      actor.role === Role.ACADEMIC_ADMIN ? actor.siteId ?? undefined : undefined,
+      resolveSiteFilter(actor, siteId),
+    );
+  }
+
+  /**
+   * The daily class register, scoped to one school. An Academic Admin is held
+   * to their own school; a Super Admin picks one, and until they do they see
+   * every school's classes.
+   */
+  @Get('classes')
+  @Roles(Role.SUPER_ADMIN, Role.ACADEMIC_ADMIN, Role.TEACHER)
+  classRegisterDay(
+    @CurrentUser() actor: AuthUser,
+    @Query('date') date?: string,
+    @Query('siteId') siteId?: string,
+  ) {
+    return this.attendance.classRegisterDay(
+      date ? new Date(date) : new Date(),
+      resolveSiteFilter(actor, siteId),
+    );
+  }
+
+  @Get('classes/:classId/roster')
+  @Roles(Role.SUPER_ADMIN, Role.ACADEMIC_ADMIN, Role.TEACHER)
+  classRoster(@Param('classId') classId: string, @Query('date') date?: string) {
+    return this.attendance.classRoster(classId, date ? new Date(date) : new Date());
+  }
+
+  @Post('classes/:classId/mark')
+  @Roles(Role.SUPER_ADMIN, Role.ACADEMIC_ADMIN, Role.TEACHER)
+  @Audit('attendance.mark_class', 'Attendance')
+  markClass(
+    @Param('classId') classId: string,
+    @Body() dto: MarkClassDto,
+    @CurrentUser('id') markedById: string,
+  ) {
+    return this.attendance.markClassRegister(
+      classId,
+      dto.date ?? new Date(),
+      dto.entries,
+      markedById,
     );
   }
 

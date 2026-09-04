@@ -19,6 +19,124 @@ export class AttendanceService {
    * page can only reach live sessions, and a normal class period — which is
    * most of the timetable — has nowhere to record attendance.
    */
+  /**
+   * The classes at a school on a given day, with how much of each roll has
+   * been marked. A school takes a register every day whether or not anything
+   * was put on the timetable, so this does not depend on a scheduled period.
+   */
+  async classRegisterDay(date: Date, siteId?: string) {
+    const day = new Date(date);
+    day.setHours(0, 0, 0, 0);
+    const next = new Date(day);
+    next.setDate(next.getDate() + 1);
+
+    const classes = await this.prisma.schoolClass.findMany({
+      where: { active: true, ...(siteId ? { siteId } : {}) },
+      include: {
+        site: { select: { id: true, name: true } },
+        classTeacher: { select: { id: true, fullName: true } },
+        _count: { select: { learners: true } },
+      },
+      orderBy: [{ site: { name: 'asc' } }, { level: 'asc' }, { name: 'asc' }],
+    });
+
+    const marks = await this.prisma.attendance.groupBy({
+      by: ['classId', 'status'],
+      where: {
+        classId: { in: classes.map((c) => c.id) },
+        date: { gte: day, lt: next },
+      },
+      _count: true,
+    });
+
+    return classes.map((cls) => {
+      const mine = marks.filter((m) => m.classId === cls.id);
+      const marked = mine.reduce((sum, m) => sum + m._count, 0);
+      return {
+        id: cls.id,
+        name: cls.name,
+        site: cls.site,
+        classTeacher: cls.classTeacher,
+        learners: cls._count.learners,
+        marked,
+        present: mine.find((m) => m.status === 'PRESENT')?._count ?? 0,
+        absent: mine.find((m) => m.status === 'ABSENT')?._count ?? 0,
+        late: mine.find((m) => m.status === 'LATE')?._count ?? 0,
+      };
+    });
+  }
+
+  /** The roll of a class with whatever has already been marked for that day. */
+  async classRoster(classId: string, date: Date) {
+    const day = new Date(date);
+    day.setHours(0, 0, 0, 0);
+    const next = new Date(day);
+    next.setDate(next.getDate() + 1);
+
+    const cls = await this.prisma.schoolClass.findUniqueOrThrow({
+      where: { id: classId },
+      include: {
+        site: { select: { id: true, name: true } },
+        learners: {
+          where: { status: 'ACTIVE' },
+          include: {
+            student: { select: { id: true, fullName: true, email: true } },
+            batch: { select: { id: true, name: true } },
+          },
+          orderBy: { student: { fullName: 'asc' } },
+        },
+      },
+    });
+
+    const marked = await this.prisma.attendance.findMany({
+      where: { classId, date: { gte: day, lt: next } },
+      select: { studentId: true, status: true, remarks: true },
+    });
+    const byStudent = Object.fromEntries(marked.map((m) => [m.studentId, m]));
+
+    return {
+      class: { id: cls.id, name: cls.name, site: cls.site },
+      date: day,
+      learners: cls.learners.map((l) => ({
+        studentId: l.student.id,
+        fullName: l.student.fullName,
+        email: l.student.email,
+        section: l.batch?.name ?? null,
+        status: byStudent[l.student.id]?.status ?? null,
+        remarks: byStudent[l.student.id]?.remarks ?? null,
+      })),
+    };
+  }
+
+  /** Records the day's register for a class. Re-marking overwrites. */
+  async markClassRegister(
+    classId: string,
+    date: Date,
+    marks: Array<{ studentId: string; status: AttendanceStatus; remarks?: string }>,
+    markedById: string | null,
+  ) {
+    const day = new Date(date);
+    day.setHours(0, 0, 0, 0);
+
+    for (const mark of marks) {
+      await this.prisma.attendance.upsert({
+        where: {
+          classId_date_studentId: { classId, date: day, studentId: mark.studentId },
+        },
+        create: {
+          classId,
+          date: day,
+          studentId: mark.studentId,
+          status: mark.status,
+          remarks: mark.remarks,
+          markedById,
+        },
+        update: { status: mark.status, remarks: mark.remarks, markedById },
+      });
+    }
+    return { marked: marks.length };
+  }
+
   async dayRegister(date: Date, siteId?: string) {
     const start = new Date(date);
     start.setHours(0, 0, 0, 0);

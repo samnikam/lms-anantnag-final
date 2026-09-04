@@ -77,7 +77,9 @@ function StudentAttendance() {
 function TeacherAttendance() {
   const { user } = useAuth();
   const canCorrect = ['SUPER_ADMIN', 'ACADEMIC_ADMIN'].includes(user!.role);
-  const [view, setView] = useState<'mark' | 'corrections'>('mark');
+  // The daily class register is what a school actually takes; period-by-period
+  // marking is the exception, not the rule, so it is no longer the only way in.
+  const [view, setView] = useState<'classes' | 'mark' | 'corrections'>('classes');
   const [params, setParams] = useSearchParams();
   const qc = useQueryClient();
 
@@ -148,7 +150,7 @@ function TeacherAttendance() {
     <>
       <PageHeader
         title="Attendance"
-        description="Pick a day, then a class period. Room headcounts from classroom panels appear alongside."
+        description="Take the daily register for a class, or mark a single period. Room headcounts from classroom panels appear alongside."
         actions={
           selectedId && (
             <button
@@ -166,7 +168,13 @@ function TeacherAttendance() {
 
       {canCorrect && (
         <div className="mb-4 flex gap-2 border-b border-slate-200">
-          {([['mark', 'Mark attendance'], ['corrections', 'Corrections']] as const).map(([k, l]) => (
+          {(
+            [
+              ['classes', 'Class register'],
+              ['mark', 'By period'],
+              ['corrections', 'Corrections'],
+            ] as const
+          ).map(([k, l]) => (
             <button
               key={k}
               type="button"
@@ -183,7 +191,9 @@ function TeacherAttendance() {
         </div>
       )}
 
-      {view === 'corrections' ? (
+      {view === 'classes' ? (
+        <ClassRegister />
+      ) : view === 'corrections' ? (
         <AttendanceCorrections />
       ) : (
         <>
@@ -541,6 +551,249 @@ function AttendanceCorrections() {
         </Field>
 
         {correct.isError && <p className="text-sm text-red-600">{errorMessage(correct.error)}</p>}
+      </Modal>
+    </>
+  );
+}
+
+/**
+ * The daily class register: pick a school, pick a class, mark its roll. This is
+ * how a school takes attendance — against the class, on a date, whether or not
+ * anything was scheduled that day.
+ */
+function ClassRegister() {
+  const { user } = useAuth();
+  const qc = useQueryClient();
+  const scoped = user!.role === 'ACADEMIC_ADMIN';
+
+  const [siteId, setSiteId] = useState('');
+  const [date, setDate] = useState(format(new Date(), 'yyyy-MM-dd'));
+  const [openClass, setOpenClass] = useState<string | null>(null);
+  const [marks, setMarks] = useState<Record<string, string>>({});
+
+  const { data: sites } = useQuery({
+    queryKey: ['sites'],
+    queryFn: async () => (await api.get<any[]>('/sites')).data,
+    enabled: !scoped,
+  });
+
+  const { data: classes, isLoading } = useQuery({
+    queryKey: ['attendance', 'classes', date, siteId],
+    queryFn: async () =>
+      (
+        await api.get<any[]>('/attendance/classes', {
+          params: { date, siteId: siteId || undefined },
+        })
+      ).data,
+  });
+
+  const { data: roster } = useQuery({
+    queryKey: ['attendance', 'class-roster', openClass, date],
+    queryFn: async () =>
+      (await api.get<any>(`/attendance/classes/${openClass}/roster`, { params: { date } })).data,
+    enabled: !!openClass,
+  });
+
+  // Start from what is already recorded, so re-opening a marked day shows it.
+  useEffect(() => {
+    if (!roster) return;
+    setMarks(
+      Object.fromEntries(roster.learners.map((l: any) => [l.studentId, l.status ?? 'PRESENT'])),
+    );
+  }, [roster]);
+
+  const save = useMutation({
+    mutationFn: async () =>
+      (
+        await api.post(`/attendance/classes/${openClass}/mark`, {
+          date: new Date(date).toISOString(),
+          entries: Object.entries(marks).map(([studentId, status]) => ({ studentId, status })),
+        })
+      ).data,
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['attendance'] });
+      setOpenClass(null);
+    },
+  });
+
+  const setAll = (status: string) =>
+    setMarks((m) => Object.fromEntries(Object.keys(m).map((k) => [k, status])));
+
+  return (
+    <>
+      <Card className="mb-6">
+        <div className="flex flex-wrap items-end gap-3">
+          {!scoped && (
+            <div>
+              <label className="label" htmlFor="reg-site">
+                School
+              </label>
+              <select
+                id="reg-site"
+                className="input max-w-[18rem]"
+                value={siteId}
+                onChange={(e) => {
+                  setSiteId(e.target.value);
+                  setOpenClass(null);
+                }}
+              >
+                <option value="">All schools</option>
+                {sites?.map((s) => (
+                  <option key={s.id} value={s.id}>
+                    {s.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
+          <div>
+            <label className="label" htmlFor="reg-date">
+              Date
+            </label>
+            <input
+              id="reg-date"
+              className="input"
+              type="date"
+              value={date}
+              onChange={(e) => {
+                setDate(e.target.value);
+                setOpenClass(null);
+              }}
+            />
+          </div>
+
+          <button
+            type="button"
+            className="btn-secondary"
+            onClick={() => setDate(format(new Date(), 'yyyy-MM-dd'))}
+          >
+            Today
+          </button>
+
+          {scoped && (
+            <p className="pb-2 text-xs text-slate-500">
+              Showing your school only — another school&rsquo;s register is not yours to take.
+            </p>
+          )}
+        </div>
+      </Card>
+
+      {isLoading ? (
+        <Loading />
+      ) : !classes?.length ? (
+        <EmptyState
+          title="No classes at this school"
+          description="Add a class under Classes, then put its learners on the roll."
+        />
+      ) : (
+        <Card>
+          <Table headers={['Class', 'School', 'Class teacher', 'On roll', 'Marked', '']}>
+            {classes.map((c) => (
+              <tr key={c.id}>
+                <td className="td font-medium">{c.name}</td>
+                <td className="td text-slate-600">{c.site.name}</td>
+                <td className="td text-slate-600">
+                  {c.classTeacher?.fullName ?? (
+                    <span className="text-xs text-amber-700">Not assigned</span>
+                  )}
+                </td>
+                <td className="td tabular-nums">{c.learners}</td>
+                <td className="td">
+                  {c.learners === 0 ? (
+                    <span className="text-xs text-slate-500">No learners yet</span>
+                  ) : c.marked === 0 ? (
+                    <Badge tone="warn">Not taken</Badge>
+                  ) : (
+                    <span className="text-sm tabular-nums text-slate-600">
+                      {c.present} present · {c.absent} absent
+                      {c.late ? ` · ${c.late} late` : ''}
+                    </span>
+                  )}
+                </td>
+                <td className="td text-right">
+                  <button
+                    type="button"
+                    className="btn-secondary text-xs"
+                    disabled={c.learners === 0}
+                    onClick={() => setOpenClass(c.id)}
+                  >
+                    {c.marked ? 'Review' : 'Take register'}
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </Table>
+        </Card>
+      )}
+
+      <Modal
+        open={!!openClass}
+        title={`${roster?.class?.name ?? 'Class'} — register for ${date}`}
+        onClose={() => setOpenClass(null)}
+        footer={
+          <>
+            <button type="button" className="btn-secondary" onClick={() => setOpenClass(null)}>
+              Cancel
+            </button>
+            <button
+              type="button"
+              className="btn-primary"
+              disabled={save.isPending || !Object.keys(marks).length}
+              onClick={() => save.mutate()}
+            >
+              {save.isPending ? 'Saving…' : 'Save register'}
+            </button>
+          </>
+        }
+      >
+        {roster && (
+          <>
+            <div className="mb-3 flex gap-2">
+              <button
+                type="button"
+                className="btn-secondary text-xs"
+                onClick={() => setAll('PRESENT')}
+              >
+                All present
+              </button>
+              <button
+                type="button"
+                className="btn-secondary text-xs"
+                onClick={() => setAll('ABSENT')}
+              >
+                All absent
+              </button>
+            </div>
+
+            <div className="max-h-80 divide-y divide-slate-100 overflow-y-auto rounded-md border border-slate-200">
+              {roster.learners.map((l: any) => (
+                <div key={l.studentId} className="flex items-center gap-3 px-3 py-2">
+                  <span className="flex-1 text-sm">
+                    <span className="font-medium">{l.fullName}</span>
+                    {l.section ? <span className="text-slate-500"> · {l.section}</span> : null}
+                  </span>
+                  {(['PRESENT', 'ABSENT', 'LATE'] as const).map((st) => (
+                    <button
+                      key={st}
+                      type="button"
+                      onClick={() => setMarks((m) => ({ ...m, [l.studentId]: st }))}
+                      className={
+                        marks[l.studentId] === st
+                          ? 'rounded-md bg-brand-700 px-2 py-1 text-xs font-medium text-white'
+                          : 'rounded-md border border-slate-300 px-2 py-1 text-xs text-ink-soft hover:bg-slate-50'
+                      }
+                    >
+                      {st.toLowerCase()}
+                    </button>
+                  ))}
+                </div>
+              ))}
+            </div>
+
+            {save.isError && <p className="mt-3 text-sm text-red-600">{errorMessage(save.error)}</p>}
+          </>
+        )}
       </Modal>
     </>
   );

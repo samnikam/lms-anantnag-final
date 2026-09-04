@@ -382,8 +382,9 @@ model SchoolClass {
 
   batches  Batch[]
   events   CalendarEvent[]
-  subjects ClassSubject[]
-  learners ClassEnrollment[]
+  subjects   ClassSubject[]
+  learners   ClassEnrollment[]
+  attendance Attendance[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -707,6 +708,12 @@ model Attendance {
   eventId String?
   event   CalendarEvent? @relation(fields: [eventId], references: [id], onDelete: Cascade)
 
+  // The daily roll call, taken against the class itself. A school takes a
+  // register whether or not anything was put on the timetable that day, so
+  // attendance cannot depend on a scheduled period existing.
+  classId String?
+  class   SchoolClass? @relation(fields: [classId], references: [id], onDelete: Cascade)
+
   studentId String?
   student   User?   @relation("AttendanceStudent", fields: [studentId], references: [id], onDelete: Cascade)
 
@@ -725,7 +732,9 @@ model Attendance {
 
   @@unique([sessionId, studentId])
   @@unique([eventId, studentId])
+  @@unique([classId, date, studentId])
   @@index([studentId, date])
+  @@index([classId, date])
   @@index([classroomId, date])
   @@index([eventId])
 }

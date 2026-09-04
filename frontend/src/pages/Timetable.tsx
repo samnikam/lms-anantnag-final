@@ -227,7 +227,8 @@ export function TimetablePage() {
         <WeekGrid
           weekStart={weekStart}
           events={data ?? []}
-          canManage={canManage || isTeacher}
+          canManage={canManage}
+          canOpenEntry={canManage || isTeacher}
           onEdit={(e) => (canManage ? setEditing(e) : isTeacher ? setRequestingCover(e) : undefined)}
           onDelete={(e) => setConfirmDelete(e)}
           onAddAt={(day, hour) => {
@@ -302,6 +303,17 @@ export function TimetablePage() {
                             <Trash2 className="h-4 w-4" />
                           </button>
                         </div>
+                      )}
+                      {/* A teacher cannot change the timetable, so the one
+                          thing they can do about a period is offered here. */}
+                      {!canManage && isTeacher && (
+                        <button
+                          type="button"
+                          className="btn-secondary text-xs"
+                          onClick={() => setRequestingCover(event)}
+                        >
+                          Request cover
+                        </button>
                       )}
                     </div>
                   </li>
@@ -947,13 +959,17 @@ function WeekGrid({
   weekStart,
   events,
   canManage,
+  canOpenEntry,
   onEdit,
   onDelete,
   onAddAt,
 }: {
   weekStart: Date;
   events: any[];
+  /** May author the timetable: add, edit, delete. */
   canManage: boolean;
+  /** May open an entry — a teacher opens one to ask for cover. */
+  canOpenEntry: boolean;
   onEdit: (e: any) => void;
   onDelete: (e: any) => void;
   onAddAt: (day: Date, hour: number) => void;
@@ -1025,11 +1041,11 @@ function WeekGrid({
                         <button
                           key={e.id}
                           type="button"
-                          onClick={() => (canManage ? onEdit(e) : undefined)}
+                          onClick={() => (canOpenEntry ? onEdit(e) : undefined)}
                           className={clsx(
                             'block w-full truncate rounded border px-1.5 py-0.5 text-left text-[11px] font-medium',
                             style.block,
-                            canManage && 'hover:shadow',
+                            canOpenEntry && 'hover:shadow',
                           )}
                           title={e.title}
                         >
@@ -1098,11 +1114,11 @@ function WeekGrid({
                       <button
                         key={e.id}
                         type="button"
-                        onClick={() => (canManage ? onEdit(e) : undefined)}
+                        onClick={() => (canOpenEntry ? onEdit(e) : undefined)}
                         className={clsx(
                           'absolute overflow-hidden rounded border px-1.5 py-1 text-left text-[11px] leading-tight transition-shadow',
                           style.block,
-                          canManage && 'hover:shadow-md',
+                          canOpenEntry && 'hover:shadow-md',
                         )}
                         style={{
                           top: `${top}%`,
@@ -1135,11 +1151,15 @@ function WeekGrid({
             {type.toLowerCase()}
           </span>
         ))}
-        {canManage && (
+        {canManage ? (
           <span className="ml-auto text-xs text-slate-400">
             Double-click an empty slot to add an entry
           </span>
-        )}
+        ) : canOpenEntry ? (
+          <span className="ml-auto text-xs text-slate-400">
+            Click one of your periods to ask for it to be covered
+          </span>
+        ) : null}
       </div>
     </Card>
   );

@@ -1,10 +1,10 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Role } from '@prisma/client';
 import { IsArray, IsBoolean, IsEnum, IsOptional, IsString } from 'class-validator';
 import { Roles } from '../common/decorators/roles.decorator';
 import { Audit } from '../common/decorators/audit.decorator';
-import { CurrentUser } from '../common/decorators/current-user.decorator';
+import { AuthUser, CurrentUser } from '../common/decorators/current-user.decorator';
 import { NotificationsService } from './notifications.service';
 
 class AnnounceDto {
@@ -43,14 +43,30 @@ export class NotificationsController {
   }
 
   @Get('announcements')
-  listAnnouncements(@Query('courseId') courseId?: string, @Query('siteId') siteId?: string) {
-    return this.notifications.listAnnouncements({ courseId, siteId });
+  listAnnouncements(
+    @CurrentUser() actor: AuthUser,
+    @Query('courseId') courseId?: string,
+    @Query('siteId') siteId?: string,
+  ) {
+    // Anyone attached to a school reads their own school's notices plus the
+    // division-wide ones; a Super Admin reads everything, or filters.
+    const scope = actor.role === Role.SUPER_ADMIN ? siteId : (actor.siteId ?? siteId ?? undefined);
+    return this.notifications.listAnnouncements({ courseId, siteId: scope });
   }
 
   @Post('announcements')
   @Roles(Role.SUPER_ADMIN, Role.ACADEMIC_ADMIN, Role.TEACHER)
   @Audit('announcement.create', 'Announcement')
-  announce(@CurrentUser('id') authorId: string, @Body() dto: AnnounceDto) {
-    return this.notifications.announce(authorId, dto);
+  announce(@CurrentUser() actor: AuthUser, @Body() dto: AnnounceDto) {
+    // An Academic Admin speaks for their own school, whatever the body says.
+    const siteId = actor.role === Role.SUPER_ADMIN ? dto.siteId : (actor.siteId ?? dto.siteId);
+    return this.notifications.announce(actor.id, { ...dto, siteId });
+  }
+
+  @Delete('announcements/:id')
+  @Roles(Role.SUPER_ADMIN, Role.ACADEMIC_ADMIN, Role.TEACHER)
+  @Audit('announcement.delete', 'Announcement')
+  removeAnnouncement(@Param('id') id: string, @CurrentUser() actor: AuthUser) {
+    return this.notifications.removeAnnouncement(id, actor);
   }
 }

@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { ForbiddenException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { DeliveryStatus, NotificationChannel, Role } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 
@@ -111,16 +111,31 @@ export class NotificationsService {
       data: { ...data, authorId, audience: data.audience ?? [] },
     });
 
-    // Push a matching in-app notification to the intended recipients.
-    const recipients = data.courseId
-      ? await this.prisma.enrollment.findMany({
-          where: { courseId: data.courseId, status: 'ACTIVE' },
-          select: { studentId: true },
-        })
-      : [];
+    // Push a matching in-app notification to whoever the notice is addressed
+    // to: everyone at one school, the learners of one subject, or — for a
+    // division-wide notice — every active account.
+    let recipientIds: string[] = [];
 
-    if (recipients.length) {
-      await this.notifyMany(recipients.map((r) => r.studentId), {
+    if (data.courseId) {
+      const enrolled = await this.prisma.enrollment.findMany({
+        where: { courseId: data.courseId, status: 'ACTIVE' },
+        select: { studentId: true },
+      });
+      recipientIds = enrolled.map((e) => e.studentId);
+    } else {
+      const people = await this.prisma.user.findMany({
+        where: {
+          status: 'ACTIVE',
+          ...(data.siteId ? { siteId: data.siteId } : {}),
+          ...(data.audience?.length ? { role: { in: data.audience } } : {}),
+        },
+        select: { id: true },
+      });
+      recipientIds = people.map((p) => p.id);
+    }
+
+    if (recipientIds.length) {
+      await this.notifyMany(recipientIds, {
         type: 'ANNOUNCEMENT',
         title: data.title,
         body: data.body,
@@ -130,13 +145,39 @@ export class NotificationsService {
     return announcement;
   }
 
+  /**
+   * A notice addressed to one school is read at that school; one addressed to
+   * all schools is read everywhere. Someone attached to a school therefore
+   * sees both, and never another school's business.
+   */
+  /** Takes a notice down. Whoever wrote it, or the school it speaks for. */
+  async removeAnnouncement(id: string, actor: { id: string; role: Role; siteId?: string | null }) {
+    const notice = await this.prisma.announcement.findUnique({ where: { id } });
+    if (!notice) throw new NotFoundException('Announcement not found.');
+
+    const isAuthor = notice.authorId === actor.id;
+    const isSuperAdmin = actor.role === Role.SUPER_ADMIN;
+    const speaksForSchool =
+      actor.role === Role.ACADEMIC_ADMIN && !!notice.siteId && notice.siteId === actor.siteId;
+
+    if (!isAuthor && !isSuperAdmin && !speaksForSchool) {
+      throw new ForbiddenException('This notice is not yours to take down.');
+    }
+
+    await this.prisma.announcement.delete({ where: { id } });
+    return { id, deleted: true };
+  }
+
   listAnnouncements(filter: { courseId?: string; siteId?: string; role?: Role }) {
     return this.prisma.announcement.findMany({
       where: {
         ...(filter.courseId ? { courseId: filter.courseId } : {}),
-        ...(filter.siteId ? { siteId: filter.siteId } : {}),
+        ...(filter.siteId ? { OR: [{ siteId: filter.siteId }, { siteId: null }] } : {}),
       },
-      include: { author: { select: { fullName: true, role: true } } },
+      include: {
+        author: { select: { fullName: true, role: true } },
+        site: { select: { id: true, name: true } },
+      },
       orderBy: [{ pinned: 'desc' }, { publishedAt: 'desc' }],
       take: 50,
     });

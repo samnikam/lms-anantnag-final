@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
-import { BadgeCheck, Bell, Download, Megaphone, Search, ShieldX } from 'lucide-react';
+import { BadgeCheck, Bell, Download, Megaphone, Search, ShieldX, Trash2 } from 'lucide-react';
 import { API_BASE, api, errorMessage, getAccessToken } from '../lib/api';
 import { useAuth } from '../lib/auth';
 import {
@@ -180,27 +180,35 @@ export function AnnouncementsPage() {
   const { user } = useAuth();
   const qc = useQueryClient();
   const [posting, setPosting] = useState(false);
-  const [form, setForm] = useState({ title: '', body: '', courseId: '', pinned: false });
+  // A notice is addressed to a school, not to a subject — that is how a
+  // department circulates one.
+  const [form, setForm] = useState({ title: '', body: '', siteId: '', pinned: false });
 
   const canPost = ['SUPER_ADMIN', 'ACADEMIC_ADMIN', 'TEACHER'].includes(user!.role);
+  const scopedToOneSchool = user!.role === 'ACADEMIC_ADMIN';
 
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['announcements'],
     queryFn: async () => (await api.get<any[]>('/announcements')).data,
   });
 
-  const { data: courses } = useQuery({
-    queryKey: ['courses', 'picker'],
-    queryFn: async () => (await api.get<any>('/courses', { params: { limit: 100 } })).data,
+  const { data: sites } = useQuery({
+    queryKey: ['sites'],
+    queryFn: async () => (await api.get<any[]>('/sites')).data,
     enabled: posting,
+  });
+
+  const takeDown = useMutation({
+    mutationFn: async (id: string) => (await api.delete(`/announcements/${id}`)).data,
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['announcements'] }),
   });
 
   const post = useMutation({
     mutationFn: async () =>
-      (await api.post('/announcements', { ...form, courseId: form.courseId || undefined })).data,
+      (await api.post('/announcements', { ...form, siteId: form.siteId || undefined })).data,
     onSuccess: () => {
       setPosting(false);
-      setForm({ title: '', body: '', courseId: '', pinned: false });
+      setForm({ title: '', body: '', siteId: '', pinned: false });
       qc.invalidateQueries({ queryKey: ['announcements'] });
     },
   });
@@ -233,10 +241,22 @@ export function AnnouncementsPage() {
               <div className="mb-2 flex flex-wrap items-center gap-2">
                 <h2 className="text-base font-semibold text-ink">{a.title}</h2>
                 {a.pinned && <Badge tone="warn">pinned</Badge>}
+                {canPost && (
+                  <button
+                    type="button"
+                    className="ml-auto rounded p-1 text-red-600 hover:bg-red-50"
+                    title="Take this notice down"
+                    aria-label={`Take down ${a.title}`}
+                    onClick={() => takeDown.mutate(a.id)}
+                  >
+                    <Trash2 className="h-4 w-4" aria-hidden />
+                  </button>
+                )}
               </div>
               <p className="whitespace-pre-wrap text-sm leading-relaxed text-ink-soft">{a.body}</p>
               <p className="mt-3 text-xs text-slate-500">
-                {a.author.fullName} · {format(new Date(a.publishedAt), 'dd MMM yyyy, HH:mm')}
+                {a.author.fullName} · {format(new Date(a.publishedAt), 'dd MMM yyyy, HH:mm')} ·{' '}
+                {a.site ? `${a.site.name} only` : 'All schools'}
               </p>
             </Card>
           ))}
@@ -262,14 +282,29 @@ export function AnnouncementsPage() {
         <Field label="Message">
           <textarea className="input" rows={5} value={form.body} onChange={(e) => setForm({ ...form, body: e.target.value })} />
         </Field>
-        <Field label="Course" hint="Learners enrolled in this course also receive a notification.">
-          <select className="input" value={form.courseId} onChange={(e) => setForm({ ...form, courseId: e.target.value })}>
-            <option value="">Everyone</option>
-            {courses?.items?.map((c: any) => (
-              <option key={c.id} value={c.id}>{c.title}</option>
-            ))}
-          </select>
-        </Field>
+        {scopedToOneSchool ? (
+          <p className="mb-4 text-sm text-ink-soft">
+            This notice goes to your school. Everyone there is notified.
+          </p>
+        ) : (
+          <Field
+            label="Who is it for?"
+            hint="Everyone at the school you pick is notified. Leave as “All schools” for a division-wide notice."
+          >
+            <select
+              className="input"
+              value={form.siteId}
+              onChange={(e) => setForm({ ...form, siteId: e.target.value })}
+            >
+              <option value="">All schools</option>
+              {sites?.map((s: any) => (
+                <option key={s.id} value={s.id}>
+                  {s.name}
+                </option>
+              ))}
+            </select>
+          </Field>
+        )}
         <label className="flex items-center gap-2 text-sm">
           <input type="checkbox" checked={form.pinned} onChange={(e) => setForm({ ...form, pinned: e.target.checked })} />
           Pin to the top

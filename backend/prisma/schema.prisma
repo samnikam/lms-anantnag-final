@@ -287,6 +287,7 @@ model Site {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  announcements Announcement[]
 }
 
 model Classroom {
@@ -1002,7 +1003,9 @@ model Announcement {
   courseId    String?
   course      Course?  @relation(fields: [courseId], references: [id])
   batchId     String?
+  /// A notice is addressed to one school, or to all of them when this is null.
   siteId      String?
+  site        Site?    @relation(fields: [siteId], references: [id], onDelete: Cascade)
   audience    Role[]   @default([])
   title       String
   body        String

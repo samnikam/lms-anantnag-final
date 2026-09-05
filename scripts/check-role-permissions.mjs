@@ -355,5 +355,25 @@ console.log('\n── Deleting is guarded, and never anonymous ──');
 }
 
 
+console.log('\n── A teacher sees only their own register ──');
+{
+  const all = (await call('GET', '/attendance/classes', tokens.superAdmin)).json ?? [];
+  const mine = (await call('GET', '/attendance/classes', tokens.teacher)).json ?? [];
+  const schools = new Set(mine.map((c) => c.site.name));
+
+  ok('a teacher sees fewer classes than the super admin', mine.length < all.length, `${mine.length} vs ${all.length}`);
+  ok('and never more than one school', schools.size <= 1, [...schools].join(', '));
+
+  const notMine = all.find((c) => !mine.some((m) => m.id === c.id));
+  if (notMine) {
+    ok(
+      'forcing another school through the query changes nothing',
+      ((await call('GET', `/attendance/classes?siteId=${notMine.site.id}`, tokens.teacher)).json ?? [])
+        .every((c) => mine.some((m) => m.id === c.id)),
+    );
+  }
+}
+
+
 console.log(`\n${'='.repeat(60)}\n  ${pass} passed, ${fail} failed\n${'='.repeat(60)}`);
 process.exit(fail ? 1 : 0);

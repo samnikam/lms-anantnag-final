@@ -564,7 +564,10 @@ function AttendanceCorrections() {
 function ClassRegister() {
   const { user } = useAuth();
   const qc = useQueryClient();
-  const scoped = user!.role === 'ACADEMIC_ADMIN';
+  // Only a Super Admin chooses a school. An academic admin has one; a teacher
+  // has the classes they were given, wherever those are.
+  const scoped = user!.role !== 'SUPER_ADMIN';
+  const isTeacher = user!.role === 'TEACHER';
 
   const [siteId, setSiteId] = useState('');
   const [date, setDate] = useState(format(new Date(), 'yyyy-MM-dd'));
@@ -673,7 +676,9 @@ function ClassRegister() {
 
           {scoped && (
             <p className="pb-2 text-xs text-slate-500">
-              Showing your school only — another school&rsquo;s register is not yours to take.
+              {isTeacher
+                ? 'Showing the classes you were assigned. Ask the academic admin to be added to another.'
+                : 'Showing your school only — another school’s register is not yours to take.'}
             </p>
           )}
         </div>
@@ -683,8 +688,12 @@ function ClassRegister() {
         <Loading />
       ) : !classes?.length ? (
         <EmptyState
-          title="No classes at this school"
-          description="Add a class under Classes, then put its learners on the roll."
+          title={isTeacher ? 'No classes assigned to you' : 'No classes at this school'}
+          description={
+            isTeacher
+              ? 'The academic admin assigns you to a class, or to a subject on one.'
+              : 'Add a class under Classes, then put its learners on the roll.'
+          }
         />
       ) : (
         <Card>

@@ -24,14 +24,20 @@ export class AttendanceService {
    * been marked. A school takes a register every day whether or not anything
    * was put on the timetable, so this does not depend on a scheduled period.
    */
-  async classRegisterDay(date: Date, siteId?: string) {
+  async classRegisterDay(date: Date, siteId?: string, onlyClassIds?: string[]) {
     const day = new Date(date);
     day.setHours(0, 0, 0, 0);
     const next = new Date(day);
     next.setDate(next.getDate() + 1);
 
     const classes = await this.prisma.schoolClass.findMany({
-      where: { active: true, ...(siteId ? { siteId } : {}) },
+      where: {
+        active: true,
+        ...(siteId ? { siteId } : {}),
+        // A teacher is given the classes they hold; everyone else gets the
+        // school's. An empty list means none, not all.
+        ...(onlyClassIds ? { id: { in: onlyClassIds } } : {}),
+      },
       include: {
         site: { select: { id: true, name: true } },
         classTeacher: { select: { id: true, fullName: true } },

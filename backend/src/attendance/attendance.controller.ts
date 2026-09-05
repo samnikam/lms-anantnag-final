@@ -79,20 +79,30 @@ export class AttendanceController {
   }
 
   /**
-   * The daily class register, scoped to one school. An Academic Admin is held
-   * to their own school; a Super Admin picks one, and until they do they see
-   * every school's classes.
+   * The daily class register.
+   *
+   * A Super Admin picks a school, or sees every school until they do. An
+   * Academic Admin is held to their own. A teacher sees only the classes they
+   * are in charge of or teach a subject in — listing a school's whole
+   * timetable to someone who cannot mark any of it is noise at best, and shows
+   * them another school's roll at worst.
    */
   @Get('classes')
   @Roles(Role.SUPER_ADMIN, Role.ACADEMIC_ADMIN, Role.TEACHER)
-  classRegisterDay(
+  async classRegisterDay(
     @CurrentUser() actor: AuthUser,
     @Query('date') date?: string,
     @Query('siteId') siteId?: string,
   ) {
+    const mine =
+      actor.role === Role.TEACHER ? await this.teacherScope.classIds(actor.id) : undefined;
+
     return this.attendance.classRegisterDay(
       date ? new Date(date) : new Date(),
-      resolveSiteFilter(actor, siteId),
+      actor.role === Role.TEACHER
+        ? (actor.siteId ?? undefined)
+        : resolveSiteFilter(actor, siteId),
+      mine,
     );
   }
 

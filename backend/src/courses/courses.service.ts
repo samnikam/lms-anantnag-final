@@ -22,9 +22,15 @@ export class CoursesService {
     if (user.role === Role.STUDENT || user.role === Role.PARENT) {
       where.state = ContentState.PUBLISHED;
     }
-    // Teachers default to their own assignments unless they ask for the catalogue.
+    // Teachers default to their own assignments unless they ask for the
+    // catalogue. A teacher is assigned either directly to a subject or, far
+    // more often, to a subject on one of their classes — looking at only the
+    // first route hid everything the academic office had actually given them.
     if (user.role === Role.TEACHER && !q.search) {
-      where.teachers = { some: { teacherId: user.id } };
+      where.OR = [
+        { teachers: { some: { teacherId: user.id } } },
+        { classSubjects: { some: { teacherId: user.id } } },
+      ];
     }
 
     const [items, total] = await this.prisma.$transaction([

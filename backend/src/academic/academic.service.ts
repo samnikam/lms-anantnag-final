@@ -141,7 +141,7 @@ export class AcademicService {
   async addSubjectsToClass(
     classId: string,
     courseIds: string[],
-    data: { teacherId?: string; periodsPerWeek?: number },
+    data: { teacherId?: string | null; periodsPerWeek?: number },
     actor: AuthUser,
   ) {
     const added = [];
@@ -159,16 +159,26 @@ export class AcademicService {
 
   async addSubjectToClass(
     classId: string,
-    data: { courseId: string; teacherId?: string; periodsPerWeek?: number },
+    data: { courseId: string; teacherId?: string | null; periodsPerWeek?: number },
     actor: AuthUser,
   ) {
     const cls = await this.prisma.schoolClass.findUniqueOrThrow({ where: { id: classId } });
     assertSiteAllowed(actor, cls.siteId);
 
+    // Only touch what was actually sent: adding a subject in bulk must not
+    // clear a teacher already named against it.
+    const previous = await this.prisma.classSubject.findUnique({
+      where: { classId_courseId: { classId, courseId: data.courseId } },
+      select: { teacherId: true },
+    });
+
     const link = await this.prisma.classSubject.upsert({
       where: { classId_courseId: { classId, courseId: data.courseId } },
-      create: { classId, ...data },
-      update: { teacherId: data.teacherId, periodsPerWeek: data.periodsPerWeek },
+      create: { classId, ...data, teacherId: data.teacherId ?? null },
+      update: {
+        ...(data.teacherId !== undefined ? { teacherId: data.teacherId ?? null } : {}),
+        ...(data.periodsPerWeek !== undefined ? { periodsPerWeek: data.periodsPerWeek } : {}),
+      },
       include: {
         course: { select: { id: true, title: true, code: true } },
         teacher: { select: { id: true, fullName: true } },
@@ -181,6 +191,20 @@ export class AcademicService {
         create: { courseId: data.courseId, teacherId: data.teacherId },
         update: {},
       });
+    }
+
+    // Taking a teacher off a subject should stop them seeing it — unless they
+    // still teach that subject to another class.
+    const removed = previous?.teacherId;
+    if (removed && removed !== data.teacherId) {
+      const stillTeaches = await this.prisma.classSubject.count({
+        where: { courseId: data.courseId, teacherId: removed },
+      });
+      if (stillTeaches === 0) {
+        await this.prisma.courseTeacher.deleteMany({
+          where: { courseId: data.courseId, teacherId: removed },
+        });
+      }
     }
 
     // The class studies this now, so everyone on its roll studies it too —

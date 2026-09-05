@@ -30,7 +30,8 @@ export class AddClassSubjectDto {
    *  courseId is kept for existing callers. */
   @IsOptional() @IsString() courseId?: string;
   @IsOptional() @IsArray() @IsString({ each: true }) courseIds?: string[];
-  @IsOptional() @IsString() teacherId?: string;
+  /** null clears the teacher; omitted leaves whoever is there. */
+  @IsOptional() @IsString() teacherId?: string | null;
   @IsOptional() @IsInt() periodsPerWeek?: number;
 }
 

@@ -545,8 +545,21 @@ function SubjectsPanel({ schoolClass, onChanged }: { schoolClass: any; onChanged
 
   const { data: teachers } = useQuery({
     queryKey: ['users', 'teachers'],
-    queryFn: async () => (await api.get<any>('/users', { params: { role: 'TEACHER', limit: 200 } })).data,
-    enabled: adding,
+    queryFn: async () =>
+      (await api.get<any>('/users', { params: { role: 'TEACHER', limit: 200 } })).data,
+  });
+
+  // Assigning the teacher is what makes a subject appear for them, so it has to
+  // be changeable after the subject is added — not only while adding it.
+  const assignTeacher = useMutation({
+    mutationFn: async ({ courseId, teacherId }: { courseId: string; teacherId: string }) =>
+      (
+        await api.post(`/classes/${schoolClass.id}/subjects`, {
+          courseIds: [courseId],
+          teacherId: teacherId || null,
+        })
+      ).data,
+    onSuccess: onChanged,
   });
 
   const reset = () => {
@@ -622,10 +635,23 @@ function SubjectsPanel({ schoolClass, onChanged }: { schoolClass: any; onChanged
                 <span className="font-medium">{s.course.title}</span>
                 <span className="ml-2 text-xs text-slate-500">{s.course.code}</span>
               </td>
-              <td className="td text-slate-600">
-                {s.teacher?.fullName ?? (
-                  <span className="text-xs text-amber-700">No teacher assigned</span>
-                )}
+              <td className="td">
+                <select
+                  className="input max-w-[15rem] py-1 text-sm"
+                  value={s.teacher?.id ?? ''}
+                  disabled={assignTeacher.isPending}
+                  onChange={(e) =>
+                    assignTeacher.mutate({ courseId: s.course.id, teacherId: e.target.value })
+                  }
+                  aria-label={`Teacher for ${s.course.title}`}
+                >
+                  <option value="">Not assigned</option>
+                  {teachers?.items?.map((t: any) => (
+                    <option key={t.id} value={t.id}>
+                      {t.fullName}
+                    </option>
+                  ))}
+                </select>
               </td>
               <td className="td text-right">
                 <button
@@ -751,6 +777,15 @@ function SubjectsPanel({ schoolClass, onChanged }: { schoolClass: any; onChanged
         </div>
       )}
 
+      {schoolClass.subjects?.length > 0 && (
+        <p className="mt-3 text-xs text-slate-500">
+          A subject only appears for a teacher once they are named against it here.
+        </p>
+      )}
+
+      {assignTeacher.isError && (
+        <p className="mt-2 text-sm text-red-600">{errorMessage(assignTeacher.error)}</p>
+      )}
       {detach.isError && <p className="mt-2 text-sm text-red-600">{errorMessage(detach.error)}</p>}
     </div>
   );

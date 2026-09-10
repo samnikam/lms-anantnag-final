@@ -5,6 +5,24 @@ import { errorMessage } from '../lib/api';
 import { useAuth } from '../lib/auth';
 import { Field } from '../components/ui';
 
+/**
+ * The seeded accounts, offered so an evaluator can sign in as each role without
+ * being handed a list separately.
+ *
+ * These exist only in the demonstration seed. Remove this block — and the
+ * accounts — before the portal carries real staff and learners.
+ */
+const DEMO_ACCOUNTS = [
+  { role: 'Super Admin', email: 'admin@lms.gov.in', scope: 'All schools' },
+  { role: 'Academic Admin', email: 'academic@lms.gov.in', scope: 'Division-wide' },
+  { role: 'Academic Admin', email: 'academic.site2@lms.gov.in', scope: 'One school' },
+  { role: 'Teacher', email: 'teacher@lms.gov.in', scope: 'Own classes' },
+  { role: 'Student', email: 'student@lms.gov.in', scope: 'Own learning' },
+  { role: 'Parent', email: 'parent@lms.gov.in', scope: "Own child" },
+];
+
+const DEMO_PASSWORD = 'Password@123';
+
 export function LoginPage() {
   const { signIn } = useAuth();
   const navigate = useNavigate();
@@ -130,6 +148,42 @@ export function LoginPage() {
             </p>
           </div>
         </form>
+
+        <div className="card mt-5">
+          <header className="flex items-center justify-between gap-3 border-b border-rule px-3 py-2">
+            <div className="label !text-ink">Evaluation accounts</div>
+            <div className="num text-[11px] text-muted">{DEMO_PASSWORD}</div>
+          </header>
+          <ul>
+            {DEMO_ACCOUNTS.map((account) => (
+              <li
+                key={account.email}
+                className="flex items-center gap-3 border-b border-rule px-3 py-2 last:border-b-0"
+              >
+                <div className="min-w-0">
+                  <div className="text-[13px] font-medium text-ink">{account.role}</div>
+                  <div className="num truncate text-[11px] text-muted">{account.email}</div>
+                </div>
+                <div className="hidden text-[13px] text-muted sm:block">{account.scope}</div>
+                <button
+                  type="button"
+                  className="btn ml-auto"
+                  onClick={() => {
+                    setIdentifier(account.email);
+                    setPassword(DEMO_PASSWORD);
+                    setError('');
+                  }}
+                >
+                  Fill
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <p className="mt-3 text-[11px] leading-relaxed text-muted">
+          Every account above uses the same password and exists only in the demonstration data.
+        </p>
         </div>
       </section>
     </div>

@@ -1,18 +1,10 @@
-# Single-platform deployment: API, portal and PostgreSQL all on Render.
+# API and portal on Render; PostgreSQL on Neon (Render's free database is
+# deleted after 30 days, Neon's is not).
 #
 # Render reads this blueprint and creates every service below in one project.
-# The only value you set by hand is CORS_ORIGIN (see the note on the API
-# service) — a blueprint cannot wire it automatically, because the portal and
-# the API would then reference each other in a cycle.
-
-databases:
-  - name: lms-portal-db
-    plan: free
-    databaseName: lms_portal
-    user: lms
-    # Must match the API's region: Render's internal connection string does
-    # not resolve across regions.
-    region: singapore
+# Set by hand: DATABASE_URL (Neon) and CORS_ORIGIN (see the note on the API
+# service — a blueprint cannot wire it, the portal and API would reference
+# each other in a cycle).
 
 services:
   # ── API: NestJS in a container ──────────────────────────────────────────
@@ -22,7 +14,7 @@ services:
     name: lms-portal-api
     runtime: docker
     plan: free
-    region: singapore # closest Render region to J&K; must match the database
+    region: singapore # closest Render region to J&K; same region as the Neon DB
     dockerfilePath: ./backend/Dockerfile
     dockerContext: ./backend
     healthCheckPath: /api/health
@@ -31,10 +23,10 @@ services:
         value: production
       - key: PORT
         value: 4000
+      # Neon (free, Singapore). Paste the *direct* connection string: drop the
+      # "-pooler" host segment and "channel_binding" so Prisma migrate can run.
       - key: DATABASE_URL
-        fromDatabase:
-          name: lms-portal-db
-          property: connectionString
+        sync: false
       - key: JWT_ACCESS_SECRET
         generateValue: true
       - key: JWT_REFRESH_SECRET

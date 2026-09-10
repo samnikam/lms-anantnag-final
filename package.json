@@ -2,7 +2,7 @@
   "name": "hybrid-lms-portal",
   "private": true,
   "version": "1.0.0",
-  "description": "Hybrid Learning LMS Portal \u2014 GEM/2026/B/7822845, PWD J&K R&B Division Pahalgam",
+  "description": "Hybrid Learning LMS Portal \u2014 GEM/2026/B/7822845, PWD J&K R&B Division Anantnag",
   "workspaces": [
     "backend",
     "frontend"

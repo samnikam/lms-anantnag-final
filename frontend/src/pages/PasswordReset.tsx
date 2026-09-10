@@ -12,7 +12,7 @@ function Shell({ title, children }: { title: string; children: React.ReactNode }
         <div className="mb-6 text-center text-white">
           <h1 className="text-2xl font-semibold">Hybrid Learning LMS Portal</h1>
           <p className="mt-1 text-sm text-brand-100">
-            Public Works Department, J&amp;K — R&amp;B Division Pahalgam
+            Public Works Department, J&amp;K — R&amp;B Division Anantnag
           </p>
         </div>
         <Card>

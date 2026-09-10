@@ -29,7 +29,7 @@ async function main() {
         code: `SITE-${String(i + 1).padStart(2, '0')}`,
         name: `Govt. School ${name}`,
         district: 'Anantnag',
-        consigneeAddr: `${name}, R&B Division Pahalgam, J&K`,
+        consigneeAddr: `${name}, R&B Division Anantnag, J&K`,
         contactName: `Site Coordinator ${i + 1}`,
         contactPhone: `94190${String(10000 + i).slice(-5)}`,
         internetLink: `BSNL-FTTH-${1000 + i}`,

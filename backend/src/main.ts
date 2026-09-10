@@ -51,7 +51,7 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('Hybrid Learning LMS Portal API')
-    .setDescription('GeM Bid GEM/2026/B/7822845 — PWD J&K, R&B Division Pahalgam')
+    .setDescription('GeM Bid GEM/2026/B/7822845 — PWD J&K, R&B Division Anantnag')
     .setVersion('1.0')
     .addBearerAuth()
     .build();

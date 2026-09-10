@@ -32,7 +32,7 @@ export function Layout() {
       >
         <div className="shrink-0 border-b border-rule px-4 py-3.5">
           <p className="truncate font-serif text-[17px] font-semibold text-ink">Hybrid Learning</p>
-          <p className="label mt-0.5 truncate">PWD J&amp;K · Pahalgam</p>
+          <p className="label mt-0.5 truncate">PWD J&amp;K · Anantnag</p>
         </div>
 
         <nav

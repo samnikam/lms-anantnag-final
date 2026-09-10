@@ -16,7 +16,7 @@ export const SETTING_KEYS = {
 const DEFAULTS: Record<string, unknown> = {
   [SETTING_KEYS.branding]: {
     portalName: 'Hybrid Learning LMS Portal',
-    department: 'Public Works Department, J&K — R&B Division Pahalgam',
+    department: 'Public Works Department, J&K — R&B Division Anantnag',
     supportEmail: 'support@lms.gov.in',
     primaryColor: '#1a3f75',
   },

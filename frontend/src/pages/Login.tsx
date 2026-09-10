@@ -59,7 +59,7 @@ export function LoginPage() {
             Public Works Department, Jammu &amp; Kashmir
           </h1>
           <p className="mt-3 text-[15px] leading-relaxed text-white/70">
-            R&amp;B Division Pahalgam. Hybrid classrooms across the division, taught from two
+            R&amp;B Division Anantnag. Hybrid classrooms across the division, taught from two
             studios and received on interactive panels at every site.
           </p>
 

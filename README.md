@@ -1,6 +1,6 @@
 # Hybrid Learning LMS Portal
 
-Custom-built Learning Management System for **GeM Bid GEM/2026/B/7822845** — Hybrid Learning Systems, Public Works Department J&K, R&B Division Pahalgam.
+Custom-built Learning Management System for **GeM Bid GEM/2026/B/7822845** — Hybrid Learning Systems, Public Works Department J&K, R&B Division Anantnag.
 
 Built for the deployment footprint the bid describes: **42 interactive panels + 42 OPS PCs across ~21 sites, fed by 2 broadcast studios** — a hub-and-spoke broadcast model, not a set of independent virtual classrooms.
 
@@ -249,4 +249,4 @@ Six defects were found by that test run and fixed:
 
 ---
 
-Source reference: GeM Bid Document GEM/2026/B/7822845, HYBRID LEARNING SYSTEMS, PWD J&K R&B Division Pahalgam.
+Source reference: GeM Bid Document GEM/2026/B/7822845, HYBRID LEARNING SYSTEMS, PWD J&K R&B Division Anantnag.

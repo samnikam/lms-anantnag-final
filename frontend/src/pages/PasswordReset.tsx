@@ -39,7 +39,7 @@ export function ForgotPasswordPage() {
     <Shell title="Reset your password">
       {request.isSuccess ? (
         <>
-          <div className="mb-4 flex items-start gap-3 rounded-md border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-900">
+          <div className="mb-4 flex items-start gap-3 rounded-md border border-attained/30 bg-attained/5 p-4 text-sm text-attained">
             <MailCheck className="mt-0.5 h-5 w-5 shrink-0" aria-hidden />
             <p>{request.data.message}</p>
           </div>
@@ -76,7 +76,7 @@ export function ForgotPasswordPage() {
           </Field>
 
           {request.isError && (
-            <p className="mb-3 text-sm text-red-600">{errorMessage(request.error)}</p>
+            <p className="mb-3 text-sm text-seal">{errorMessage(request.error)}</p>
           )}
 
           <button
@@ -114,7 +114,7 @@ export function ResetPasswordPage() {
   return (
     <Shell title="Choose a new password">
       {reset.isSuccess ? (
-        <div className="rounded-md border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-900">
+        <div className="rounded-md border border-attained/30 bg-attained/5 p-4 text-sm text-attained">
           <p className="font-medium">Password changed.</p>
           <p className="mt-1">
             All other devices have been signed out. Taking you to the sign-in screen…
@@ -162,7 +162,7 @@ export function ResetPasswordPage() {
             />
           </Field>
 
-          {reset.isError && <p className="mb-3 text-sm text-red-600">{errorMessage(reset.error)}</p>}
+          {reset.isError && <p className="mb-3 text-sm text-seal">{errorMessage(reset.error)}</p>}
 
           <button
             type="submit"

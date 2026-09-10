@@ -42,7 +42,7 @@ export function KioskLoginPage() {
         </div>
 
         {error && (
-          <div role="alert" className="mb-6 rounded-md border border-red-200 bg-red-50 px-4 py-3 text-lg text-red-800">
+          <div role="alert" className="mb-6 rounded-md border border-seal/30 bg-seal/5 px-4 py-3 text-lg text-seal">
             {error}
           </div>
         )}
@@ -140,7 +140,7 @@ export function KioskPage() {
             </div>
 
             {joined.degraded ? (
-              <div className="flex flex-col items-center gap-4 rounded-lg bg-amber-100 p-10 text-center text-amber-900">
+              <div className="flex flex-col items-center gap-4 rounded-lg bg-seal/5 p-10 text-center text-seal">
                 <WifiOff className="h-12 w-12" aria-hidden />
                 <p className="text-2xl font-medium">{joined.message}</p>
               </div>
@@ -251,7 +251,7 @@ export function KioskPage() {
           />
         </Field>
         {markAttendance.isError && (
-          <p className="text-sm text-red-600">{errorMessage(markAttendance.error)}</p>
+          <p className="text-sm text-seal">{errorMessage(markAttendance.error)}</p>
         )}
       </Modal>
     </div>

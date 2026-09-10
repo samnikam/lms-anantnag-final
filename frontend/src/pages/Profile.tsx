@@ -78,11 +78,11 @@ export function ProfilePage() {
         <div className="space-y-6 lg:col-span-2">
           <Card title="Profile details">
             {save.isSuccess && (
-              <div className="mb-4 rounded-md border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm text-emerald-800">
+              <div className="mb-4 rounded-md border border-attained/30 bg-attained/5 px-4 py-2 text-sm text-attained">
                 Profile updated.
               </div>
             )}
-            {save.isError && <p className="mb-4 text-sm text-red-600">{errorMessage(save.error)}</p>}
+            {save.isError && <p className="mb-4 text-sm text-seal">{errorMessage(save.error)}</p>}
 
             <Field label="Full name">
               <input
@@ -135,12 +135,12 @@ export function ProfilePage() {
 
           <Card title="Change password">
             {changePassword.isSuccess && (
-              <div className="mb-4 rounded-md border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm text-emerald-800">
+              <div className="mb-4 rounded-md border border-attained/30 bg-attained/5 px-4 py-2 text-sm text-attained">
                 Password changed. Other devices have been signed out.
               </div>
             )}
             {changePassword.isError && (
-              <p className="mb-4 text-sm text-red-600">{errorMessage(changePassword.error)}</p>
+              <p className="mb-4 text-sm text-seal">{errorMessage(changePassword.error)}</p>
             )}
 
             <Field label="Current password">

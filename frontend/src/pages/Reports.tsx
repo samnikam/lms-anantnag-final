@@ -250,7 +250,7 @@ function TeacherWorkload({ rows }: { rows: any[] }) {
             {unassigned.map((r) => (
               <span
                 key={r.teacherId}
-                className="rounded-full bg-amber-100 px-3 py-1 text-xs text-amber-900"
+                className="border border-seal/30 px-2 py-0.5 text-[11px] text-seal"
               >
                 {r.teacher}
               </span>

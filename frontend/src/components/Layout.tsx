@@ -26,30 +26,23 @@ export function Layout() {
       {/* Sidebar — role-filtered navigation */}
       <aside
         className={clsx(
-          'fixed inset-y-0 left-0 z-40 w-64 shrink-0 border-r border-slate-200 bg-white transition-transform lg:static lg:translate-x-0',
+          'fixed inset-y-0 left-0 z-40 flex w-60 shrink-0 flex-col border-r border-rule bg-surface transition-transform lg:static lg:translate-x-0',
           menuOpen ? 'translate-x-0' : '-translate-x-full',
         )}
       >
-        <div className="flex h-16 items-center gap-3 border-b border-slate-200 px-5">
-          <div className="flex h-9 w-9 items-center justify-center rounded bg-brand-700 text-sm font-bold text-white">
-            LMS
-          </div>
-          <div className="min-w-0">
-            <p className="truncate text-sm font-semibold text-ink">Hybrid Learning</p>
-            <p className="truncate text-xs text-slate-500">PWD J&amp;K — Pahalgam</p>
-          </div>
+        <div className="shrink-0 border-b border-rule px-4 py-3.5">
+          <p className="truncate font-serif text-[17px] font-semibold text-ink">Hybrid Learning</p>
+          <p className="label mt-0.5 truncate">PWD J&amp;K · Pahalgam</p>
         </div>
 
         <nav
-          className="h-[calc(100vh-4rem)] overflow-y-auto px-3 pb-6 pt-3"
+          className="scroll-quiet flex-1 overflow-y-auto px-2 pb-6 pt-1"
           aria-label="Main navigation"
         >
           {sections.map((section) => (
             <div key={section.group} className="mb-1">
               {section.label && (
-                <p className="px-3 pb-1 pt-4 text-[11px] font-semibold uppercase tracking-wider text-slate-400">
-                  {section.label}
-                </p>
+                <p className="label px-2.5 pb-1 pt-4 !text-faint">{section.label}</p>
               )}
               <div className="space-y-0.5">
                 {section.items.map(({ to, label, icon: Icon }, i) => (
@@ -60,10 +53,11 @@ export function Layout() {
                     onClick={() => setMenuOpen(false)}
                     className={({ isActive }) =>
                       clsx(
-                        'flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors',
+                        'relative flex items-center gap-2.5 px-2.5 py-1.5 text-[13px] transition-colors',
+                        'before:absolute before:inset-y-0 before:left-0 before:w-[2px]',
                         isActive
-                          ? 'bg-brand-50 font-semibold text-brand-800'
-                          : 'font-medium text-ink-soft hover:bg-slate-50 hover:text-ink',
+                          ? 'bg-paper font-semibold text-ink before:bg-ink'
+                          : 'font-normal text-muted before:bg-transparent hover:bg-paper hover:text-ink',
                       )
                     }
                   >
@@ -71,11 +65,11 @@ export function Layout() {
                         above it to exist first, and saying so beats leaving an
                         admin to work out where to start. */}
                     {section.group === 'setup' ? (
-                      <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-slate-200 text-[10px] font-semibold text-slate-600">
+                      <span className="num w-4 shrink-0 text-center text-[11px] text-faint">
                         {i + 1}
                       </span>
                     ) : (
-                      <Icon className="h-4 w-4 shrink-0" aria-hidden />
+                      <Icon className="h-[14px] w-[14px] shrink-0" aria-hidden />
                     )}
                     <span className="truncate">{label}</span>
                   </NavLink>
@@ -91,10 +85,10 @@ export function Layout() {
       )}
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-20 flex h-16 items-center justify-between border-b border-slate-200 bg-white px-4 lg:px-6">
+        <header className="sticky top-0 z-20 flex h-14 items-center justify-between border-b border-rule bg-surface px-4 lg:px-6">
           <button
             type="button"
-            className="rounded p-2 text-ink-soft hover:bg-slate-100 lg:hidden"
+            className="p-2 text-muted hover:text-ink lg:hidden"
             onClick={() => setMenuOpen((v) => !v)}
             aria-label={menuOpen ? 'Close menu' : 'Open menu'}
           >
@@ -105,20 +99,20 @@ export function Layout() {
             <button
               type="button"
               onClick={() => navigate('/notifications')}
-              className="relative rounded p-2 text-ink-soft hover:bg-slate-100"
+              className="relative p-2 text-muted transition-colors hover:text-ink"
               aria-label={`Notifications${unread?.count ? `, ${unread.count} unread` : ''}`}
             >
               <Bell className="h-5 w-5" />
               {!!unread?.count && (
-                <span className="absolute right-1 top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-600 px-1 text-[10px] font-semibold text-white">
+                <span className="num absolute right-0.5 top-0.5 flex h-[15px] min-w-[15px] items-center justify-center bg-seal px-1 text-[10px] font-medium text-white">
                   {unread.count > 9 ? '9+' : unread.count}
                 </span>
               )}
             </button>
 
-            <div className="hidden text-right sm:block">
-              <p className="text-sm font-medium text-ink">{user.fullName}</p>
-              <p className="text-xs text-slate-500">{ROLE_LABELS[user.role]}</p>
+            <div className="hidden border-l border-rule pl-4 text-right sm:block">
+              <p className="text-[13px] font-medium leading-tight text-ink">{user.fullName}</p>
+              <p className="label mt-0.5">{ROLE_LABELS[user.role]}</p>
             </div>
 
             <button
@@ -135,7 +129,7 @@ export function Layout() {
           </div>
         </header>
 
-        <main className="flex-1 p-4 lg:p-6">
+        <main className="mx-auto w-full max-w-[1500px] flex-1 p-4 lg:p-6">
           <Outlet />
         </main>
       </div>

@@ -28,20 +28,61 @@ export function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-brand-900 via-brand-800 to-brand-700 p-4">
-      <div className="w-full max-w-md">
-        <div className="mb-6 text-center text-white">
-          <h1 className="text-2xl font-semibold">Hybrid Learning LMS Portal</h1>
-          <p className="mt-1 text-sm text-brand-100">
-            Public Works Department, J&amp;K — R&amp;B Division Pahalgam
-          </p>
+    // The masthead carries the department; the form sits on paper beside it.
+    <div className="min-h-screen lg:grid lg:grid-cols-[1fr_520px]">
+      <section className="flex flex-col justify-between bg-ink px-6 py-8 lg:px-12 lg:py-12">
+        <div>
+          <div className="font-serif text-[26px] font-semibold text-white">Hybrid Learning</div>
+          <div className="label mt-1 !text-white/50">Learning Management System · v1.0</div>
         </div>
 
-        <form onSubmit={onSubmit} className="card p-6">
-          <h2 className="mb-5 text-lg font-semibold text-ink">Sign in</h2>
+        <div className="max-w-[46ch] py-10">
+          <h1 className="font-serif text-[24px] font-semibold leading-snug text-white">
+            Public Works Department, Jammu &amp; Kashmir
+          </h1>
+          <p className="mt-3 text-[15px] leading-relaxed text-white/70">
+            R&amp;B Division Pahalgam. Hybrid classrooms across the division, taught from two
+            studios and received on interactive panels at every site.
+          </p>
 
+          <dl className="mt-8 grid grid-cols-2 gap-x-6 gap-y-4">
+            <div>
+              <dt className="label !text-white/40">Sites</dt>
+              <dd className="num mt-1 text-[20px] text-white">21</dd>
+            </div>
+            <div>
+              <dt className="label !text-white/40">Panels</dt>
+              <dd className="num mt-1 text-[20px] text-white">42</dd>
+            </div>
+            <div>
+              <dt className="label !text-white/40">Studios</dt>
+              <dd className="num mt-1 text-[20px] text-white">02</dd>
+            </div>
+            <div>
+              <dt className="label !text-white/40">Session</dt>
+              <dd className="num mt-1 text-[20px] text-white">2026&ndash;27</dd>
+            </div>
+          </dl>
+        </div>
+
+        <p className="num text-[11px] text-white/40">
+          Encrypted sign-in · hashed credentials · session expiry enforced
+        </p>
+      </section>
+
+      <section className="bg-paper px-4 py-8 lg:px-8 lg:py-12">
+        <div className="mx-auto max-w-[440px]">
+          <h2 className="font-serif text-[21px] font-semibold text-ink">Sign in</h2>
+          <p className="mt-1 text-[13px] text-muted">
+            Use the credentials issued by your school or the division office.
+          </p>
+
+        <form onSubmit={onSubmit} className="card mt-4 p-4">
           {error && (
-            <div role="alert" className="mb-4 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">
+            <div
+              role="alert"
+              className="mb-3 border border-seal/30 bg-surface px-3 py-2 text-[13px] text-seal"
+            >
               {error}
             </div>
           )}
@@ -74,22 +115,23 @@ export function LoginPage() {
             </Link>
           </div>
 
-          <button type="submit" className="btn-primary w-full" disabled={busy}>
-            {busy && <Loader2 className="h-4 w-4 animate-spin" aria-hidden />}
+          <button type="submit" className="btn-primary mt-4 w-full justify-center !py-2" disabled={busy}>
+            {busy && <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden />}
             {busy ? 'Signing in…' : 'Sign in'}
           </button>
 
-          <div className="mt-5 border-t border-slate-200 pt-4">
-            <Link to="/kiosk-login" className="btn-secondary w-full">
-              <MonitorPlay className="h-4 w-4" aria-hidden />
+          <div className="mt-4 border-t border-rule pt-3">
+            <Link to="/kiosk-login" className="btn w-full justify-center">
+              <MonitorPlay className="h-3.5 w-3.5" aria-hidden />
               Sign in as a classroom panel
             </Link>
-            <p className="mt-2 text-center text-xs text-slate-500">
+            <p className="mt-2 text-center text-[11px] text-muted">
               For shared interactive panels and OPS PCs in classrooms.
             </p>
           </div>
         </form>
-      </div>
+        </div>
+      </section>
     </div>
   );
 }

@@ -195,7 +195,7 @@ function YearModal({ open, onClose, onDone }: { open: boolean; onClose: () => vo
         <input type="checkbox" checked={form.isCurrent} onChange={(e) => setForm({ ...form, isCurrent: e.target.checked })} />
         Make this the current academic year
       </label>
-      {create.isError && <p className="mt-3 text-sm text-red-600">{errorMessage(create.error)}</p>}
+      {create.isError && <p className="mt-3 text-sm text-seal">{errorMessage(create.error)}</p>}
     </Modal>
   );
 }
@@ -270,7 +270,7 @@ function BatchModal({
           <input className="input" value={form.section} onChange={(e) => setForm({ ...form, section: e.target.value })} />
         </Field>
       </div>
-      {create.isError && <p className="text-sm text-red-600">{errorMessage(create.error)}</p>}
+      {create.isError && <p className="text-sm text-seal">{errorMessage(create.error)}</p>}
     </Modal>
   );
 }
@@ -319,9 +319,9 @@ function EnrolModal({ open, onClose, batches }: { open: boolean; onClose: () => 
           ))}
         </select>
       </Field>
-      {enrol.isError && <p className="text-sm text-red-600">{errorMessage(enrol.error)}</p>}
+      {enrol.isError && <p className="text-sm text-seal">{errorMessage(enrol.error)}</p>}
       {enrol.isSuccess && (
-        <p className="text-sm text-emerald-700">Enrolled {enrol.data.enrolled} learner(s) into the course.</p>
+        <p className="text-sm text-attained">Enrolled {enrol.data.enrolled} learner(s) into the course.</p>
       )}
     </Modal>
   );
@@ -515,7 +515,7 @@ function EnrolmentRegister() {
                   {e.status !== 'WITHDRAWN' && (
                     <button
                       type="button"
-                      className="rounded p-1.5 text-red-600 hover:bg-red-50"
+                      className="rounded p-1.5 text-seal hover:bg-seal/5"
                       aria-label={`Withdraw ${e.student.fullName}`}
                       title="Withdraw"
                       onClick={() => {
@@ -571,7 +571,7 @@ function EnrolmentRegister() {
         <Field label="Reason">
           <input className="input" value={reason} onChange={(e) => setReason(e.target.value)} />
         </Field>
-        {transfer.isError && <p className="text-sm text-red-600">{errorMessage(transfer.error)}</p>}
+        {transfer.isError && <p className="text-sm text-seal">{errorMessage(transfer.error)}</p>}
       </Modal>
 
       <Modal
@@ -601,7 +601,7 @@ function EnrolmentRegister() {
         <Field label="Reason">
           <input className="input" value={reason} onChange={(e) => setReason(e.target.value)} />
         </Field>
-        {withdraw.isError && <p className="text-sm text-red-600">{errorMessage(withdraw.error)}</p>}
+        {withdraw.isError && <p className="text-sm text-seal">{errorMessage(withdraw.error)}</p>}
       </Modal>
 
       <Modal
@@ -748,9 +748,9 @@ function EnrolStudentModal({
         </Field>
       </div>
 
-      {enrol.isError && <p className="text-sm text-red-600">{errorMessage(enrol.error)}</p>}
+      {enrol.isError && <p className="text-sm text-seal">{errorMessage(enrol.error)}</p>}
       {enrol.isSuccess && (
-        <p className="text-sm text-emerald-700">Enrolled — the learner sees the course immediately.</p>
+        <p className="text-sm text-attained">Enrolled — the learner sees the course immediately.</p>
       )}
     </Modal>
   );

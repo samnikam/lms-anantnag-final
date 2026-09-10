@@ -290,7 +290,7 @@ function TeacherAttendance() {
 
             <div>
               {save.isSuccess && (
-                <div className="mb-4 rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
+                <div className="mb-4 rounded-md border border-attained/30 bg-attained/5 px-4 py-3 text-sm text-attained">
                   Attendance saved. Guardians of learners below the threshold have been alerted.
                 </div>
               )}
@@ -550,7 +550,7 @@ function AttendanceCorrections() {
           <input className="input" value={reason} onChange={(e) => setReason(e.target.value)} />
         </Field>
 
-        {correct.isError && <p className="text-sm text-red-600">{errorMessage(correct.error)}</p>}
+        {correct.isError && <p className="text-sm text-seal">{errorMessage(correct.error)}</p>}
       </Modal>
     </>
   );
@@ -704,7 +704,7 @@ function ClassRegister() {
                 <td className="td text-slate-600">{c.site.name}</td>
                 <td className="td text-slate-600">
                   {c.classTeacher?.fullName ?? (
-                    <span className="text-xs text-amber-700">Not assigned</span>
+                    <span className="text-xs text-seal">Not assigned</span>
                   )}
                 </td>
                 <td className="td tabular-nums">{c.learners}</td>
@@ -800,7 +800,7 @@ function ClassRegister() {
               ))}
             </div>
 
-            {save.isError && <p className="mt-3 text-sm text-red-600">{errorMessage(save.error)}</p>}
+            {save.isError && <p className="mt-3 text-sm text-seal">{errorMessage(save.error)}</p>}
           </>
         )}
       </Modal>

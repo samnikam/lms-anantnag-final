@@ -174,8 +174,8 @@ export function SitesPage() {
                           title={`${d.type} · ${d.serialNo}`}
                           className={
                             d.status === 'ONLINE'
-                              ? 'inline-flex items-center gap-1 rounded bg-emerald-100 px-1.5 py-0.5 text-[11px] text-emerald-800'
-                              : 'inline-flex items-center gap-1 rounded bg-red-100 px-1.5 py-0.5 text-[11px] text-red-800'
+                              ? 'inline-flex items-center gap-1 rounded bg-attained/5 px-1.5 py-0.5 text-[11px] text-attained'
+                              : 'inline-flex items-center gap-1 rounded bg-seal/5 px-1.5 py-0.5 text-[11px] text-seal'
                           }
                         >
                           {d.status === 'ONLINE' ? <Wifi className="h-3 w-3" /> : <WifiOff className="h-3 w-3" />}
@@ -348,7 +348,7 @@ function AddClassroomModal({
         </Field>
       </div>
 
-      {create.isError && <p className="text-sm text-red-600">{errorMessage(create.error)}</p>}
+      {create.isError && <p className="text-sm text-seal">{errorMessage(create.error)}</p>}
     </Modal>
   );
 }
@@ -499,7 +499,7 @@ function AddDeviceModal({
         A new device shows as offline until its agent sends a heartbeat.
       </p>
 
-      {create.isError && <p className="mt-3 text-sm text-red-600">{errorMessage(create.error)}</p>}
+      {create.isError && <p className="mt-3 text-sm text-seal">{errorMessage(create.error)}</p>}
     </Modal>
   );
 }

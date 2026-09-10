@@ -273,7 +273,7 @@ function AddResourceModal({
         Allow download for offline use at low-bandwidth sites
       </label>
 
-      {save.isError && <p className="mt-3 text-sm text-red-600">{errorMessage(save.error)}</p>}
+      {save.isError && <p className="mt-3 text-sm text-seal">{errorMessage(save.error)}</p>}
     </Modal>
   );
 }

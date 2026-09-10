@@ -188,7 +188,7 @@ export function CoursesPage() {
                       {canRemove && (
                         <button
                           type="button"
-                          className="rounded p-1 text-red-600 hover:bg-red-50"
+                          className="rounded p-1 text-seal hover:bg-seal/5"
                           title="Delete this subject"
                           aria-label={`Delete ${c.title}`}
                           onClick={() => setConfirmDelete(c)}
@@ -240,7 +240,7 @@ export function CoursesPage() {
             onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
           />
         </Field>
-        {rename.isError && <p className="text-sm text-red-600">{errorMessage(rename.error)}</p>}
+        {rename.isError && <p className="text-sm text-seal">{errorMessage(rename.error)}</p>}
       </Modal>
 
       <Modal
@@ -273,7 +273,7 @@ export function CoursesPage() {
           Past broadcasts, timetable entries and questions in the bank are kept — they simply stop
           pointing at this subject. This cannot be undone.
         </p>
-        {remove.isError && <p className="mt-3 text-sm text-red-600">{errorMessage(remove.error)}</p>}
+        {remove.isError && <p className="mt-3 text-sm text-seal">{errorMessage(remove.error)}</p>}
       </Modal>
 
       <Modal
@@ -336,7 +336,7 @@ export function CoursesPage() {
           </button>
         )}
 
-        {create.isError && <p className="mt-3 text-sm text-red-600">{errorMessage(create.error)}</p>}
+        {create.isError && <p className="mt-3 text-sm text-seal">{errorMessage(create.error)}</p>}
       </Modal>
     </>
   );
@@ -521,7 +521,7 @@ export function CourseDetailPage() {
                   </button>
                   <button
                     type="button"
-                    className="rounded p-1 text-red-600 hover:bg-red-50"
+                    className="rounded p-1 text-seal hover:bg-seal/5"
                     aria-label={`Remove ${mod.title}`}
                     onClick={() =>
                       setConfirmRemove({
@@ -563,7 +563,7 @@ export function CourseDetailPage() {
                         </button>
                         <button
                           type="button"
-                          className="rounded p-1 text-red-600 hover:bg-red-50"
+                          className="rounded p-1 text-seal hover:bg-seal/5"
                           aria-label={`Remove ${lesson.title}`}
                           onClick={() =>
                             setConfirmRemove({ kind: 'lesson', id: lesson.id, title: lesson.title })
@@ -663,7 +663,7 @@ export function CourseDetailPage() {
                     </div>
                     <button
                       type="button"
-                      className="rounded p-1.5 text-red-600 hover:bg-red-50"
+                      className="rounded p-1.5 text-seal hover:bg-seal/5"
                       aria-label={`Remove ${t.teacher.fullName}`}
                       onClick={() => removeTeacher.mutate(t.teacher.id)}
                     >
@@ -678,7 +678,7 @@ export function CourseDetailPage() {
               </p>
             )}
             {removeTeacher.isError && (
-              <p className="mt-2 text-sm text-red-600">{errorMessage(removeTeacher.error)}</p>
+              <p className="mt-2 text-sm text-seal">{errorMessage(removeTeacher.error)}</p>
             )}
           </Card>
 
@@ -725,7 +725,7 @@ export function CourseDetailPage() {
             autoFocus
           />
         </Field>
-        {rename.isError && <p className="text-sm text-red-600">{errorMessage(rename.error)}</p>}
+        {rename.isError && <p className="text-sm text-seal">{errorMessage(rename.error)}</p>}
       </Modal>
 
       <Modal
@@ -754,7 +754,7 @@ export function CourseDetailPage() {
             : 'Learner progress recorded against this lesson is removed with it.'}
         </p>
         {removeItem.isError && (
-          <p className="mt-3 text-sm text-red-600">{errorMessage(removeItem.error)}</p>
+          <p className="mt-3 text-sm text-seal">{errorMessage(removeItem.error)}</p>
         )}
       </Modal>
 
@@ -800,7 +800,7 @@ export function CourseDetailPage() {
           </ul>
         )}
         {assignTeacher.isError && (
-          <p className="mt-3 text-sm text-red-600">{errorMessage(assignTeacher.error)}</p>
+          <p className="mt-3 text-sm text-seal">{errorMessage(assignTeacher.error)}</p>
         )}
       </Modal>
 
@@ -835,7 +835,7 @@ export function CourseDetailPage() {
         <Field label="New subject code">
           <input className="input" value={newCode} onChange={(e) => setNewCode(e.target.value)} />
         </Field>
-        {clone.isError && <p className="text-sm text-red-600">{errorMessage(clone.error)}</p>}
+        {clone.isError && <p className="text-sm text-seal">{errorMessage(clone.error)}</p>}
       </Modal>
     </>
   );
@@ -956,7 +956,7 @@ function EditCourseModal({
         </Field>
       </div>
 
-      {save.isError && <p className="text-sm text-red-600">{errorMessage(save.error)}</p>}
+      {save.isError && <p className="text-sm text-seal">{errorMessage(save.error)}</p>}
     </Modal>
   );
 }

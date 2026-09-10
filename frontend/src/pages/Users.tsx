@@ -153,7 +153,7 @@ export function UsersPage() {
                     {canDelete && u.id !== user!.id && (
                       <button
                         type="button"
-                        className="rounded p-1 text-red-600 hover:bg-red-50"
+                        className="rounded p-1 text-seal hover:bg-seal/5"
                         title={`Delete ${u.fullName}`}
                         aria-label={`Delete ${u.fullName}`}
                         onClick={() => setConfirmDelete(u)}
@@ -224,11 +224,11 @@ export function UsersPage() {
           Registers they marked, audit entries and classes they were in charge of are kept — they
           simply stop naming this person. This cannot be undone.
         </p>
-        <p className="mt-3 rounded-md border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
+        <p className="mt-3 rounded-md border border-seal/30 bg-seal/5 p-3 text-sm text-seal">
           Suspending keeps the full record and stops them signing in. Delete only an account created
           in error.
         </p>
-        {remove.isError && <p className="mt-3 text-sm text-red-600">{errorMessage(remove.error)}</p>}
+        {remove.isError && <p className="mt-3 text-sm text-seal">{errorMessage(remove.error)}</p>}
       </Modal>
 
       <LinkParentModal open={linking} onClose={() => setLinking(false)} />
@@ -406,7 +406,7 @@ function CreateUserModal({
         <input className="input" type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} />
       </Field>
 
-      {create.isError && <p className="text-sm text-red-600">{errorMessage(create.error)}</p>}
+      {create.isError && <p className="text-sm text-seal">{errorMessage(create.error)}</p>}
     </Modal>
   );
 }
@@ -495,7 +495,7 @@ function LinkParentModal({ open, onClose }: { open: boolean; onClose: () => void
         </Field>
       </div>
 
-      {link.isError && <p className="mb-3 text-sm text-red-600">{errorMessage(link.error)}</p>}
+      {link.isError && <p className="mb-3 text-sm text-seal">{errorMessage(link.error)}</p>}
 
       <h3 className="mb-2 mt-6 text-sm font-semibold text-ink">Existing links</h3>
       {links?.length ? (
@@ -575,7 +575,7 @@ function ResetPasswordModal({ user, onClose }: { user: any | null; onClose: () =
       }
     >
       {reset.isSuccess ? (
-        <div className="rounded-md border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-900">
+        <div className="rounded-md border border-attained/30 bg-attained/5 p-4 text-sm text-attained">
           <p className="font-medium">Password reset.</p>
           <p className="mt-1">
             Give {user?.fullName} the new password and ask them to change it after signing in. All
@@ -611,7 +611,7 @@ function ResetPasswordModal({ user, onClose }: { user: any | null; onClose: () =
             />
           </Field>
 
-          {reset.isError && <p className="text-sm text-red-600">{errorMessage(reset.error)}</p>}
+          {reset.isError && <p className="text-sm text-seal">{errorMessage(reset.error)}</p>}
         </>
       )}
     </Modal>

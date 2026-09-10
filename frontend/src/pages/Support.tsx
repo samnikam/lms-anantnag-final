@@ -56,7 +56,7 @@ export function SupportPage() {
       />
 
       {isHandler && sla && sla.some((t) => t.breached) && (
-        <div className="mb-6 rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+        <div className="mb-6 rounded-md border border-seal/30 bg-seal/5 px-4 py-3 text-sm text-seal">
           {sla.filter((t) => t.breached).length} ticket(s) have breached their response target.
         </div>
       )}
@@ -159,7 +159,7 @@ function RaiseModal({ open, onClose, onDone }: { open: boolean; onClose: () => v
           </select>
         </Field>
       </div>
-      {create.isError && <p className="text-sm text-red-600">{errorMessage(create.error)}</p>}
+      {create.isError && <p className="text-sm text-seal">{errorMessage(create.error)}</p>}
     </Modal>
   );
 }

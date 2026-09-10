@@ -278,7 +278,7 @@ function ManualReviewPanel({
         ))}
       </ul>
 
-      {grade.isError && <p className="mt-3 text-sm text-red-600">{errorMessage(grade.error)}</p>}
+      {grade.isError && <p className="mt-3 text-sm text-seal">{errorMessage(grade.error)}</p>}
     </Modal>
   );
 }
@@ -373,7 +373,7 @@ export function QuizAttemptPage() {
           <h2 className="text-xl font-semibold text-ink">
             {result.autoSubmitted ? 'Attempt submitted automatically' : 'Attempt submitted'}
           </h2>
-          {result.message && <p className="mt-2 text-sm text-amber-700">{result.message}</p>}
+          {result.message && <p className="mt-2 text-sm text-seal">{result.message}</p>}
 
           {result.awaitingManualReview ? (
             <p className="mt-4 text-sm text-ink-soft">
@@ -413,7 +413,7 @@ export function QuizAttemptPage() {
             <span
               className={clsx(
                 'inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm font-semibold tabular-nums',
-                remaining !== null && remaining < 120 ? 'bg-red-100 text-red-800' : 'bg-slate-100 text-ink',
+                remaining !== null && remaining < 120 ? 'bg-seal/5 text-seal' : 'bg-slate-100 text-ink',
               )}
             >
               <Clock className="h-4 w-4" aria-hidden />
@@ -427,7 +427,7 @@ export function QuizAttemptPage() {
       />
 
       {attempt.proctoringEnabled && (
-        <div className="mb-4 flex items-start gap-3 rounded-md border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+        <div className="mb-4 flex items-start gap-3 rounded-md border border-seal/30 bg-seal/5 px-4 py-3 text-sm text-seal">
           <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
           <p>
             This is a proctored assessment. Switching tabs or windows is recorded, and the attempt is
@@ -437,7 +437,7 @@ export function QuizAttemptPage() {
       )}
 
       {warning && (
-        <div role="alert" className="mb-4 flex items-start gap-3 rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+        <div role="alert" className="mb-4 flex items-start gap-3 rounded-md border border-seal/30 bg-seal/5 px-4 py-3 text-sm text-seal">
           <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
           <p>{warning}</p>
         </div>
@@ -707,7 +707,7 @@ function QuizBuilderModal({
           )}
 
           {createQuiz.isError && (
-            <p className="text-sm text-red-600">{errorMessage(createQuiz.error)}</p>
+            <p className="text-sm text-seal">{errorMessage(createQuiz.error)}</p>
           )}
         </>
       ) : (
@@ -751,7 +751,7 @@ function QuizBuilderModal({
           )}
 
           {attachAndPublish.isError && (
-            <p className="mt-3 text-sm text-red-600">{errorMessage(attachAndPublish.error)}</p>
+            <p className="mt-3 text-sm text-seal">{errorMessage(attachAndPublish.error)}</p>
           )}
         </>
       )}
@@ -829,7 +829,7 @@ function QuestionComposer({
           {options.length > 2 && (
             <button
               type="button"
-              className="rounded p-1.5 text-red-600 hover:bg-red-50"
+              className="rounded p-1.5 text-seal hover:bg-seal/5"
               aria-label={`Remove option ${i + 1}`}
               onClick={() => setOptions(options.filter((_, j) => j !== i))}
             >
@@ -868,7 +868,7 @@ function QuestionComposer({
         </button>
       </div>
 
-      {create.isError && <p className="mt-2 text-sm text-red-600">{errorMessage(create.error)}</p>}
+      {create.isError && <p className="mt-2 text-sm text-seal">{errorMessage(create.error)}</p>}
     </div>
   );
 }

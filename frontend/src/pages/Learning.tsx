@@ -129,7 +129,7 @@ export function CoursePlayerPage() {
                       )}
                     >
                       {l.completed ? (
-                        <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" aria-hidden />
+                        <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-attained" aria-hidden />
                       ) : (
                         <Circle className="mt-0.5 h-4 w-4 shrink-0 text-slate-300" aria-hidden />
                       )}
@@ -148,7 +148,7 @@ export function CoursePlayerPage() {
             <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
               <h2 className="text-xl font-semibold text-ink">{lesson.title}</h2>
               {lesson.completed ? (
-                <span className="inline-flex items-center gap-1.5 text-sm font-medium text-emerald-700">
+                <span className="inline-flex items-center gap-1.5 text-sm font-medium text-attained">
                   <CheckCircle2 className="h-4 w-4" aria-hidden />
                   Completed
                 </span>

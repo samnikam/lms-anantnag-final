@@ -296,7 +296,7 @@ export function TimetablePage() {
                           </button>
                           <button
                             type="button"
-                            className="rounded p-1.5 text-red-600 hover:bg-red-50"
+                            className="rounded p-1.5 text-seal hover:bg-seal/5"
                             aria-label={`Delete ${event.title}`}
                             onClick={() => setConfirmDelete(event)}
                           >
@@ -587,7 +587,7 @@ function EntryModal({
       }
     >
       {conflict ? (
-        <div className="rounded-md border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
+        <div className="rounded-md border border-seal/30 bg-seal/5 p-4 text-sm text-seal">
           <p className="font-medium">Saved, but it overlaps something else</p>
           <p className="mt-1">{conflict}</p>
           <p className="mt-2 text-xs">
@@ -737,7 +737,7 @@ function EntryModal({
             </Field>
           )}
 
-          {save.isError && <p className="mt-3 text-sm text-red-600">{errorMessage(save.error)}</p>}
+          {save.isError && <p className="mt-3 text-sm text-seal">{errorMessage(save.error)}</p>}
         </>
       )}
     </Modal>
@@ -941,11 +941,11 @@ function ClassPicker({
 
 /** Colour per entry type, used by both the grid and the agenda. */
 const TYPE_STYLE: Record<string, { block: string; dot: string }> = {
-  CLASS: { block: 'bg-brand-50 border-brand-300 text-brand-900', dot: 'bg-brand-500' },
-  EXAM: { block: 'bg-red-50 border-red-300 text-red-900', dot: 'bg-red-500' },
-  DEADLINE: { block: 'bg-amber-50 border-amber-300 text-amber-900', dot: 'bg-amber-500' },
-  HOLIDAY: { block: 'bg-emerald-50 border-emerald-300 text-emerald-900', dot: 'bg-emerald-500' },
-  EVENT: { block: 'bg-slate-100 border-slate-300 text-slate-800', dot: 'bg-slate-400' },
+  CLASS: { block: 'bg-surface border-rule text-ink', dot: 'bg-ink' },
+  EXAM: { block: 'bg-seal/5 border-seal/30 text-seal', dot: 'bg-seal' },
+  DEADLINE: { block: 'bg-surface border-seal/40 text-seal', dot: 'bg-seal/50' },
+  HOLIDAY: { block: 'bg-attained/5 border-attained/30 text-attained', dot: 'bg-attained' },
+  EVENT: { block: 'bg-paper border-rule text-muted', dot: 'bg-faint' },
 };
 
 const minutesOf = (d: Date) => d.getHours() * 60 + d.getMinutes();
@@ -1342,7 +1342,7 @@ function SubstitutionsPanel({ role }: { role: string }) {
             </Field>
 
             {decide.isError && (
-              <p className="mt-2 text-sm text-red-600">{errorMessage(decide.error)}</p>
+              <p className="mt-2 text-sm text-seal">{errorMessage(decide.error)}</p>
             )}
           </>
         )}
@@ -1409,7 +1409,7 @@ function RequestCoverModal({
               onChange={(e) => setReason(e.target.value)}
             />
           </Field>
-          {ask.isError && <p className="text-sm text-red-600">{errorMessage(ask.error)}</p>}
+          {ask.isError && <p className="text-sm text-seal">{errorMessage(ask.error)}</p>}
         </>
       )}
     </Modal>

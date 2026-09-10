@@ -312,7 +312,7 @@ function ScheduleModal({
         Create a Zoom meeting for this session
       </label>
 
-      {schedule.isError && <p className="mt-3 text-sm text-red-600">{errorMessage(schedule.error)}</p>}
+      {schedule.isError && <p className="mt-3 text-sm text-seal">{errorMessage(schedule.error)}</p>}
     </Modal>
   );
 }
@@ -454,7 +454,7 @@ export function SessionDetailPage() {
                       <div className="flex shrink-0 gap-1">
                         <button
                           type="button"
-                          className="rounded p-1.5 text-emerald-700 hover:bg-emerald-50"
+                          className="rounded p-1.5 text-attained hover:bg-attained/5"
                           aria-label="Approve question"
                           onClick={() => moderate.mutate({ questionId: q.id, approved: true })}
                         >
@@ -462,7 +462,7 @@ export function SessionDetailPage() {
                         </button>
                         <button
                           type="button"
-                          className="rounded p-1.5 text-red-700 hover:bg-red-50"
+                          className="rounded p-1.5 text-seal hover:bg-seal/5"
                           aria-label="Dismiss question"
                           onClick={() => moderate.mutate({ questionId: q.id, approved: false })}
                         >

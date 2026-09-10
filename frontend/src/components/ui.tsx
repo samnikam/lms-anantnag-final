@@ -12,12 +12,12 @@ export function PageHeader({
   actions?: ReactNode;
 }) {
   return (
-    <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
-      <div>
-        <h1 className="text-2xl font-semibold text-ink">{title}</h1>
-        {description && <p className="mt-1 text-sm text-ink-soft">{description}</p>}
+    <div className="mb-5 flex flex-wrap items-start justify-between gap-4 border-b border-rule pb-4">
+      <div className="min-w-0">
+        <h1 className="font-serif text-[22px] leading-tight text-ink">{title}</h1>
+        {description && <p className="mt-1 max-w-3xl text-[13px] text-muted">{description}</p>}
       </div>
-      {actions && <div className="flex flex-wrap gap-2">{actions}</div>}
+      {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}
     </div>
   );
 }
@@ -36,12 +36,12 @@ export function Card({
   return (
     <section className={clsx('card', className)}>
       {(title || action) && (
-        <header className="flex items-center justify-between border-b border-slate-200 px-5 py-3">
-          {title && <h2 className="text-sm font-semibold text-ink">{title}</h2>}
+        <header className="flex flex-wrap items-center justify-between gap-3 border-b border-rule px-3 py-2">
+          {title && <h2 className="label !text-ink">{title}</h2>}
           {action}
         </header>
       )}
-      <div className="p-5">{children}</div>
+      <div className="p-3">{children}</div>
     </section>
   );
 }
@@ -59,15 +59,15 @@ export function StatCard({
 }) {
   const tones = {
     default: 'text-ink',
-    good: 'text-emerald-700',
-    warn: 'text-amber-700',
-    bad: 'text-red-700',
+    good: 'text-attained',
+    warn: 'text-seal',
+    bad: 'text-seal',
   };
   return (
-    <div className="card p-5">
-      <p className="text-xs font-medium uppercase tracking-wide text-slate-500">{label}</p>
-      <p className={clsx('mt-2 text-3xl font-semibold tabular-nums', tones[tone])}>{value}</p>
-      {hint && <p className="mt-1 text-xs text-slate-500">{hint}</p>}
+    <div className="card p-3">
+      <p className="label">{label}</p>
+      <p className={clsx('num mt-1.5 text-[22px] leading-none', tones[tone])}>{value}</p>
+      {hint && <p className="mt-1.5 text-[11px] text-muted">{hint}</p>}
     </div>
   );
 }
@@ -84,9 +84,9 @@ export function Loading({ label = 'Loading…' }: { label?: string }) {
 
 export function ErrorState({ message, onRetry }: { message: string; onRetry?: () => void }) {
   return (
-    <div className="flex flex-col items-center gap-3 rounded-lg border border-red-200 bg-red-50 py-10 text-center">
-      <AlertCircle className="h-6 w-6 text-red-600" aria-hidden />
-      <p className="max-w-md text-sm text-red-800">{message}</p>
+    <div className="flex flex-col items-center gap-3 rounded-lg border border-seal/30 bg-seal/5 py-10 text-center">
+      <AlertCircle className="h-6 w-6 text-seal" aria-hidden />
+      <p className="max-w-md text-sm text-seal">{message}</p>
       {onRetry && (
         <button type="button" className="btn-secondary" onClick={onRetry}>
           Try again
@@ -106,20 +106,20 @@ export function EmptyState({
   action?: ReactNode;
 }) {
   return (
-    <div className="flex flex-col items-center gap-2 py-14 text-center">
-      <Inbox className="h-8 w-8 text-slate-300" aria-hidden />
-      <p className="font-medium text-ink">{title}</p>
-      {description && <p className="max-w-md text-sm text-ink-soft">{description}</p>}
+    <div className="flex flex-col items-center gap-1.5 py-10 text-center">
+      <Inbox className="mb-1 h-5 w-5 text-faint" aria-hidden />
+      <p className="text-[13px] font-medium text-ink">{title}</p>
+      {description && <p className="max-w-md text-[13px] text-muted">{description}</p>}
       {action && <div className="mt-3">{action}</div>}
     </div>
   );
 }
 
 const BADGE_TONES: Record<string, string> = {
-  neutral: 'bg-slate-100 text-slate-700',
-  good: 'bg-emerald-100 text-emerald-800',
-  warn: 'bg-amber-100 text-amber-800',
-  bad: 'bg-red-100 text-red-800',
+  neutral: 'border-rule bg-surface text-muted',
+  good: 'border-attained/30 bg-surface text-attained',
+  warn: 'border-seal/30 bg-surface text-seal',
+  bad: 'bg-seal/5 text-seal',
   info: 'bg-brand-100 text-brand-800',
 };
 
@@ -133,7 +133,7 @@ export function Badge({
   return (
     <span
       className={clsx(
-        'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium',
+        'inline-flex items-center border px-1.5 py-px text-[11px] font-medium uppercase tracking-[0.06em]',
         BADGE_TONES[tone],
       )}
     >
@@ -168,7 +168,7 @@ export function ProgressBar({ value, label }: { value: number; label?: string })
         </div>
       )}
       <div
-        className="h-2 w-full overflow-hidden rounded-full bg-slate-200"
+        className="h-1.5 w-full overflow-hidden bg-rule"
         role="progressbar"
         aria-valuenow={pct}
         aria-valuemin={0}
@@ -176,8 +176,8 @@ export function ProgressBar({ value, label }: { value: number; label?: string })
       >
         <div
           className={clsx(
-            'h-full rounded-full transition-all',
-            pct >= 75 ? 'bg-emerald-500' : pct >= 40 ? 'bg-brand-500' : 'bg-amber-500',
+            'h-full transition-all',
+            pct >= 75 ? 'bg-attained' : pct >= 40 ? 'bg-ink-soft' : 'bg-seal',
           )}
           style={{ width: `${pct}%` }}
         />
@@ -188,18 +188,18 @@ export function ProgressBar({ value, label }: { value: number; label?: string })
 
 export function Table({ headers, children }: { headers: string[]; children: ReactNode }) {
   return (
-    <div className="overflow-x-auto">
-      <table className="min-w-full divide-y divide-slate-200">
-        <thead className="bg-slate-50">
+    <div className="scroll-quiet overflow-x-auto">
+      <table className="min-w-full">
+        <thead className="border-b border-rule">
           <tr>
-            {headers.map((h) => (
-              <th key={h} scope="col" className="th">
+            {headers.map((h, i) => (
+              <th key={h || i} scope="col" className="th">
                 {h}
               </th>
             ))}
           </tr>
         </thead>
-        <tbody className="divide-y divide-slate-100 bg-white">{children}</tbody>
+        <tbody className="divide-y divide-rule bg-surface [&>tr:hover]:bg-paper">{children}</tbody>
       </table>
     </div>
   );
@@ -221,7 +221,7 @@ export function Field({
       <label className="label">{label}</label>
       {children}
       {hint && !error && <p className="mt-1 text-xs text-slate-500">{hint}</p>}
-      {error && <p className="mt-1 text-xs text-red-600">{error}</p>}
+      {error && <p className="mt-1 text-xs text-seal">{error}</p>}
     </div>
   );
 }
@@ -243,21 +243,25 @@ export function Modal({
   if (!open) return null;
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-ink/50 p-4"
       role="dialog"
       aria-modal="true"
       aria-label={title}
       onClick={onClose}
     >
       <div
-        className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-lg bg-white shadow-xl"
+        className="scroll-quiet max-h-[90vh] w-full max-w-2xl overflow-y-auto border border-rule bg-surface"
         onClick={(e) => e.stopPropagation()}
       >
-        <header className="border-b border-slate-200 px-5 py-4">
-          <h2 className="text-lg font-semibold text-ink">{title}</h2>
+        <header className="sticky top-0 z-10 border-b border-rule bg-surface px-4 py-3">
+          <h2 className="font-serif text-[17px] text-ink">{title}</h2>
         </header>
-        <div className="px-5 py-4">{children}</div>
-        {footer && <footer className="flex justify-end gap-2 border-t border-slate-200 px-5 py-4">{footer}</footer>}
+        <div className="px-4 py-4">{children}</div>
+        {footer && (
+          <footer className="sticky bottom-0 flex justify-end gap-2 border-t border-rule bg-paper px-4 py-3">
+            {footer}
+          </footer>
+        )}
       </div>
     </div>
   );

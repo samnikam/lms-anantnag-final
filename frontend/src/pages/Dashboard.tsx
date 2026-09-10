@@ -213,7 +213,7 @@ function AcademicAdminDashboard({ data }: { data: any }) {
                   <td className="td tabular-nums">{c.learners}</td>
                   <td className="td text-slate-600">
                     {c.classTeacher ?? (
-                      <span className="text-xs text-amber-700">Not assigned</span>
+                      <span className="text-xs text-seal">Not assigned</span>
                     )}
                   </td>
                 </tr>
@@ -616,7 +616,7 @@ function OversightDashboard({ data }: { data: any }) {
               <td className="td tabular-nums">
                 {site.sessionsReceived}
                 {site.sessionsDegraded > 0 && (
-                  <span className="ml-2 text-xs text-amber-700">{site.sessionsDegraded} degraded</span>
+                  <span className="ml-2 text-xs text-seal">{site.sessionsDegraded} degraded</span>
                 )}
               </td>
               <td className="td tabular-nums">{site.avgHeadcount}</td>

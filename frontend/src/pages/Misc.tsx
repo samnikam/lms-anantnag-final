@@ -125,17 +125,17 @@ export function VerifyCertificatePage() {
             <div
               className={
                 data.valid
-                  ? 'mt-6 rounded-md border border-emerald-200 bg-emerald-50 p-5'
-                  : 'mt-6 rounded-md border border-red-200 bg-red-50 p-5'
+                  ? 'mt-6 rounded-md border border-attained/30 bg-attained/5 p-5'
+                  : 'mt-6 rounded-md border border-seal/30 bg-seal/5 p-5'
               }
             >
               {data.valid ? (
                 <>
-                  <div className="mb-3 flex items-center gap-2 text-emerald-800">
+                  <div className="mb-3 flex items-center gap-2 text-attained">
                     <BadgeCheck className="h-5 w-5" aria-hidden />
                     <p className="font-semibold">Valid certificate</p>
                   </div>
-                  <dl className="space-y-2 text-sm text-emerald-900">
+                  <dl className="space-y-2 text-sm text-attained">
                     <div className="flex justify-between gap-4">
                       <dt>Holder</dt>
                       <dd className="font-medium">{data.holder}</dd>
@@ -155,7 +155,7 @@ export function VerifyCertificatePage() {
                   </dl>
                 </>
               ) : (
-                <div className="flex items-center gap-2 text-red-800">
+                <div className="flex items-center gap-2 text-seal">
                   <ShieldX className="h-5 w-5" aria-hidden />
                   <p className="text-sm font-medium">{data.message}</p>
                 </div>
@@ -244,7 +244,7 @@ export function AnnouncementsPage() {
                 {canPost && (
                   <button
                     type="button"
-                    className="ml-auto rounded p-1 text-red-600 hover:bg-red-50"
+                    className="ml-auto rounded p-1 text-seal hover:bg-seal/5"
                     title="Take this notice down"
                     aria-label={`Take down ${a.title}`}
                     onClick={() => takeDown.mutate(a.id)}
@@ -309,7 +309,7 @@ export function AnnouncementsPage() {
           <input type="checkbox" checked={form.pinned} onChange={(e) => setForm({ ...form, pinned: e.target.checked })} />
           Pin to the top
         </label>
-        {post.isError && <p className="mt-3 text-sm text-red-600">{errorMessage(post.error)}</p>}
+        {post.isError && <p className="mt-3 text-sm text-seal">{errorMessage(post.error)}</p>}
       </Modal>
     </>
   );

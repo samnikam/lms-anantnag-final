@@ -219,7 +219,7 @@ function CreateAssignmentModal({
         Accept late submissions
       </label>
 
-      {create.isError && <p className="mt-3 text-sm text-red-600">{errorMessage(create.error)}</p>}
+      {create.isError && <p className="mt-3 text-sm text-seal">{errorMessage(create.error)}</p>}
     </Modal>
   );
 }
@@ -341,8 +341,8 @@ export function AssignmentDetailPage() {
                 {submit.isPending ? 'Submitting…' : mySubmission ? 'Resubmit' : 'Submit'}
               </button>
 
-              {submit.isError && <p className="mt-3 text-sm text-red-600">{errorMessage(submit.error)}</p>}
-              {submit.isSuccess && <p className="mt-3 text-sm text-emerald-700">Submission received.</p>}
+              {submit.isError && <p className="mt-3 text-sm text-seal">{errorMessage(submit.error)}</p>}
+              {submit.isSuccess && <p className="mt-3 text-sm text-attained">Submission received.</p>}
             </Card>
           ) : (
             <Card title={`Submissions (${data.submissions.length})`} className="mt-6">
@@ -434,7 +434,7 @@ export function AssignmentDetailPage() {
         <Field label="Feedback">
           <textarea className="input" rows={3} value={feedback} onChange={(e) => setFeedback(e.target.value)} />
         </Field>
-        {grade.isError && <p className="text-sm text-red-600">{errorMessage(grade.error)}</p>}
+        {grade.isError && <p className="text-sm text-seal">{errorMessage(grade.error)}</p>}
       </Modal>
     </>
   );

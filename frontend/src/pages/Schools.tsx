@@ -198,7 +198,7 @@ export function SchoolsManager({ canManage }: { canManage: boolean }) {
                       </button>
                       <button
                         type="button"
-                        className="rounded p-1.5 text-red-600 hover:bg-red-50"
+                        className="rounded p-1.5 text-seal hover:bg-seal/5"
                         aria-label={`Delete ${s.name}`}
                         onClick={() => setConfirmDelete(s)}
                       >
@@ -410,7 +410,7 @@ function SchoolFormModal({
         </Field>
       </div>
 
-      {save.isError && <p className="text-sm text-red-600">{errorMessage(save.error)}</p>}
+      {save.isError && <p className="text-sm text-seal">{errorMessage(save.error)}</p>}
     </Modal>
   );
 }

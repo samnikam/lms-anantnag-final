@@ -150,7 +150,7 @@ export function ClassesPage() {
                           Class teacher: <strong>{c.classTeacher.fullName}</strong>
                         </span>
                       ) : (
-                        <span className="text-amber-700">No class teacher assigned</span>
+                        <span className="text-seal">No class teacher assigned</span>
                       )}
                     </p>
                   </div>
@@ -183,7 +183,7 @@ export function ClassesPage() {
                   </button>
                   <button
                     type="button"
-                    className="rounded p-1.5 text-red-600 hover:bg-red-50"
+                    className="rounded p-1.5 text-seal hover:bg-seal/5"
                     aria-label={`Delete ${c.name}`}
                     onClick={() => setConfirmDelete(c)}
                   >
@@ -451,7 +451,7 @@ function ClassModal({
         </Field>
       </div>
 
-      {save.isError && <p className="text-sm text-red-600">{errorMessage(save.error)}</p>}
+      {save.isError && <p className="text-sm text-seal">{errorMessage(save.error)}</p>}
     </Modal>
   );
 }
@@ -521,7 +521,7 @@ function SectionModal({
         />
       </Field>
 
-      {create.isError && <p className="text-sm text-red-600">{errorMessage(create.error)}</p>}
+      {create.isError && <p className="text-sm text-seal">{errorMessage(create.error)}</p>}
     </Modal>
   );
 }
@@ -656,7 +656,7 @@ function SubjectsPanel({ schoolClass, onChanged }: { schoolClass: any; onChanged
               <td className="td text-right">
                 <button
                   type="button"
-                  className="rounded p-1.5 text-red-600 hover:bg-red-50"
+                  className="rounded p-1.5 text-seal hover:bg-seal/5"
                   aria-label={`Remove ${s.course.title}`}
                   onClick={() => detach.mutate(s.course.id)}
                 >
@@ -772,7 +772,7 @@ function SubjectsPanel({ schoolClass, onChanged }: { schoolClass: any; onChanged
           </div>
 
           {attach.isError && (
-            <p className="mt-2 text-sm text-red-600">{errorMessage(attach.error)}</p>
+            <p className="mt-2 text-sm text-seal">{errorMessage(attach.error)}</p>
           )}
         </div>
       )}
@@ -784,9 +784,9 @@ function SubjectsPanel({ schoolClass, onChanged }: { schoolClass: any; onChanged
       )}
 
       {assignTeacher.isError && (
-        <p className="mt-2 text-sm text-red-600">{errorMessage(assignTeacher.error)}</p>
+        <p className="mt-2 text-sm text-seal">{errorMessage(assignTeacher.error)}</p>
       )}
-      {detach.isError && <p className="mt-2 text-sm text-red-600">{errorMessage(detach.error)}</p>}
+      {detach.isError && <p className="mt-2 text-sm text-seal">{errorMessage(detach.error)}</p>}
     </div>
   );
 }
@@ -951,14 +951,14 @@ function EnrolInClassModal({
             </Field>
           )}
 
-          {enrol.isError && <p className="text-sm text-red-600">{errorMessage(enrol.error)}</p>}
+          {enrol.isError && <p className="text-sm text-seal">{errorMessage(enrol.error)}</p>}
           {enrol.isSuccess && (
             <div className="mt-3 text-sm">
-              <p className="text-emerald-700">
+              <p className="text-attained">
                 Added {enrol.data.admitted} learner(s) to {schoolClass.name}.
               </p>
               {enrol.data.failed?.length > 0 && (
-                <p className="mt-1 text-amber-700">
+                <p className="mt-1 text-seal">
                   {enrol.data.failed.length} could not be added: {enrol.data.failed[0].message}
                 </p>
               )}
@@ -1012,7 +1012,7 @@ function LearnersPanel({ schoolClass, onChanged }: { schoolClass: any; onChanged
                 <td className="td">
                   <button
                     type="button"
-                    className="rounded p-1 text-red-600 hover:bg-red-50"
+                    className="rounded p-1 text-seal hover:bg-seal/5"
                     title={`Take ${l.student.fullName} off this class`}
                     onClick={() => remove.mutate(l.student.id)}
                   >

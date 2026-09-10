@@ -90,7 +90,7 @@ export function SettingsPage() {
       </div>
 
       {save.isSuccess && (
-        <div className="mb-4 rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
+        <div className="mb-4 rounded-md border border-attained/30 bg-attained/5 px-4 py-3 text-sm text-attained">
           Settings saved.
         </div>
       )}
@@ -250,7 +250,7 @@ export function SettingsPage() {
           </div>
 
           {purge.isSuccess && (
-            <p className="mt-3 text-sm text-emerald-700">
+            <p className="mt-3 text-sm text-attained">
               Removed {purge.data.refreshTokensRemoved} expired session token(s) and{' '}
               {purge.data.resetTokensRemoved} stale reset code(s).
             </p>

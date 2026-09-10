@@ -11,7 +11,7 @@ services:
   # Needs an always-on process, not a serverless function: it runs the
   # Socket.IO broadcast gateway and the @Cron device-heartbeat sweep.
   - type: web
-    name: lms-portal-api
+    name: lms-hybrid-learning-portal-api
     runtime: docker
     plan: free
     region: singapore # closest Render region to J&K; same region as the Neon DB
@@ -32,7 +32,7 @@ services:
       - key: JWT_REFRESH_SECRET
         generateValue: true
       # Set this once, after the first deploy, to the portal's own URL:
-      #   https://lms-portal-web.onrender.com
+      #   https://lms-hybrid-learning-portal-web.onrender.com
       # The portal and API are separate origins, so the refresh cookie is a
       # third-party cookie — the backend already sends SameSite=None; Secure.
       - key: CORS_ORIGIN
@@ -45,7 +45,7 @@ services:
 
   # ── Portal: static Vite build served from Render's CDN ──────────────────
   - type: web
-    name: lms-portal-web
+    name: lms-hybrid-learning-portal-web
     runtime: static
     buildCommand: npm install && npm run build --workspace frontend
     staticPublishPath: ./frontend/dist
@@ -55,7 +55,7 @@ services:
       - key: VITE_API_URL
         fromService:
           type: web
-          name: lms-portal-api
+          name: lms-hybrid-learning-portal-api
           property: host
     routes:
       # Client-side routing: every unknown path falls through to the SPA.

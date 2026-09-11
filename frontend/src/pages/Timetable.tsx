@@ -489,7 +489,8 @@ function EntryModal({
         courseId: form.courseId || undefined,
         classId: form.audience.startsWith('class:') ? form.audience.slice(6) : undefined,
         batchId: form.audience.startsWith('batch:') ? form.audience.slice(6) : undefined,
-        siteId: scopedSiteId ?? form.siteId ?? undefined,
+        // `||`, not `??`: an unpicked school is '', which `??` would keep.
+        siteId: scopedSiteId || form.siteId || undefined,
       };
       return isEdit
         ? (await api.patch(`/calendar/${event.id}`, payload)).data
@@ -1118,7 +1119,7 @@ function WeekGrid({
                         className={clsx(
                           'absolute overflow-hidden rounded border px-1.5 py-1 text-left text-[11px] leading-tight transition-shadow',
                           style.block,
-                          canOpenEntry && 'hover:shadow-md',
+                          canOpenEntry && 'hover:-translate-y-px hover:shadow-md',
                         )}
                         style={{
                           top: `${top}%`,

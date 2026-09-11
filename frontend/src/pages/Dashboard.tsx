@@ -13,6 +13,23 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
+import {
+  Award,
+  BookOpen,
+  Building2,
+  CalendarClock,
+  CheckCircle2,
+  ClipboardList,
+  GraduationCap,
+  LayoutGrid,
+  LibraryBig,
+  LifeBuoy,
+  MonitorPlay,
+  TrendingUp,
+  UserCheck,
+  Users,
+  Video,
+} from 'lucide-react';
 import { api, errorMessage } from '../lib/api';
 import { ROLE_LABELS, useAuth } from '../lib/auth';
 import {
@@ -27,7 +44,7 @@ import {
   Table,
 } from '../components/ui';
 
-const CHART_COLORS = ['#1e4d8f', '#4f82c8', '#7ea7db', '#adc9ea', '#d6e5f5'];
+const CHART_COLORS = ['#2f2c6e', '#8b7cf6', '#56b8e8', '#3bc9a0', '#f2789f'];
 
 export function DashboardPage() {
   const { user } = useAuth();
@@ -42,7 +59,7 @@ export function DashboardPage() {
   return (
     <>
       <PageHeader
-        title={`Welcome, ${user?.fullName.split(' ')[0]}`}
+        title={`Hello ${user?.fullName.split(' ')[0]}, 👋`}
         description={`${ROLE_LABELS[user!.role]}${user?.site ? ` · ${user.site.name}` : ''}`}
       />
       {data?.role === 'SUPER_ADMIN' && <SuperAdminDashboard data={data} />}
@@ -67,16 +84,18 @@ function SuperAdminDashboard({ data }: { data: any }) {
   return (
     <div className="space-y-6">
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <StatCard label="Active users" value={totalUsers} />
-        <StatCard label="Upcoming sessions" value={data.upcomingSessions} />
+        <StatCard label="Active users" value={totalUsers} icon={Users} accent="brand" />
+        <StatCard label="Upcoming sessions" value={data.upcomingSessions} icon={CalendarClock} accent="violet" />
         <StatCard
           label="Panels online"
+          icon={MonitorPlay}
           value={`${data.devices.online}/${deviceTotal}`}
           tone={data.devices.offline > 0 ? 'warn' : 'good'}
           hint={data.devices.offline ? `${data.devices.offline} offline` : 'All devices reporting'}
         />
         <StatCard
           label="Open tickets"
+          icon={LifeBuoy}
           value={data.openTickets}
           tone={data.openTickets > 0 ? 'warn' : 'good'}
         />
@@ -86,26 +105,26 @@ function SuperAdminDashboard({ data }: { data: any }) {
         <Card title="Users by role">
           <ResponsiveContainer width="100%" height={260}>
             <BarChart data={roleRows} layout="vertical" margin={{ left: 40 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" horizontal={false} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#ececf4" horizontal={false} />
               <XAxis type="number" tick={{ fontSize: 12 }} />
               <YAxis type="category" dataKey="name" tick={{ fontSize: 12 }} width={130} />
               <Tooltip />
-              <Bar dataKey="count" fill="#1e4d8f" radius={[0, 4, 4, 0]} />
+              <Bar dataKey="count" fill="#2f2c6e" radius={[0, 8, 8, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </Card>
 
         <Card title="Platform activity (last 30 days)">
           <div className="grid grid-cols-2 gap-4">
-            <StatCard label="Active users" value={data.activity.activeUsers} />
-            <StatCard label="Live sessions" value={data.activity.liveSessions} />
-            <StatCard label="Submissions" value={data.activity.submissions} />
-            <StatCard label="Quiz attempts" value={data.activity.quizAttempts} />
+            <StatCard label="Active users" value={data.activity.activeUsers} icon={Users} accent="brand" />
+            <StatCard label="Live sessions" value={data.activity.liveSessions} icon={Video} accent="coral" />
+            <StatCard label="Submissions" value={data.activity.submissions} icon={ClipboardList} accent="sky" />
+            <StatCard label="Quiz attempts" value={data.activity.quizAttempts} icon={CheckCircle2} accent="mint" />
           </div>
         </Card>
       </div>
 
-      <Card title="Recent privileged actions" action={<Link to="/audit" className="text-sm text-brand-700">View all</Link>}>
+      <Card title="Recent privileged actions" action={<Link to="/audit" className="rounded-full bg-tint-brand px-3 py-1 text-[12px] font-semibold text-brand-600 transition-colors hover:bg-brand-100">View all</Link>}>
         {data.recentAudit?.length ? (
           <Table headers={['When', 'Actor', 'Action', 'Entity']}>
             {data.recentAudit.map((log: any) => (
@@ -135,34 +154,38 @@ function AcademicAdminDashboard({ data }: { data: any }) {
     <div className="space-y-6">
       {/* The five figures the set-up sequence builds, in that order. */}
       <div className="grid gap-4 sm:grid-cols-3 xl:grid-cols-5">
-        <StatCard label="Students" value={t.students ?? 0} />
-        <StatCard label="Teachers" value={t.teachers ?? 0} />
-        <StatCard label="Classes" value={t.classes ?? 0} />
-        <StatCard label="Sections" value={t.sections ?? 0} />
-        <StatCard label="Subjects taught" value={t.subjects ?? 0} />
+        <StatCard label="Students" value={t.students ?? 0} icon={GraduationCap} accent="brand" />
+        <StatCard label="Teachers" value={t.teachers ?? 0} icon={Users} accent="violet" />
+        <StatCard label="Classes" value={t.classes ?? 0} icon={LayoutGrid} accent="sky" />
+        <StatCard label="Sections" value={t.sections ?? 0} icon={LayoutGrid} accent="mint" />
+        <StatCard label="Subjects taught" value={t.subjects ?? 0} icon={BookOpen} accent="coral" />
       </div>
 
       {/* What needs attention before the day is out. */}
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard
           label="Registers not yet taken"
+          icon={ClipboardList}
           value={pending.length}
           tone={pending.length > 0 ? 'warn' : 'good'}
           hint={pending.length ? 'Today' : 'Every class is marked'}
         />
         <StatCard
           label="Classes without a class teacher"
+          icon={Users}
           value={data.classesWithoutTeacher ?? 0}
           tone={data.classesWithoutTeacher > 0 ? 'warn' : 'good'}
         />
         <StatCard
           label="Cover requests"
+          icon={UserCheck}
           value={data.pendingCover ?? 0}
           tone={data.pendingCover > 0 ? 'warn' : 'good'}
           hint={data.pendingCover ? 'Awaiting your decision' : 'Nothing outstanding'}
         />
         <StatCard
           label="Parent links to approve"
+          icon={UserCheck}
           value={data.pendingParentLinks ?? 0}
           tone={data.pendingParentLinks > 0 ? 'warn' : 'good'}
         />
@@ -172,7 +195,7 @@ function AcademicAdminDashboard({ data }: { data: any }) {
         <Card
           title="Today’s classes"
           action={
-            <Link to="/calendar" className="text-sm text-brand-700">
+            <Link to="/calendar" className="rounded-full bg-tint-brand px-3 py-1 text-[12px] font-semibold text-brand-600 transition-colors hover:bg-brand-100">
               Timetable
             </Link>
           }
@@ -200,7 +223,7 @@ function AcademicAdminDashboard({ data }: { data: any }) {
         <Card
           title="Registers still to take"
           action={
-            <Link to="/attendance" className="text-sm text-brand-700">
+            <Link to="/attendance" className="rounded-full bg-tint-brand px-3 py-1 text-[12px] font-semibold text-brand-600 transition-colors hover:bg-brand-100">
               Attendance
             </Link>
           }
@@ -253,7 +276,7 @@ function AcademicAdminDashboard({ data }: { data: any }) {
         <Card
           title="Recent announcements"
           action={
-            <Link to="/announcements" className="text-sm text-brand-700">
+            <Link to="/announcements" className="rounded-full bg-tint-brand px-3 py-1 text-[12px] font-semibold text-brand-600 transition-colors hover:bg-brand-100">
               View all
             </Link>
           }
@@ -292,9 +315,9 @@ function TeacherDashboard({ data }: { data: any }) {
       )}
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <StatCard label="My classes" value={classes.length} />
-        <StatCard label="My subjects" value={data.mySubjects?.length ?? 0} />
-        <StatCard label="My students" value={data.totalStudents ?? 0} />
+        <StatCard label="My classes" value={classes.length} icon={LayoutGrid} accent="brand" />
+        <StatCard label="My subjects" value={data.mySubjects?.length ?? 0} icon={BookOpen} accent="violet" />
+        <StatCard label="My students" value={data.totalStudents ?? 0} icon={GraduationCap} accent="sky" />
         <StatCard
           label="Registers to take"
           value={pending.length}
@@ -314,15 +337,15 @@ function TeacherDashboard({ data }: { data: any }) {
           value={data.answersAwaitingReview}
           tone={data.answersAwaitingReview > 0 ? 'warn' : 'good'}
         />
-        <StatCard label="Cover requested" value={data.pendingCoverRequests ?? 0} />
-        <StatCard label="Upcoming live classes" value={data.upcomingSessions?.length ?? 0} />
+        <StatCard label="Cover requested" value={data.pendingCoverRequests ?? 0} icon={UserCheck} accent="amber" />
+        <StatCard label="Upcoming live classes" value={data.upcomingSessions?.length ?? 0} icon={Video} accent="coral" />
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
         <Card
           title="Today’s periods"
           action={
-            <Link to="/calendar" className="text-sm text-brand-700">
+            <Link to="/calendar" className="rounded-full bg-tint-brand px-3 py-1 text-[12px] font-semibold text-brand-600 transition-colors hover:bg-brand-100">
               My timetable
             </Link>
           }
@@ -350,7 +373,7 @@ function TeacherDashboard({ data }: { data: any }) {
         <Card
           title="Registers still to take"
           action={
-            <Link to="/attendance" className="text-sm text-brand-700">
+            <Link to="/attendance" className="rounded-full bg-tint-brand px-3 py-1 text-[12px] font-semibold text-brand-600 transition-colors hover:bg-brand-100">
               Mark attendance
             </Link>
           }
@@ -407,15 +430,15 @@ function StudentDashboard({ data }: { data: any }) {
   return (
     <div className="space-y-6">
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <StatCard label="Courses" value={data.courses.length} />
-        <StatCard label="Overall completion" value={`${data.overallCompletionPct}%`} />
+        <StatCard label="Courses" value={data.courses.length} icon={BookOpen} accent="brand" />
+        <StatCard label="Overall completion" value={`${data.overallCompletionPct}%`} icon={TrendingUp} accent="mint" />
         <StatCard
           label="Attendance"
           value={`${data.attendancePct}%`}
           tone={data.attendancePct >= 75 ? 'good' : 'bad'}
           hint={data.attendancePct < 75 ? 'Below the 75% requirement' : undefined}
         />
-        <StatCard label="Certificates" value={data.certificates} />
+        <StatCard label="Certificates" value={data.certificates} icon={Award} accent="amber" />
       </div>
 
       {data.resumeCourse && (
@@ -435,7 +458,7 @@ function StudentDashboard({ data }: { data: any }) {
       )}
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <Card title="Assignments due" action={<Link to="/assignments" className="text-sm text-brand-700">All</Link>}>
+        <Card title="Assignments due" action={<Link to="/assignments" className="rounded-full bg-tint-brand px-3 py-1 text-[12px] font-semibold text-brand-600 transition-colors hover:bg-brand-100">All</Link>}>
           {data.assignmentsDue?.length ? (
             <ul className="divide-y divide-slate-100">
               {data.assignmentsDue.map((a: any) => (
@@ -481,13 +504,13 @@ function ParentDashboard({ data }: { data: any }) {
           <h2 className="mb-3 text-lg font-semibold text-ink">{child.student.fullName}</h2>
 
           <div className="mb-4 grid gap-4 sm:grid-cols-3">
-            <StatCard label="Course completion" value={`${child.completionPct}%`} />
+            <StatCard label="Course completion" value={`${child.completionPct}%`} icon={TrendingUp} accent="mint" />
             <StatCard
               label="Attendance"
               value={`${child.attendancePct}%`}
               tone={child.attendancePct >= 75 ? 'good' : 'bad'}
             />
-            <StatCard label="Enrolled courses" value={child.courses.length} />
+            <StatCard label="Enrolled courses" value={child.courses.length} icon={BookOpen} accent="brand" />
           </div>
 
           <div className="grid gap-6 lg:grid-cols-2">
@@ -541,7 +564,7 @@ function ContentManagerDashboard({ data }: { data: any }) {
   return (
     <div className="space-y-6">
       <div className="grid gap-4 sm:grid-cols-3">
-        <StatCard label="Library resources" value={data.libraryResources} />
+        <StatCard label="Library resources" value={data.libraryResources} icon={LibraryBig} accent="brand" />
         <StatCard label="Awaiting review" value={data.awaitingReview.length} tone="warn" />
         <StatCard label="Published courses" value={data.coursesByState?.PUBLISHED ?? 0} tone="good" />
       </div>
@@ -592,18 +615,18 @@ function OversightDashboard({ data }: { data: any }) {
   return (
     <div className="space-y-6">
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <StatCard label="Sites" value={data.totals.siteCount} />
-        <StatCard label="Classrooms" value={data.totals.classrooms} />
+        <StatCard label="Sites" value={data.totals.siteCount} icon={Building2} accent="brand" />
+        <StatCard label="Classrooms" value={data.totals.classrooms} icon={MonitorPlay} accent="violet" />
         <StatCard
           label="Device uptime"
           value={`${data.totals.uptimePct}%`}
           tone={data.totals.uptimePct >= 90 ? 'good' : data.totals.uptimePct >= 70 ? 'warn' : 'bad'}
           hint={`${data.totals.devicesOnline} of ${data.totals.devicesTotal} online`}
         />
-        <StatCard label="Average completion" value={`${data.averageCompletionPct}%`} />
+        <StatCard label="Average completion" value={`${data.averageCompletionPct}%`} icon={TrendingUp} accent="mint" />
       </div>
 
-      <Card title="Site-wise utilization" action={<Link to="/reports" className="text-sm text-brand-700">Full report</Link>}>
+      <Card title="Site-wise utilization" action={<Link to="/reports" className="rounded-full bg-tint-brand px-3 py-1 text-[12px] font-semibold text-brand-600 transition-colors hover:bg-brand-100">Full report</Link>}>
         <Table headers={['Site', 'Classrooms', 'Learners', 'Sessions received', 'Avg. headcount', 'Device uptime']}>
           {data.sites.map((site: any) => (
             <tr key={site.siteId}>
@@ -633,7 +656,7 @@ function OversightDashboard({ data }: { data: any }) {
 
 function UpcomingSessions({ sessions }: { sessions?: any[] }) {
   return (
-    <Card title="Upcoming live classes" action={<Link to="/live" className="text-sm text-brand-700">All sessions</Link>}>
+    <Card title="Upcoming live classes" action={<Link to="/live" className="rounded-full bg-tint-brand px-3 py-1 text-[12px] font-semibold text-brand-600 transition-colors hover:bg-brand-100">All sessions</Link>}>
       {sessions?.length ? (
         <ul className="divide-y divide-slate-100">
           {sessions.map((s: any) => (

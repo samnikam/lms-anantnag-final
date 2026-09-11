@@ -32,7 +32,7 @@ export function KioskLoginPage() {
 
   return (
     <div className="kiosk flex min-h-screen items-center justify-center bg-slate-900 p-6">
-      <form onSubmit={onSubmit} className="w-full max-w-xl rounded-xl bg-white p-10">
+      <form onSubmit={onSubmit} className="w-full max-w-xl rounded-[28px] bg-white p-10 shadow-lg">
         <div className="mb-8 flex items-center gap-4">
           <MonitorPlay className="h-10 w-10 text-brand-700" aria-hidden />
           <div>
@@ -131,7 +131,7 @@ export function KioskPage() {
 
       <main className="p-8">
         {joined ? (
-          <section className="rounded-xl bg-black p-8 text-white">
+          <section className="rounded-[28px] bg-ink p-8 text-white shadow-lg">
             <div className="mb-6 flex items-center justify-between">
               <h2 className="text-2xl font-semibold">{joined.title}</h2>
               <button type="button" className="btn-secondary" onClick={() => setJoined(null)}>
@@ -140,17 +140,17 @@ export function KioskPage() {
             </div>
 
             {joined.degraded ? (
-              <div className="flex flex-col items-center gap-4 rounded-lg bg-seal/5 p-10 text-center text-seal">
+              <div className="flex flex-col items-center gap-4 rounded-2xl bg-tint-coral p-10 text-center text-seal">
                 <WifiOff className="h-12 w-12" aria-hidden />
                 <p className="text-2xl font-medium">{joined.message}</p>
               </div>
             ) : (
-              <div className="flex aspect-video items-center justify-center rounded-lg bg-slate-800">
+              <div className="flex aspect-video items-center justify-center rounded-2xl bg-slate-800">
                 {joined.url ? (
                   <iframe
                     title={joined.title}
                     src={joined.url}
-                    className="h-full w-full rounded-lg"
+                    className="h-full w-full rounded-2xl"
                     allow="camera; microphone; fullscreen; display-capture"
                   />
                 ) : (
@@ -176,7 +176,7 @@ export function KioskPage() {
         ) : (
           <div className="grid gap-6">
             {sessions.map((session) => (
-              <article key={session.id} className="rounded-xl bg-white p-8 shadow-sm">
+              <article key={session.id} className="rounded-[28px] bg-white p-8 shadow">
                 <div className="flex flex-wrap items-start justify-between gap-6">
                   <div>
                     <p className="text-lg text-ink-soft">

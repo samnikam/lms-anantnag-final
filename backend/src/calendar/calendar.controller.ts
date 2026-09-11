@@ -6,6 +6,7 @@ import { IsDate, IsIn, IsOptional, IsString } from 'class-validator';
 import { Roles } from '../common/decorators/roles.decorator';
 import { Audit } from '../common/decorators/audit.decorator';
 import { AuthUser, CurrentUser } from '../common/decorators/current-user.decorator';
+import { EmptyToNull } from '../common/empty-to-null';
 import { CalendarService } from './calendar.service';
 
 export const EVENT_TYPES = ['CLASS', 'EXAM', 'DEADLINE', 'HOLIDAY', 'EVENT'] as const;
@@ -15,11 +16,11 @@ class CreateEventDto {
   @IsIn(EVENT_TYPES as unknown as string[]) type!: string;
   @Type(() => Date) @IsDate() startAt!: Date;
   @Type(() => Date) @IsDate() endAt!: Date;
-  @IsOptional() @IsString() courseId?: string;
-  @IsOptional() @IsString() classId?: string;
-  @IsOptional() @IsString() batchId?: string;
-  @IsOptional() @IsString() siteId?: string;
-  @IsOptional() @IsString() academicYearId?: string;
+  @IsOptional() @EmptyToNull() @IsString() courseId?: string;
+  @IsOptional() @EmptyToNull() @IsString() classId?: string;
+  @IsOptional() @EmptyToNull() @IsString() batchId?: string;
+  @IsOptional() @EmptyToNull() @IsString() siteId?: string;
+  @IsOptional() @EmptyToNull() @IsString() academicYearId?: string;
 }
 
 class UpdateEventDto {
@@ -27,10 +28,10 @@ class UpdateEventDto {
   @IsOptional() @IsIn(EVENT_TYPES as unknown as string[]) type?: string;
   @IsOptional() @Type(() => Date) @IsDate() startAt?: Date;
   @IsOptional() @Type(() => Date) @IsDate() endAt?: Date;
-  @IsOptional() @IsString() courseId?: string;
-  @IsOptional() @IsString() classId?: string;
-  @IsOptional() @IsString() batchId?: string;
-  @IsOptional() @IsString() siteId?: string;
+  @IsOptional() @EmptyToNull() @IsString() courseId?: string;
+  @IsOptional() @EmptyToNull() @IsString() classId?: string;
+  @IsOptional() @EmptyToNull() @IsString() batchId?: string;
+  @IsOptional() @EmptyToNull() @IsString() siteId?: string;
 }
 
 /**

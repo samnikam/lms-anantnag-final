@@ -17,6 +17,8 @@ import {
 } from 'lucide-react';
 import { IconTile, type Accent } from '../components/ui';
 import { Section, SectionHeading } from './PublicLayout';
+import { Reveal } from './motion';
+import { DotField } from './illustrations';
 
 /**
  * The portal's modules, grouped the way the signed-in sidebar groups them so
@@ -129,8 +131,9 @@ const ASSURANCES = [
 export function PlatformPage() {
   return (
     <>
-      <section className="border-b border-rule bg-surface">
-        <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8 lg:py-20">
+      <section className="relative overflow-hidden border-b border-rule bg-surface">
+        <DotField className="pointer-events-none absolute inset-0 h-full w-full opacity-70" />
+        <div className="relative mx-auto max-w-6xl px-5 py-16 sm:px-8 lg:py-20">
           <p className="eyebrow mb-4 !text-brand-500">The platform</p>
           <h1 className="max-w-3xl text-[32px] font-extrabold leading-[1.15] tracking-[-0.03em] text-ink sm:text-[42px]">
             Every part of the school day, kept in one record
@@ -147,10 +150,13 @@ export function PlatformPage() {
         <Section key={g.group} className={i % 2 === 1 ? 'bg-surface' : undefined}>
           <SectionHeading eyebrow={`0${i + 1}`} title={g.group} description={g.blurb} align="left" />
           <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {g.items.map((it) => (
+            {g.items.map((it, j) => (
+              <Reveal key={it.title} delay={(j % 4) * 90}>
               <article
-                key={it.title}
-                className={i % 2 === 1 ? 'rounded-[20px] bg-paper p-6' : 'card p-6'}
+                className={
+                  (i % 2 === 1 ? 'rounded-[20px] bg-paper' : 'card') +
+                  ' h-full p-6 transition-all hover:-translate-y-1 hover:shadow-md'
+                }
               >
                 <IconTile icon={it.icon} accent={it.accent} />
                 <h3 className="mt-5 text-[15.5px] font-bold tracking-[-0.01em] text-ink">
@@ -158,6 +164,7 @@ export function PlatformPage() {
                 </h3>
                 <p className="mt-2.5 text-[13px] leading-relaxed text-muted">{it.body}</p>
               </article>
+              </Reveal>
             ))}
           </div>
         </Section>
@@ -170,14 +177,16 @@ export function PlatformPage() {
           description="A school record is only worth keeping if it can be trusted and, when necessary, questioned."
         />
         <div className="mt-12 grid gap-4 sm:grid-cols-2">
-          {ASSURANCES.map(([title, body]) => (
-            <div key={title} className="flex gap-4 rounded-[18px] bg-surface p-6">
+          {ASSURANCES.map(([title, body], i) => (
+            <Reveal key={title} delay={(i % 2) * 100}>
+            <div className="flex h-full gap-4 rounded-[18px] bg-surface p-6 transition-transform hover:-translate-y-0.5">
               <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-accent-mint" aria-hidden />
               <div>
                 <h3 className="text-[14.5px] font-bold text-ink">{title}</h3>
                 <p className="mt-1.5 text-[13px] leading-relaxed text-muted">{body}</p>
               </div>
             </div>
+            </Reveal>
           ))}
         </div>
       </Section>

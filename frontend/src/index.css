@@ -144,3 +144,130 @@ svg.lucide {
     border-radius: 18px;
   }
 }
+
+/* ── Motion ──────────────────────────────────────────────────────────────
+   Used by the public site. Everything here is decorative: the page must read
+   the same with all of it switched off, which is what the reduced-motion
+   block at the foot of this file guarantees. */
+
+@keyframes reveal-up {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes float-slow {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-14px);
+  }
+}
+@keyframes drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(18px, -22px, 0) scale(1.06);
+  }
+}
+/* A signal leaving the studio and arriving at a panel. */
+@keyframes ping-ring {
+  0% {
+    transform: scale(0.55);
+    opacity: 0.85;
+  }
+  100% {
+    transform: scale(1.9);
+    opacity: 0;
+  }
+}
+@keyframes dash-flow {
+  to {
+    stroke-dashoffset: -220;
+  }
+}
+@keyframes sheen {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@layer components {
+  /* Scroll reveal. The element is hidden until the observer marks it in
+     view, so it must be visible again the moment motion is switched off. */
+  .reveal {
+    opacity: 0;
+  }
+  .reveal.is-in {
+    animation: reveal-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .anim-float {
+    animation: float-slow 7s ease-in-out infinite;
+  }
+  .anim-drift {
+    animation: drift 16s ease-in-out infinite;
+  }
+  .anim-sheen {
+    background-size: 200% 200%;
+    animation: sheen 12s ease infinite;
+  }
+
+  /* Underline that draws itself on hover — used on the public nav. */
+  .link-underline {
+    position: relative;
+  }
+  .link-underline::after {
+    content: '';
+    position: absolute;
+    left: 0.875rem;
+    right: 0.875rem;
+    bottom: 0.3rem;
+    height: 1.5px;
+    border-radius: 2px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .link-underline:hover::after {
+    transform: scaleX(1);
+  }
+}
+
+/* Anyone who has asked their system for less movement gets none of it. */
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .reveal.is-in {
+    opacity: 1;
+    animation: none !important;
+  }
+  .anim-float,
+  .anim-drift,
+  .anim-sheen,
+  .card-interactive:hover {
+    animation: none !important;
+    transform: none !important;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

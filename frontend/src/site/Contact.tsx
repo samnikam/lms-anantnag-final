@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { Building2, FileBadge, KeyRound, LifeBuoy, MapPin, MonitorPlay } from 'lucide-react';
 import { IconTile, type Accent } from '../components/ui';
 import { DIVISION, Section, SectionHeading } from './PublicLayout';
+import { Reveal } from './motion';
 
 /**
  * Who to approach for what. The portal issues no accounts of its own — a
@@ -61,8 +62,9 @@ export function ContactPage() {
 
       <Section>
         <div className="grid gap-5 md:grid-cols-2">
-          {ROUTES.map((r) => (
-            <article key={r.title} className="card flex flex-col p-7">
+          {ROUTES.map((r, i) => (
+            <Reveal key={r.title} delay={(i % 2) * 110}>
+            <article className="card-interactive flex h-full flex-col p-7">
               <IconTile icon={r.icon} accent={r.accent} />
               <h2 className="mt-5 text-[16px] font-bold tracking-[-0.01em] text-ink">{r.title}</h2>
               <p className="mt-2.5 flex-1 text-[13.5px] leading-relaxed text-muted">{r.body}</p>
@@ -75,6 +77,7 @@ export function ContactPage() {
                 </Link>
               )}
             </article>
+            </Reveal>
           ))}
         </div>
       </Section>

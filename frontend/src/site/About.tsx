@@ -2,6 +2,8 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, Building2, Radio, ShieldCheck, Sparkles } from 'lucide-react';
 import { IconTile, type Accent } from '../components/ui';
 import { DIVISION, FIGURES, Section, SectionHeading } from './PublicLayout';
+import { CountUp, Reveal } from './motion';
+import { DotField, RidgeDivider } from './illustrations';
 
 const PROBLEM = [
   {
@@ -48,8 +50,9 @@ const APPROACH: Array<{ icon: typeof Radio; accent: Accent; title: string; body:
 export function AboutPage() {
   return (
     <>
-      <section className="border-b border-rule bg-surface">
-        <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8 lg:py-20">
+      <section className="relative overflow-hidden border-b border-rule bg-surface">
+        <DotField className="pointer-events-none absolute inset-0 h-full w-full opacity-70" />
+        <div className="relative mx-auto max-w-6xl px-5 py-16 sm:px-8 lg:py-20">
           <p className="eyebrow mb-4 !text-brand-500">About the programme</p>
           <h1 className="max-w-3xl text-[32px] font-extrabold leading-[1.15] tracking-[-0.03em] text-ink sm:text-[42px]">
             Bringing a full curriculum within reach of every school in the division
@@ -62,10 +65,14 @@ export function AboutPage() {
 
           <dl className="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-4">
             {FIGURES.map((f) => (
-              <div key={f.label} className="card p-5">
-                <dd className="num text-[26px] font-extrabold leading-none text-ink">{f.value}</dd>
-                <dt className="label mt-2">{f.label}</dt>
-              </div>
+              <Reveal key={f.label} delay={FIGURES.indexOf(f) * 90}>
+                <div className="card-interactive p-5">
+                  <dd className="num text-[26px] font-extrabold leading-none text-ink">
+                    <CountUp value={f.value} />
+                  </dd>
+                  <dt className="label mt-2">{f.label}</dt>
+                </div>
+              </Reveal>
             ))}
           </dl>
         </div>
@@ -78,26 +85,32 @@ export function AboutPage() {
           align="left"
         />
         <div className="mt-12 grid gap-5 md:grid-cols-3">
-          {PROBLEM.map((p) => (
-            <article key={p.title} className="rounded-[20px] border-l-[3px] border-accent-coral bg-surface p-6">
-              <h3 className="text-[15.5px] font-bold tracking-[-0.01em] text-ink">{p.title}</h3>
-              <p className="mt-2.5 text-[13.5px] leading-relaxed text-muted">{p.body}</p>
-            </article>
+          {PROBLEM.map((p, i) => (
+            <Reveal key={p.title} delay={i * 110}>
+              <article className="h-full rounded-[20px] border-l-[3px] border-accent-coral bg-surface p-6 transition-transform hover:-translate-y-0.5">
+                <h3 className="text-[15.5px] font-bold tracking-[-0.01em] text-ink">{p.title}</h3>
+                <p className="mt-2.5 text-[13.5px] leading-relaxed text-muted">{p.body}</p>
+              </article>
+            </Reveal>
           ))}
         </div>
       </Section>
 
-      <Section className="bg-surface">
+      <RidgeDivider className="block h-12 w-full sm:h-16" fill="#ffffff" />
+
+      <Section className="bg-surface !pt-4">
         <SectionHeading eyebrow="The approach" title="How the portal answers it" align="left" />
         <div className="mt-12 grid gap-5 md:grid-cols-2">
-          {APPROACH.map((a) => (
-            <article key={a.title} className="flex gap-5 rounded-[20px] bg-paper p-6">
+          {APPROACH.map((a, i) => (
+            <Reveal key={a.title} delay={(i % 2) * 110}>
+            <article className="flex h-full gap-5 rounded-[20px] bg-paper p-6 transition-transform hover:-translate-y-0.5">
               <IconTile icon={a.icon} accent={a.accent} />
               <div className="min-w-0">
                 <h3 className="text-[15.5px] font-bold tracking-[-0.01em] text-ink">{a.title}</h3>
                 <p className="mt-2 text-[13.5px] leading-relaxed text-muted">{a.body}</p>
               </div>
             </article>
+            </Reveal>
           ))}
         </div>
       </Section>

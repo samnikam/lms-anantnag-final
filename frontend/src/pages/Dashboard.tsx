@@ -441,6 +441,43 @@ function StudentDashboard({ data }: { data: any }) {
         <StatCard label="Certificates" value={data.certificates} icon={Award} accent="amber" />
       </div>
 
+      {/* Today's lessons: which period, when, and who takes it. */}
+      <Card
+        title="Today's classes"
+        action={
+          <Link
+            to="/calendar"
+            className="rounded-full bg-tint-brand px-3 py-1 text-[12px] font-semibold text-brand-600 transition-colors hover:bg-brand-100"
+          >
+            Timetable
+          </Link>
+        }
+      >
+        {data.todaysClasses?.length ? (
+          <Table headers={['Time', 'Lesson', 'Class', 'Teacher']}>
+            {data.todaysClasses.map((c: any) => (
+              <tr key={c.id}>
+                <td className="td num whitespace-nowrap text-muted">
+                  {format(new Date(c.startAt), 'HH:mm')}
+                  {c.endAt ? `–${format(new Date(c.endAt), 'HH:mm')}` : ''}
+                </td>
+                <td className="td">
+                  <div className="font-medium text-ink">{c.title}</div>
+                  {c.subject && <div className="text-[11px] text-faint">{c.subject}</div>}
+                </td>
+                <td className="td text-muted">{c.className ?? '—'}</td>
+                <td className="td text-muted">{c.teacher ?? '—'}</td>
+              </tr>
+            ))}
+          </Table>
+        ) : (
+          <EmptyState
+            title="Nothing scheduled today"
+            description="Your class timetable is set by the school office."
+          />
+        )}
+      </Card>
+
       {data.resumeCourse && (
         <Card title="Resume learning">
           <div className="flex flex-wrap items-center justify-between gap-4">

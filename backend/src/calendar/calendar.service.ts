@@ -150,23 +150,63 @@ export class CalendarService {
     }
   }
 
-  /** A learner's timetable: their batch, their courses, and shared entries. */
-  private async learnerScope(studentId: string): Promise<Prisma.CalendarEventWhereInput> {
-    const enrollments = await this.prisma.enrollment.findMany({
-      where: { studentId, status: EnrollmentStatus.ACTIVE },
-      select: { courseId: true, batchId: true, batch: { select: { classId: true } } },
+  /**
+   * A learner's periods between two moments, decorated the same way the
+   * timetable is — so the dashboard and the timetable can never disagree
+   * about which lessons a learner has or who takes them.
+   */
+  async periodsForLearner(studentId: string, from: Date, to: Date) {
+    const scope = await this.learnerScope(studentId);
+    const events = await this.prisma.calendarEvent.findMany({
+      where: { AND: [{ startAt: { gte: from, lt: to } }, scope] },
+      orderBy: { startAt: 'asc' },
+      take: 50,
     });
+    return this.decorate(events);
+  }
+
+  /**
+   * A learner's timetable: the class they are in, their sections, their
+   * courses, and whatever is addressed to the whole school.
+   *
+   * Class membership is held by ClassEnrollment. Deriving it from the course
+   * enrolment's batch instead missed every learner without a section — which,
+   * since a section is optional, is most of them — and left them with a
+   * timetable that showed holidays but not a single one of their own periods.
+   */
+  private async learnerScope(studentId: string): Promise<Prisma.CalendarEventWhereInput> {
+    const [enrollments, classLinks] = await Promise.all([
+      this.prisma.enrollment.findMany({
+        where: { studentId, status: EnrollmentStatus.ACTIVE },
+        select: { courseId: true, batchId: true, batch: { select: { classId: true } } },
+      }),
+      this.prisma.classEnrollment.findMany({
+        where: { studentId, status: EnrollmentStatus.ACTIVE },
+        select: { classId: true, batchId: true },
+      }),
+    ]);
 
     const courseIds = enrollments.map((e) => e.courseId);
-    const batchIds = enrollments.map((e) => e.batchId).filter((b): b is string => !!b);
+    const batchIds = [
+      ...new Set(
+        [...enrollments.map((e) => e.batchId), ...classLinks.map((c) => c.batchId)].filter(
+          (b): b is string => !!b,
+        ),
+      ),
+    ];
     // An entry for the whole class reaches every section within it.
     const classIds = [
-      ...new Set(enrollments.map((e) => e.batch?.classId).filter((c): c is string => !!c)),
+      ...new Set(
+        [
+          ...classLinks.map((c) => c.classId),
+          ...enrollments.map((e) => e.batch?.classId),
+        ].filter((c): c is string => !!c),
+      ),
     ];
 
     return {
       OR: [
-        { courseId: { in: courseIds } },
+        ...(courseIds.length ? [{ courseId: { in: courseIds } }] : []),
         ...(batchIds.length ? [{ batchId: { in: batchIds } }] : []),
         ...(classIds.length ? [{ classId: { in: classIds } }] : []),
         // Holidays and division-wide notices belong to everyone.
@@ -175,37 +215,94 @@ export class CalendarService {
     };
   }
 
+  /** The person who takes a period, in the order the school would name them. */
+  private static readonly TEACHER_SELECT = { id: true, fullName: true, email: true };
+
   private async decorate(events: any[]) {
     const courseIds = [...new Set(events.map((e) => e.courseId).filter(Boolean))];
     const batchIds = [...new Set(events.map((e) => e.batchId).filter(Boolean))];
     const classIds = [...new Set(events.map((e) => e.classId).filter(Boolean))];
     const siteIds = [...new Set(events.map((e) => e.siteId).filter(Boolean))];
+    const sessionIds = [...new Set(events.map((e) => e.sessionId).filter(Boolean))];
 
-    const [courses, batches, classes, sites] = await Promise.all([
-      courseIds.length
-        ? this.prisma.course.findMany({ where: { id: { in: courseIds } }, select: { id: true, title: true, code: true } })
-        : [],
-      batchIds.length
-        ? this.prisma.batch.findMany({ where: { id: { in: batchIds } }, select: { id: true, name: true } })
-        : [],
-      classIds.length
-        ? this.prisma.schoolClass.findMany({ where: { id: { in: classIds } }, select: { id: true, name: true } })
-        : [],
-      siteIds.length
-        ? this.prisma.site.findMany({ where: { id: { in: siteIds } }, select: { id: true, name: true } })
-        : [],
-    ]);
+    const sel = CalendarService.TEACHER_SELECT;
+    const [courses, batches, classes, sites, classSubjects, courseTeachers, sessions] =
+      await Promise.all([
+        courseIds.length
+          ? this.prisma.course.findMany({ where: { id: { in: courseIds } }, select: { id: true, title: true, code: true } })
+          : [],
+        batchIds.length
+          ? this.prisma.batch.findMany({ where: { id: { in: batchIds } }, select: { id: true, name: true } })
+          : [],
+        classIds.length
+          ? this.prisma.schoolClass.findMany({
+              where: { id: { in: classIds } },
+              select: { id: true, name: true, classTeacher: { select: sel } },
+            })
+          : [],
+        siteIds.length
+          ? this.prisma.site.findMany({ where: { id: { in: siteIds } }, select: { id: true, name: true } })
+          : [],
+        // Who teaches this subject to this class — the answer for a period
+        // that names both.
+        classIds.length && courseIds.length
+          ? this.prisma.classSubject.findMany({
+              where: { classId: { in: classIds }, courseId: { in: courseIds } },
+              select: { classId: true, courseId: true, teacher: { select: sel } },
+            })
+          : [],
+        // A subject-wide fallback for a period that names no class.
+        courseIds.length
+          ? this.prisma.courseTeacher.findMany({
+              where: { courseId: { in: courseIds } },
+              select: { courseId: true, isLead: true, teacher: { select: sel } },
+              orderBy: { isLead: 'desc' },
+            })
+          : [],
+        sessionIds.length
+          ? this.prisma.liveSession.findMany({
+              where: { id: { in: sessionIds } },
+              select: { id: true, host: { select: sel } },
+            })
+          : [],
+      ]);
 
     const byId = (rows: any[]) => Object.fromEntries(rows.map((r) => [r.id, r]));
     const c = byId(courses), b = byId(batches), k = byId(classes), s = byId(sites);
 
-    return events.map((e) => ({
-      ...e,
-      course: e.courseId ? c[e.courseId] ?? null : null,
-      batch: e.batchId ? b[e.batchId] ?? null : null,
-      schoolClass: e.classId ? k[e.classId] ?? null : null,
-      site: e.siteId ? s[e.siteId] ?? null : null,
-    }));
+    const subjectTeacher = Object.fromEntries(
+      classSubjects.filter((cs) => cs.teacher).map((cs) => [`${cs.classId}:${cs.courseId}`, cs.teacher]),
+    );
+    // First wins, and leads were ordered first.
+    const leadTeacher: Record<string, any> = {};
+    for (const ct of courseTeachers) {
+      if (ct.teacher && !leadTeacher[ct.courseId]) leadTeacher[ct.courseId] = ct.teacher;
+    }
+    const sessionHost = Object.fromEntries(
+      sessions.filter((x) => x.host).map((x) => [x.id, x.host]),
+    );
+
+    return events.map((e) => {
+      const cls = e.classId ? k[e.classId] ?? null : null;
+      /* Most specific first: the person who teaches this subject to this
+         class, then whoever hosts the broadcast, then the subject lead, and
+         failing all of those the teacher in charge of the class. */
+      const teacher =
+        (e.classId && e.courseId ? subjectTeacher[`${e.classId}:${e.courseId}`] : null) ??
+        (e.sessionId ? sessionHost[e.sessionId] : null) ??
+        (e.courseId ? leadTeacher[e.courseId] : null) ??
+        cls?.classTeacher ??
+        null;
+
+      return {
+        ...e,
+        course: e.courseId ? c[e.courseId] ?? null : null,
+        batch: e.batchId ? b[e.batchId] ?? null : null,
+        schoolClass: cls ? { id: cls.id, name: cls.name } : null,
+        site: e.siteId ? s[e.siteId] ?? null : null,
+        teacher,
+      };
+    });
   }
 
   async create(user: AuthUser, data: any) {

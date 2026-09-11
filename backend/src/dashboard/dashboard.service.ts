@@ -3,6 +3,7 @@ import { DeviceStatus, EnrollmentStatus, Role, SessionStatus } from '@prisma/cli
 import { PrismaService } from '../prisma/prisma.service';
 import { AuthUser } from '../common/decorators/current-user.decorator';
 import { AttendanceService } from '../attendance/attendance.service';
+import { CalendarService } from '../calendar/calendar.service';
 import { ProgressService } from '../progress/progress.service';
 import { ReportsService } from '../reports/reports.service';
 import { UsersService } from '../users/users.service';
@@ -12,6 +13,7 @@ export class DashboardService {
   constructor(
     private prisma: PrismaService,
     private attendance: AttendanceService,
+    private calendar: CalendarService,
     private progress: ProgressService,
     private reports: ReportsService,
     private users: UsersService,
@@ -352,7 +354,13 @@ export class DashboardService {
   }
 
   private async student(studentId: string) {
-    const [courses, attendance, upcoming, dueSoon, certificates, unread] = await Promise.all([
+    const dayStart = new Date();
+    dayStart.setHours(0, 0, 0, 0);
+    const dayEnd = new Date(dayStart);
+    dayEnd.setDate(dayEnd.getDate() + 1);
+
+    const [courses, attendance, upcoming, dueSoon, certificates, unread, todaysClasses] =
+      await Promise.all([
       this.progress.myCourses(studentId),
       this.attendance.studentSummary(studentId),
       this.upcomingSessionsForStudent(studentId),
@@ -369,6 +377,8 @@ export class DashboardService {
       }),
       this.prisma.certificate.count({ where: { studentId, revokedAt: null } }),
       this.prisma.notification.count({ where: { userId: studentId, readAt: null, channel: 'IN_APP' } }),
+      // The same scope the timetable uses, so the two cannot disagree.
+      this.calendar.periodsForLearner(studentId, dayStart, dayEnd),
     ]);
 
     const resume = courses
@@ -386,6 +396,17 @@ export class DashboardService {
       assignmentsDue: dueSoon,
       certificates,
       unreadNotifications: unread,
+      // Which lesson, when, and who takes it.
+      todaysClasses: todaysClasses.map((e: any) => ({
+        id: e.id,
+        title: e.title,
+        type: e.type,
+        startAt: e.startAt,
+        endAt: e.endAt,
+        className: e.schoolClass?.name ?? null,
+        subject: e.course?.title ?? null,
+        teacher: e.teacher?.fullName ?? null,
+      })),
       resumeCourse: resume ?? courses[0] ?? null,
     };
   }

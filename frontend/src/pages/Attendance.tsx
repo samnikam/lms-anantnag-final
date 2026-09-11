@@ -55,10 +55,27 @@ function StudentAttendance() {
 
       <Card title="Recent sessions">
         {data.recent?.length ? (
-          <Table headers={['Date', 'Status']}>
+          /* A date and a status alone do not say which lesson was missed. */
+          <Table headers={['Date', 'Lesson', 'Class', 'Teacher', 'Status']}>
             {data.recent.map((r: any, i: number) => (
               <tr key={i}>
-                <td className="td">{format(new Date(r.date), 'dd MMM yyyy')}</td>
+                <td className="td whitespace-nowrap">
+                  <div className="font-medium text-ink">
+                    {format(new Date(r.date), 'dd MMM yyyy')}
+                  </div>
+                  {r.startAt && (
+                    <div className="num text-[11px] text-faint">
+                      {format(new Date(r.startAt), 'HH:mm')}
+                      {r.endAt ? `–${format(new Date(r.endAt), 'HH:mm')}` : ''}
+                    </div>
+                  )}
+                </td>
+                <td className="td">
+                  <div className="font-medium text-ink">{r.lesson ?? '—'}</div>
+                  {r.subject && <div className="text-[11px] text-faint">{r.subject}</div>}
+                </td>
+                <td className="td">{r.className ?? '—'}</td>
+                <td className="td">{r.teacher ?? '—'}</td>
                 <td className="td">
                   <StatusBadge status={r.status} />
                 </td>

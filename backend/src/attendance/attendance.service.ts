@@ -437,7 +437,27 @@ export class AttendanceService {
 
     const records = await this.prisma.attendance.findMany({
       where,
-      select: { status: true, date: true },
+      // Enough context for a learner to recognise the entry: a bare date and
+      // status does not say which lesson it was, nor who took it.
+      select: {
+        status: true,
+        date: true,
+        remarks: true,
+        class: { select: { id: true, name: true } },
+        event: {
+          select: {
+            title: true,
+            startAt: true,
+            endAt: true,
+            classId: true,
+            courseId: true,
+          },
+        },
+        session: {
+          select: { title: true, scheduledStart: true, host: { select: { fullName: true } } },
+        },
+        markedBy: { select: { fullName: true } },
+      },
       orderBy: { date: 'desc' },
     });
 
@@ -450,8 +470,57 @@ export class AttendanceService {
       present,
       absent: records.filter((r) => r.status === AttendanceStatus.ABSENT).length,
       percentage: records.length ? Math.round((present / records.length) * 100) : 0,
-      recent: records.slice(0, 30),
+      recent: await this.withLessonContext(records.slice(0, 30)),
     };
+  }
+
+  /**
+   * Names the lesson behind each mark. A period carries a class and a subject
+   * but not a teacher, so the teacher is the one who takes that subject to
+   * that class — falling back to whoever hosted the broadcast, and then to
+   * whoever actually took the register.
+   */
+  private async withLessonContext(records: any[]) {
+    const pairs = records
+      .map((r) => r.event)
+      .filter((e) => e?.classId && e?.courseId) as Array<{ classId: string; courseId: string }>;
+
+    const subjectTeachers = pairs.length
+      ? await this.prisma.classSubject.findMany({
+          where: {
+            classId: { in: [...new Set(pairs.map((p) => p.classId))] },
+            courseId: { in: [...new Set(pairs.map((p) => p.courseId))] },
+          },
+          select: {
+            classId: true,
+            courseId: true,
+            course: { select: { title: true } },
+            teacher: { select: { fullName: true } },
+          },
+        })
+      : [];
+    const byPair = Object.fromEntries(
+      subjectTeachers.map((cs) => [`${cs.classId}:${cs.courseId}`, cs]),
+    );
+
+    return records.map((r) => {
+      const cs = r.event?.classId && r.event?.courseId
+        ? byPair[`${r.event.classId}:${r.event.courseId}`]
+        : null;
+      return {
+        status: r.status,
+        date: r.date,
+        remarks: r.remarks ?? null,
+        // What it was: a named period, a broadcast, or the daily roll call.
+        lesson: r.event?.title ?? r.session?.title ?? 'Daily register',
+        subject: cs?.course?.title ?? null,
+        className: r.class?.name ?? null,
+        startAt: r.event?.startAt ?? r.session?.scheduledStart ?? null,
+        endAt: r.event?.endAt ?? null,
+        teacher:
+          cs?.teacher?.fullName ?? r.session?.host?.fullName ?? r.markedBy?.fullName ?? null,
+      };
+    });
   }
 
   /** Site-wise attendance rollup for the department oversight dashboard. */

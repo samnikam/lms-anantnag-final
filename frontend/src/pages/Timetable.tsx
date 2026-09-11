@@ -273,9 +273,16 @@ export function TimetablePage() {
                         </Badge>
                       </div>
                       <p className="mt-0.5 text-xs text-slate-500">
-                        {[event.course?.title, event.batch?.name ?? event.schoolClass?.name, event.site?.name]
+                        {[
+                          event.course?.title,
+                          event.batch?.name ?? event.schoolClass?.name,
+                          event.site?.name,
+                        ]
                           .filter(Boolean)
                           .join(' · ') || 'Everyone'}
+                        {event.teacher?.fullName && (
+                          <span className="text-slate-400"> · {event.teacher.fullName}</span>
+                        )}
                       </p>
                     </div>
 
@@ -1127,7 +1134,15 @@ function WeekGrid({
                           left: `calc(${idx * width}% + 2px)`,
                           width: `calc(${width}% - 4px)`,
                         }}
-                        title={`${e.title} · ${format(s, 'HH:mm')}–${format(en, 'HH:mm')}`}
+                        title={[
+                          e.title,
+                          `${format(s, 'HH:mm')}–${format(en, 'HH:mm')}`,
+                          e.course?.title,
+                          e.schoolClass?.name,
+                          e.teacher?.fullName,
+                        ]
+                          .filter(Boolean)
+                          .join(' · ')}
                       >
                         <span className="block truncate font-semibold">{e.title}</span>
                         <span className="block truncate opacity-80">
@@ -1135,6 +1150,11 @@ function WeekGrid({
                           {e.schoolClass?.name ? ` · ${e.schoolClass.name}` : ''}
                           {e.batch?.name ? ` · ${e.batch.name}` : ''}
                         </span>
+                        {e.teacher?.fullName && (
+                          <span className="block truncate opacity-70">
+                            {e.teacher.fullName}
+                          </span>
+                        )}
                       </button>
                     );
                   })}

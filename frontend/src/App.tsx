@@ -30,6 +30,12 @@ import { ProfilePage } from './pages/Profile';
 import { ForgotPasswordPage, ResetPasswordPage } from './pages/PasswordReset';
 import { NotFoundPage, ForbiddenPage } from './pages/Errors';
 
+import { PublicLayout } from './site/PublicLayout';
+import { HomePage } from './site/Home';
+import { AboutPage } from './site/About';
+import { PlatformPage } from './site/Platform';
+import { ContactPage } from './site/Contact';
+
 /** Blocks a route whose role list does not include the signed-in role. */
 function RequireRole({ roles, children }: { roles: Role[]; children: JSX.Element }) {
   const { user } = useAuth();
@@ -51,16 +57,25 @@ export function App() {
     );
   }
 
+  // Signed out: the public site, with the sign-in screens alongside it.
   if (!user) {
     return (
       <Routes>
+        <Route element={<PublicLayout />}>
+          <Route index element={<HomePage />} />
+          <Route path="about" element={<AboutPage />} />
+          <Route path="platform" element={<PlatformPage />} />
+          <Route path="contact" element={<ContactPage />} />
+        </Route>
+
         <Route path="/login" element={<LoginPage />} />
         <Route path="/kiosk-login" element={<KioskLoginPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/reset-password" element={<ResetPasswordPage />} />
         <Route path="/verify/:token" element={<VerifyCertificatePage />} />
         <Route path="/verify" element={<VerifyCertificatePage />} />
-        <Route path="*" element={<Navigate to="/login" replace />} />
+        {/* An unknown address belongs on the front page, not at a dead end. */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     );
   }
@@ -70,6 +85,10 @@ export function App() {
       <Route path="/verify/:token" element={<VerifyCertificatePage />} />
       <Route path="/reset-password" element={<ResetPasswordPage />} />
       <Route path="/login" element={<Navigate to="/" replace />} />
+      {/* The marketing pages are for visitors; a signed-in user goes to work. */}
+      <Route path="/about" element={<Navigate to="/" replace />} />
+      <Route path="/platform" element={<Navigate to="/" replace />} />
+      <Route path="/contact" element={<Navigate to="/support" replace />} />
 
       <Route element={<Layout />}>
         <Route index element={<DashboardPage />} />

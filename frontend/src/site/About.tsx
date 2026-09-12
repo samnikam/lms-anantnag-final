@@ -4,7 +4,6 @@ import {
   Building2,
   CheckCircle2,
   Eye,
-  HeartHandshake,
   Quote,
   Radio,
   ShieldCheck,
@@ -14,32 +13,37 @@ import {
 } from 'lucide-react';
 import { CountUp, Reveal } from './motion';
 import { ABOUT, DISTRICT, HERO_SLIDES } from './media';
-import { DIVISION, FIGURES, PageBanner, Section, SectionHeading } from './PublicLayout';
+import {
+  AT_A_GLANCE,
+  HEAD_MESSAGE,
+  HEAD_OF_INSTITUTION,
+  MISSION,
+  STAFF_NOTE,
+  STAFF_POINTS,
+  VALUES,
+  VISION,
+} from './aboutContent';
+import {
+  Backdrop,
+  DIVISION,
+  FIGURES,
+  PageBanner,
+  Section,
+  SectionHeading,
+} from './PublicLayout';
 
-const PILLARS = [
-  {
-    icon: Eye,
-    title: 'Our Vision',
-    body: 'That a learner\u2019s subjects are decided by their curiosity, not by which specialist teacher their school was able to appoint.',
+/** The accent families used across the site, named here for reuse. */
+const TONE = {
+  coral: { soft: 'bg-accent-coral-soft', solid: 'bg-accent-coral', text: 'text-accent-coral-deep' },
+  mint: { soft: 'bg-accent-mint-soft', solid: 'bg-accent-mint', text: 'text-accent-mint-deep' },
+  sky: { soft: 'bg-accent-sky-soft', solid: 'bg-accent-sky', text: 'text-accent-sky-deep' },
+  amber: { soft: 'bg-accent-amber-soft', solid: 'bg-accent-amber', text: 'text-accent-amber-deep' },
+  violet: {
+    soft: 'bg-accent-violet-soft',
+    solid: 'bg-accent-violet',
+    text: 'text-accent-violet-deep',
   },
-  {
-    icon: Target,
-    title: 'Our Mission',
-    body: 'To carry good teaching to every participating classroom in the district, and to keep an honest, single record of what was taught, who attended and what they achieved.',
-  },
-  {
-    icon: HeartHandshake,
-    title: 'Our Commitment',
-    body: 'That the programme works on the connection, the power supply and the winter a valley school actually has \u2014 not on ideal conditions.',
-  },
-];
-
-const VALUES = [
-  ['Equity', 'The furthest classroom gets the same lesson as the nearest one.'],
-  ['Accountability', 'Every register, correction and privileged action is traceable.'],
-  ['Continuity', 'A missed session is recorded, not lost; a power cut is planned for.'],
-  ['Clarity', 'Learners, teachers and families each see exactly what concerns them.'],
-];
+} as const;
 
 const CHALLENGES = [
   {
@@ -101,8 +105,230 @@ export function AboutPage() {
         imageAlt={DISTRICT.amarnathApproach.alt}
       />
 
-      {/* ══ INTRODUCTION ═══════════════════════════════════════════════ */}
+      {/* ══ OUR VISION — a single statement, given the whole width ═════ */}
+      <section className="relative overflow-hidden bg-brand-800">
+        <span aria-hidden className="orb -left-24 -top-28 h-96 w-96 bg-accent-violet/25" />
+        <span
+          aria-hidden
+          className="orb -bottom-24 -right-20 h-80 w-80 bg-accent-coral/20"
+          style={{ animationDelay: '-8s' }}
+        />
+        <div className="relative mx-auto max-w-4xl px-5 py-20 text-center sm:px-8 lg:py-24">
+          <Reveal>
+            <span className="float-y inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-accent-amber text-ink shadow-lg">
+              <Eye className="h-7 w-7" aria-hidden />
+            </span>
+            <p className="mt-7 text-[12px] font-extrabold uppercase tracking-[0.18em] text-accent-amber">
+              Our Vision
+            </p>
+            <blockquote className="mt-6 text-[21px] font-semibold leading-[1.45] tracking-[-0.015em] text-white sm:text-[27px]">
+              {VISION}
+            </blockquote>
+            <span className="rule-grow is-in mx-auto mt-8 block h-1 w-20 rounded-full bg-gradient-to-r from-accent-amber to-accent-coral" />
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ══ OUR MISSION — a numbered rail, not a grid ══════════════════ */}
+      <Section className="relative overflow-hidden">
+        <Backdrop variant="warm" grid />
+        <div className="grid gap-14 lg:grid-cols-[0.8fr_1fr]">
+          <div className="lg:sticky lg:top-28 lg:self-start">
+            <Reveal variant="left">
+              <SectionHeading kicker="Our Mission" title="What we set out to do" align="left" />
+              <p className="mt-5 text-[15px] leading-relaxed text-muted">
+                Seven commitments that shape how the schools in this programme are run.
+              </p>
+              <img
+                src={ABOUT.welcome.src}
+                alt={ABOUT.welcome.alt}
+                loading="lazy"
+                className="mt-9 hidden aspect-[4/3] w-full rounded-2xl object-cover shadow-xl ring-1 ring-rule lg:block"
+              />
+            </Reveal>
+          </div>
+
+          <ol className="relative space-y-1 border-l-2 border-rule pl-8">
+            {MISSION.map((m, i) => (
+              <Reveal key={m.text} variant="right" delay={i * 60} as="li">
+                <li className="group relative flex items-center gap-4 py-4">
+                  <span
+                    className="num absolute -left-[45px] flex h-8 w-8 items-center justify-center rounded-full bg-surface text-[11px] font-extrabold text-brand-400 ring-2 ring-rule transition-all duration-300 group-hover:bg-brand-700 group-hover:text-white group-hover:ring-brand-700"
+                    aria-hidden
+                  >
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  <span className="icon-pop inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-tint-brand text-brand-600 transition-colors group-hover:bg-brand-700 group-hover:text-white">
+                    <m.icon className="h-5 w-5" aria-hidden />
+                  </span>
+                  <p className="text-[16px] font-bold text-ink">{m.text}</p>
+                </li>
+              </Reveal>
+            ))}
+          </ol>
+        </div>
+      </Section>
+
+      {/* ══ OUR VALUES — badges rather than cards ══════════════════════ */}
+      <Section className="relative overflow-hidden bg-surface">
+        <Backdrop variant="mint" />
+        <SectionHeading
+          kicker="Our Values"
+          title="What we hold our schools to"
+          description="Seven principles that sit behind every decision the programme takes."
+        />
+
+        <div className="mt-14 flex flex-wrap justify-center gap-4">
+          {VALUES.map((v, i) => {
+            const t = TONE[v.tone];
+            return (
+              <Reveal key={v.name} variant="zoom" delay={Math.min(i * 70, 400)}>
+                <div
+                  className={`group flex items-center gap-3.5 rounded-full ${t.soft} py-3 pl-3 pr-7 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-lg`}
+                >
+                  <span
+                    className={`icon-pop inline-flex h-11 w-11 items-center justify-center rounded-full ${t.solid} text-white shadow-sm`}
+                  >
+                    <v.icon className="h-5 w-5" aria-hidden />
+                  </span>
+                  <span className={`text-[16px] font-extrabold ${t.text}`}>{v.name}</span>
+                </div>
+              </Reveal>
+            );
+          })}
+        </div>
+      </Section>
+
+      {/* ══ HEAD OF INSTITUTION'S MESSAGE ══════════════════════════════ */}
       <Section>
+        <div className="grid items-center gap-12 lg:grid-cols-[auto_1fr]">
+          <Reveal variant="left">
+            <div className="relative mx-auto w-52 lg:w-64">
+              <img
+                src={DISTRICT.pahalgamMeadow.src}
+                alt={DISTRICT.pahalgamMeadow.alt}
+                loading="lazy"
+                className="aspect-square w-full rounded-2xl object-cover shadow-xl ring-1 ring-rule"
+              />
+              <span
+                className="absolute -bottom-4 -right-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-accent-amber text-ink shadow-lg"
+                aria-hidden
+              >
+                <Quote className="h-6 w-6" />
+              </span>
+            </div>
+          </Reveal>
+
+          <Reveal variant="right" delay={120}>
+            <SectionHeading
+              kicker="Message from the Head of Institution"
+              title="Learning that builds the whole person"
+              align="left"
+            />
+            <blockquote className="mt-7 text-[18px] font-medium italic leading-relaxed text-ink-soft sm:text-[20px]">
+              {HEAD_MESSAGE}
+            </blockquote>
+            <div className="mt-8 border-l-4 border-accent-coral pl-5">
+              <p className="text-[15px] font-extrabold text-ink">{HEAD_OF_INSTITUTION.name}</p>
+              <p className="text-[12.5px] font-semibold uppercase tracking-[0.08em] text-muted">
+                {HEAD_OF_INSTITUTION.role}
+              </p>
+            </div>
+          </Reveal>
+        </div>
+      </Section>
+
+      {/* ══ TEACHERS & STAFF ═══════════════════════════════════════════ */}
+      <Section className="relative overflow-hidden bg-surface">
+        <Backdrop variant="cool" />
+        <div className="grid items-center gap-14 lg:grid-cols-2">
+          <Reveal variant="left">
+            <SectionHeading kicker="Teachers & Staff" title="Teaching staff" align="left" />
+            <p className="mt-6 text-[15.5px] leading-relaxed text-muted">{STAFF_NOTE}</p>
+            <p className="mt-5 rounded-xl bg-accent-amber-soft p-5 text-[13.5px] leading-relaxed text-ink-soft">
+              Individual names, photographs and contact details are not published on this site.
+              Each school provides them to its own families directly.
+            </p>
+          </Reveal>
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            {STAFF_POINTS.map((p, i) => (
+              <Reveal key={p.title} variant="zoom" delay={(i % 2) * 100}>
+                <article className="lift-card group h-full rounded-2xl bg-paper p-6 ring-1 ring-rule hover:shadow-xl">
+                  <span className="icon-pop inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-brand-600 to-brand-800 text-white shadow-pill">
+                    <p.icon className="h-5 w-5" aria-hidden />
+                  </span>
+                  <h3 className="mt-5 text-[16px] font-extrabold tracking-[-0.02em] text-ink">
+                    {p.title}
+                  </h3>
+                  <p className="mt-2 text-[13px] leading-relaxed text-muted">{p.body}</p>
+                </article>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </Section>
+
+      {/* ══ SCHOOL AT A GLANCE — a ruled record, not boxes ═════════════ */}
+      <Section>
+        <SectionHeading
+          kicker="School at a glance"
+          title="The programme in summary"
+          description="The essential facts about the schools this programme serves."
+        />
+
+        <div className="mt-14 grid gap-10 lg:grid-cols-[1.15fr_0.85fr]">
+          <Reveal variant="left">
+            <dl className="divide-y divide-rule border-y border-rule">
+              {AT_A_GLANCE.map((r) => (
+                <div key={r.label} className="group flex items-center gap-5 py-5">
+                  <span className="icon-pop inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-tint-brand text-brand-600">
+                    <r.icon className="h-5 w-5" aria-hidden />
+                  </span>
+                  <dt className="w-32 shrink-0 text-[12px] font-bold uppercase tracking-[0.1em] text-faint">
+                    {r.label}
+                  </dt>
+                  <dd
+                    className={
+                      r.pending
+                        ? 'text-[14.5px] font-medium italic text-faint'
+                        : 'text-[15px] font-bold text-ink'
+                    }
+                  >
+                    {r.value}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </Reveal>
+
+          <Reveal variant="right" delay={120}>
+            <div className="grid grid-cols-2 gap-4">
+              {FIGURES.map((f, i) => {
+                const tones = ['coral', 'violet', 'mint', 'amber'] as const;
+                const t = TONE[tones[i]];
+                return (
+                  <div
+                    key={f.label}
+                    className={`flex flex-col justify-center rounded-2xl ${t.soft} p-6 text-center transition-transform duration-300 hover:-translate-y-1.5`}
+                  >
+                    <span className={`num text-[34px] font-extrabold leading-none ${t.text}`}>
+                      <CountUp value={f.value} />
+                    </span>
+                    <span className="mt-2.5 text-[11.5px] font-bold uppercase tracking-[0.1em] text-ink-soft">
+                      {f.label}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </Reveal>
+        </div>
+      </Section>
+
+      {/* ══ ABOUT THE PROGRAMME ════════════════════════════════════════ */}
+      <Section className="relative overflow-hidden bg-surface">
+        <Backdrop variant="warm" />
         <div className="grid items-center gap-12 lg:grid-cols-2">
           <Reveal variant="left">
             <SectionHeading
@@ -112,16 +338,16 @@ export function AboutPage() {
             />
             <div className="mt-6 space-y-4 text-[15px] leading-relaxed text-muted">
               <p>
-{DIVISION.programme} is a programme of the {DIVISION.department}, run across{' '}
+                {DIVISION.programme} is a programme of the {DIVISION.department}, run across{' '}
                 {DIVISION.district} by the {DIVISION.division}. It serves government schools in
                 the district — the classrooms furthest from a specialist teacher first.
               </p>
               <p>
-                It pairs classroom hardware with a purpose-built learning management portal. Two
-                broadcast studios carry lessons to interactive panels installed in classrooms at
-                schools across the district, while the portal holds everything that follows from
-                those lessons — the timetable, the daily register, work set and graded,
-                examinations, results and certificates.
+                It pairs classroom hardware with a purpose-built learning portal. Two broadcast
+                studios carry lessons to interactive panels installed in classrooms at schools
+                across the district, while the portal holds everything that follows from those
+                lessons — the timetable, the daily register, work set and graded, examinations,
+                results and certificates.
               </p>
               <p>
                 The structure of the programme follows directly from its hardware: two studios,
@@ -138,14 +364,14 @@ export function AboutPage() {
                 src={ABOUT.welcome.src}
                 alt={ABOUT.welcome.alt}
                 loading="lazy"
-                className="col-span-2 aspect-[16/10] w-full rounded-2xl object-cover shadow-lg"
+                className="col-span-2 aspect-[16/10] w-full rounded-2xl object-cover shadow-xl ring-1 ring-rule"
               />
-              <figure className="relative overflow-hidden rounded-2xl shadow">
+              <figure className="group relative overflow-hidden rounded-2xl shadow ring-1 ring-rule">
                 <img
                   src={DISTRICT.amarnathCave.src}
                   alt={DISTRICT.amarnathCave.alt}
                   loading="lazy"
-                  className="aspect-square w-full object-cover"
+                  className="photo-zoom aspect-square w-full object-cover"
                 />
                 <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-brand-900/90 to-transparent px-4 pb-3 pt-8">
                   <span className="text-[13px] font-extrabold text-white">Amarnath</span>
@@ -167,75 +393,8 @@ export function AboutPage() {
         </div>
       </Section>
 
-      {/* ══ VISION, MISSION, COMMITMENT ════════════════════════════════ */}
-      <Section className="bg-surface">
-        <SectionHeading
-          kicker="What we stand for"
-          title="Vision, mission and commitment"
-          description="Three statements that decide what this programme does, and what it refuses to trade away."
-        />
-
-        <div className="mt-14 grid gap-6 md:grid-cols-3">
-          {PILLARS.map((p, i) => (
-            <Reveal key={p.title} variant="zoom" delay={i * 110}>
-              <article className="h-full rounded-2xl bg-paper p-8 text-center">
-                <span className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-brand-700 text-white shadow-pill">
-                  <p.icon className="h-7 w-7" aria-hidden />
-                </span>
-                <h3 className="mt-6 text-[20px] font-extrabold tracking-[-0.02em] text-ink">
-                  {p.title}
-                </h3>
-                <span className="mx-auto mt-4 block h-1 w-12 rounded-full bg-accent-amber" />
-                <p className="mt-4 text-[14px] leading-relaxed text-muted">{p.body}</p>
-              </article>
-            </Reveal>
-          ))}
-        </div>
-
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {VALUES.map(([title, body], i) => (
-            <Reveal key={title} delay={(i % 4) * 90}>
-              <div className="h-full rounded-xl border-l-4 border-accent-mint bg-paper p-5">
-                <h4 className="text-[14.5px] font-extrabold text-ink">{title}</h4>
-                <p className="mt-1.5 text-[13px] leading-relaxed text-muted">{body}</p>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-      </Section>
-
-      {/* ══ A WORD FROM THE OFFICE ═════════════════════════════════════ */}
+      {/* ══ THE NEED ═══════════════════════════════════════════════════ */}
       <Section>
-        <Reveal>
-          <div className="grid items-center gap-10 rounded-2xl bg-brand-800 p-8 sm:p-12 lg:grid-cols-[auto_1fr]">
-            <img
-              src={DISTRICT.pahalgamMeadow.src}
-              alt={DISTRICT.pahalgamMeadow.alt}
-              loading="lazy"
-              className="mx-auto aspect-square w-44 rounded-2xl object-cover shadow-lg lg:w-56"
-            />
-            <div>
-              <Quote className="h-8 w-8 text-accent-amber" aria-hidden />
-              <blockquote className="mt-5 text-[17px] font-medium leading-relaxed text-white/85 sm:text-[19px]">
-                A school in this district is not short of able learners. What it is often short of
-                is a teacher for one particular subject, on one particular morning, in a village
-                that takes half a day to reach. This programme was built to close that gap — not
-                to replace the teacher in the room, but to make sure no class goes without the
-                one it does not have.
-              </blockquote>
-              <p className="mt-6 text-[13px] font-bold uppercase tracking-[0.1em] text-accent-amber">
-                The Division Office
-              </p>
-              <p className="mt-1 text-[13px] text-white/50">
-                {DIVISION.division} · {DIVISION.district}
-              </p>
-            </div>
-          </div>
-        </Reveal>
-      </Section>
-
-      {/* ══ CHALLENGES ═════════════════════════════════════════════════ */}
-      <Section className="bg-surface">
         <SectionHeading
           kicker="The need"
           title="What the division set out to solve"
@@ -245,8 +404,8 @@ export function AboutPage() {
         <div className="mt-14 grid gap-6 md:grid-cols-3">
           {CHALLENGES.map((c, i) => (
             <Reveal key={c.title} variant="zoom" delay={i * 110}>
-              <article className="h-full rounded-2xl border-t-4 border-accent-coral bg-paper p-7">
-                <span className="inline-flex h-14 w-14 items-center justify-center rounded-xl bg-accent-coral-soft text-accent-coral-deep">
+              <article className="lift-card group h-full rounded-2xl bg-surface p-7 shadow-sm ring-1 ring-rule hover:shadow-xl">
+                <span className="icon-pop inline-flex h-14 w-14 items-center justify-center rounded-xl bg-accent-coral-soft text-accent-coral-deep">
                   <c.icon className="h-6 w-6" aria-hidden />
                 </span>
                 <h3 className="mt-5 text-[18px] font-extrabold tracking-[-0.02em] text-ink">
@@ -278,7 +437,7 @@ export function AboutPage() {
           <ul className="mt-12 grid gap-4 md:grid-cols-2">
             {OBJECTIVES.map((o, i) => (
               <Reveal key={o} variant={i % 2 === 0 ? 'left' : 'right'} delay={(i % 2) * 90}>
-                <li className="flex h-full items-start gap-3.5 rounded-xl bg-white/[0.07] p-5 ring-1 ring-white/10">
+                <li className="flex h-full items-start gap-3.5 rounded-xl bg-white/[0.07] p-5 ring-1 ring-white/10 transition-colors hover:bg-white/[0.12]">
                   <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-accent-amber" aria-hidden />
                   <span className="text-[14.5px] leading-relaxed text-white/80">{o}</span>
                 </li>
@@ -288,15 +447,16 @@ export function AboutPage() {
         </div>
       </section>
 
-      {/* ══ APPROACH ═══════════════════════════════════════════════════ */}
-      <Section>
+      {/* ══ OUR APPROACH ═══════════════════════════════════════════════ */}
+      <Section className="relative overflow-hidden bg-surface">
+        <Backdrop variant="cool" grid />
         <SectionHeading kicker="Our approach" title="How the portal answers it" />
 
         <div className="mt-14 grid gap-6 md:grid-cols-2">
           {APPROACH.map((a, i) => (
-            <Reveal key={a.title} delay={(i % 2) * 110}>
-              <article className="flex h-full gap-5 rounded-2xl bg-surface p-7 shadow ring-1 ring-rule transition-all hover:-translate-y-1 hover:shadow-lg">
-                <span className="inline-flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-brand-700 text-white shadow-pill">
+            <Reveal key={a.title} variant={i % 2 === 0 ? 'left' : 'right'} delay={(i % 2) * 110}>
+              <article className="lift-card group flex h-full gap-5 rounded-2xl bg-paper p-7 ring-1 ring-rule hover:shadow-xl">
+                <span className="icon-pop inline-flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-brand-600 to-brand-800 text-white shadow-pill">
                   <a.icon className="h-6 w-6" aria-hidden />
                 </span>
                 <div className="min-w-0">
@@ -309,62 +469,11 @@ export function AboutPage() {
             </Reveal>
           ))}
         </div>
-      </Section>
-
-      {/* ══ AT A GLANCE ════════════════════════════════════════════════ */}
-      <Section className="bg-surface">
-        <SectionHeading kicker="At a glance" title="Programme details" />
-
-        <div className="mt-12 grid gap-6 lg:grid-cols-[1.1fr_1fr]">
-          <Reveal>
-            <dl className="overflow-hidden rounded-2xl ring-1 ring-rule">
-              {[
-                ['Department', DIVISION.department],
-                ['Division', DIVISION.division],
-                ['District', DIVISION.district],
-                ['Programme', DIVISION.programme],
-                ['Academic session', DIVISION.session],
-                ['Schools served', '21 sites across the district'],
-                ['Classrooms equipped', '42 interactive panels'],
-              ].map(([k, v], i) => (
-                <div
-                  key={k}
-                  className={`flex flex-col gap-1 px-6 py-4 sm:flex-row sm:items-baseline sm:gap-6 ${
-                    i % 2 === 0 ? 'bg-paper' : 'bg-surface'
-                  }`}
-                >
-                  <dt className="w-52 shrink-0 text-[11.5px] font-bold uppercase tracking-[0.08em] text-faint">
-                    {k}
-                  </dt>
-                  <dd className="text-[14.5px] font-bold text-ink">{v}</dd>
-                </div>
-              ))}
-            </dl>
-          </Reveal>
-
-          <Reveal delay={120}>
-            <div className="grid h-full grid-cols-2 gap-4">
-              {FIGURES.map((f) => (
-                <div
-                  key={f.label}
-                  className="flex flex-col justify-center rounded-2xl bg-paper p-6 text-center ring-1 ring-rule"
-                >
-                  <span className="num text-[34px] font-extrabold leading-none text-brand-700">
-                    <CountUp value={f.value} />
-                  </span>
-                  <span className="mt-2.5 text-[11.5px] font-bold uppercase tracking-[0.1em] text-muted">
-                    {f.label}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </Reveal>
-        </div>
 
         <div className="mt-12 text-center">
           <Link
             to="/contact"
-            className="group inline-flex items-center gap-2 rounded-lg bg-brand-700 px-7 py-3.5 text-[14.5px] font-bold text-white shadow-pill transition-all hover:-translate-y-0.5 hover:bg-brand-600"
+            className="btn-sheen group inline-flex items-center gap-2 rounded-lg bg-brand-700 px-7 py-3.5 text-[14.5px] font-bold text-white shadow-pill transition-all hover:-translate-y-0.5 hover:bg-brand-600"
           >
             Contact the division office
             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden />

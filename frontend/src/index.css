@@ -286,6 +286,143 @@ svg.lucide {
   }
 }
 
+/* ── Aesthetic layer ─────────────────────────────────────────────────────
+   Decoration for the public pages: soft light behind a section, a heading
+   rule that draws itself, and the small responses a card makes to a cursor.
+   None of it carries meaning. */
+
+@keyframes orb-drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(24px, -28px, 0) scale(1.08);
+  }
+}
+@keyframes rule-grow {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+@keyframes sheen-sweep {
+  from {
+    transform: translateX(-120%) skewX(-18deg);
+  }
+  to {
+    transform: translateX(240%) skewX(-18deg);
+  }
+}
+@keyframes float-y {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@layer components {
+  /* A blurred disc of colour, placed behind a section to lift it off flat
+     white. Always decorative and never interactive. */
+  .orb {
+    position: absolute;
+    border-radius: 9999px;
+    filter: blur(64px);
+    pointer-events: none;
+    animation: orb-drift 20s ease-in-out infinite;
+  }
+
+  /* A faint grid, for the same purpose where a disc would be too soft. */
+  .grid-pattern {
+    background-image:
+      linear-gradient(to right, rgba(81, 76, 153, 0.06) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(81, 76, 153, 0.06) 1px, transparent 1px);
+    background-size: 46px 46px;
+    -webkit-mask-image: radial-gradient(ellipse at center, #000 20%, transparent 72%);
+    mask-image: radial-gradient(ellipse at center, #000 20%, transparent 72%);
+  }
+
+  /* The short rule under a section heading, drawn once it is scrolled to. */
+  .rule-grow {
+    transform-origin: left;
+  }
+  .reveal.is-in .rule-grow,
+  .rule-grow.is-in {
+    animation: rule-grow 0.6s 0.25s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .float-y {
+    animation: float-y 6s ease-in-out infinite;
+  }
+
+  /* A card that answers the cursor: it rises, its shadow deepens, and a
+     coloured edge appears along the top. */
+  .lift-card {
+    position: relative;
+    overflow: hidden;
+    transition:
+      transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 0.35s ease;
+  }
+  .lift-card::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 3px;
+    background: linear-gradient(90deg, #f2789f, #f5a623, #3bc9a0);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .lift-card:hover {
+    transform: translateY(-8px);
+  }
+  .lift-card:hover::before {
+    transform: scaleX(1);
+  }
+
+  /* The icon inside a hovered card leans and grows very slightly. */
+  .icon-pop {
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .group:hover .icon-pop {
+    transform: scale(1.12) rotate(-7deg);
+  }
+
+  /* A band of light that crosses a solid button as it is hovered. */
+  .btn-sheen {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .btn-sheen::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 42%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.38), transparent);
+    transform: translateX(-120%) skewX(-18deg);
+    z-index: -1;
+  }
+  .btn-sheen:hover::after {
+    animation: sheen-sweep 0.85s ease-out;
+  }
+
+  /* A photograph that lightens and lifts a shade as its frame is hovered. */
+  .photo-zoom {
+    transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .group:hover .photo-zoom {
+    transform: scale(1.08);
+  }
+}
+
 /* Anyone who has asked their system for less movement gets none of it. */
 @media (prefers-reduced-motion: reduce) {
   .reveal,
@@ -295,8 +432,23 @@ svg.lucide {
   }
   .ken-burns,
   .ticker-track,
-  .pulse-ring {
+  .pulse-ring,
+  .orb,
+  .float-y,
+  .rule-grow {
     animation: none !important;
+    transform: none !important;
+  }
+  .lift-card:hover,
+  .group:hover .icon-pop,
+  .group:hover .photo-zoom {
+    transform: none !important;
+  }
+  .lift-card::before {
+    transform: scaleX(1);
+  }
+  .btn-sheen::after {
+    display: none;
   }
   /* The caption must still be readable, just not animated in. */
   .hover-caption {

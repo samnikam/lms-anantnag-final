@@ -86,14 +86,16 @@ export function SectionHeading({
   return (
     <div className={clsx('max-w-3xl', align === 'center' && 'mx-auto text-center')}>
       {kicker && (
-        <p
+        <span
           className={clsx(
-            'mb-3 text-[12px] font-extrabold uppercase tracking-[0.16em]',
-            light ? 'text-accent-amber' : 'text-accent-coral-deep',
+            'mb-4 inline-block rounded-full px-4 py-1.5 text-[11.5px] font-extrabold uppercase tracking-[0.16em]',
+            light
+              ? 'bg-white/10 text-accent-amber ring-1 ring-white/15'
+              : 'bg-accent-coral-soft text-accent-coral-deep',
           )}
         >
           {kicker}
-        </p>
+        </span>
       )}
       <h2
         className={clsx(
@@ -103,10 +105,10 @@ export function SectionHeading({
       >
         {title}
       </h2>
-      {/* The short rule under a heading, as an institutional site uses. */}
+      {/* The short rule under a heading, drawn in as the section arrives. */}
       <span
         className={clsx(
-          'mt-5 block h-1 w-16 rounded-full bg-accent-amber',
+          'rule-grow is-in mt-5 block h-1 w-16 rounded-full bg-gradient-to-r from-accent-amber to-accent-coral',
           align === 'center' && 'mx-auto',
         )}
       />
@@ -430,5 +432,34 @@ export function PageBanner({
         <span className="mt-5 block h-1 w-16 rounded-full bg-accent-amber" />
       </div>
     </section>
+  );
+}
+
+/**
+ * Soft light behind a section. Purely decorative — it sits under the content
+ * and never takes a pointer.
+ */
+export function Backdrop({
+  variant = 'warm',
+  grid = false,
+}: {
+  variant?: 'warm' | 'cool' | 'mint';
+  grid?: boolean;
+}) {
+  const orbs = {
+    warm: ['bg-accent-coral/15', 'bg-accent-amber/15'],
+    cool: ['bg-accent-violet/15', 'bg-accent-sky/15'],
+    mint: ['bg-accent-mint/15', 'bg-accent-sky/12'],
+  }[variant];
+
+  return (
+    <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden" aria-hidden>
+      {grid && <div className="grid-pattern absolute inset-0" />}
+      <span className={clsx('orb -left-32 -top-24 h-[26rem] w-[26rem]', orbs[0])} />
+      <span
+        className={clsx('orb -bottom-28 -right-24 h-[22rem] w-[22rem]', orbs[1])}
+        style={{ animationDelay: '-7s' }}
+      />
+    </div>
   );
 }

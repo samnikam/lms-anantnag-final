@@ -13,7 +13,7 @@ import {
   Video,
 } from 'lucide-react';
 import clsx from 'clsx';
-import { DIVISION, FIGURES, Section, SectionHeading } from './PublicLayout';
+import { Backdrop, DIVISION, FIGURES, Section, SectionHeading } from './PublicLayout';
 import { CountUp, Reveal } from './motion';
 import { ABOUT, FACILITIES, GALLERY, HERO_SLIDES, LANDMARKS, ROLE_PHOTOS } from './media';
 import {
@@ -162,7 +162,7 @@ export function HomePage() {
             >
               <Link
                 to="/login"
-                className="inline-flex items-center gap-2 rounded-lg bg-accent-amber px-7 py-3.5 text-[14.5px] font-extrabold text-ink shadow-lg transition-transform hover:-translate-y-0.5"
+                className="btn-sheen inline-flex items-center gap-2 rounded-lg bg-accent-amber px-7 py-3.5 text-[14.5px] font-extrabold text-ink shadow-lg transition-transform hover:-translate-y-0.5"
               >
                 Access the Portal
                 <ArrowRight className="h-4 w-4" aria-hidden />
@@ -222,9 +222,9 @@ export function HomePage() {
             <Reveal key={q.title} delay={i * 80}>
               <Link
                 to={q.to}
-                className="group flex h-full items-center gap-4 rounded-xl bg-surface p-5 shadow-md ring-1 ring-rule transition-all hover:-translate-y-1 hover:shadow-lg"
+                className="lift-card group flex h-full items-center gap-4 rounded-xl bg-surface p-5 shadow-md ring-1 ring-rule hover:shadow-xl"
               >
-                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand-700 text-white transition-colors group-hover:bg-accent-coral-deep">
+                <span className="icon-pop flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-brand-600 to-brand-800 text-white shadow-pill">
                   <q.icon className="h-5 w-5" aria-hidden />
                 </span>
                 <span className="min-w-0">
@@ -268,9 +268,9 @@ export function HomePage() {
             const t = TONE[q.tone];
             return (
               <Reveal key={q.title} variant="zoom" delay={i * 80}>
-                <article className="h-full rounded-xl bg-surface p-6 shadow-md ring-1 ring-rule transition-all hover:-translate-y-1 hover:shadow-lg">
+                <article className="lift-card group h-full rounded-xl bg-surface p-6 shadow-md ring-1 ring-rule hover:shadow-xl">
                   <span
-                    className={`inline-flex h-12 w-12 items-center justify-center rounded-xl ${t.solid} text-white shadow-sm`}
+                    className={`icon-pop inline-flex h-12 w-12 items-center justify-center rounded-xl ${t.solid} text-white shadow-sm`}
                   >
                     <q.icon className="h-5 w-5" aria-hidden />
                   </span>
@@ -286,7 +286,8 @@ export function HomePage() {
       </section>
 
       {/* ══ WELCOME ════════════════════════════════════════════════════ */}
-      <Section>
+      <Section className="relative overflow-hidden">
+        <Backdrop variant="warm" />
         <div className="grid items-center gap-12 lg:grid-cols-2">
           <Reveal variant="left">
             <div className="relative">
@@ -294,7 +295,7 @@ export function HomePage() {
                 src={ABOUT.welcome.src}
                 alt={ABOUT.welcome.alt}
                 loading="lazy"
-                className="aspect-[4/3] w-full rounded-2xl object-cover shadow-lg"
+                className="aspect-[4/3] w-full rounded-2xl object-cover shadow-xl ring-1 ring-rule"
               />
               {/* A small second frame, the way a school site layers two. */}
               <img
@@ -394,14 +395,24 @@ export function HomePage() {
           loading="lazy"
           className="absolute inset-0 h-full w-full object-cover opacity-[0.12]"
         />
-        <div className="relative mx-auto max-w-6xl px-5 py-16 sm:px-8">
+        <span
+          aria-hidden
+          className="orb -left-20 -top-24 h-96 w-96 bg-accent-violet/25"
+        />
+        <span
+          aria-hidden
+          className="orb -bottom-28 right-0 h-80 w-80 bg-accent-coral/20"
+          style={{ animationDelay: '-9s' }}
+        />
+        <div className="relative mx-auto max-w-6xl px-5 py-20 sm:px-8">
           <dl className="grid grid-cols-2 gap-8 lg:grid-cols-4">
             {FIGURES.map((f, i) => (
               <Reveal key={f.label} delay={i * 90}>
-                <div className="text-center">
-                  <dd className="num text-[44px] font-extrabold leading-none text-accent-amber sm:text-[52px]">
+                <div className="group rounded-2xl px-4 py-6 text-center transition-colors hover:bg-white/[0.06]">
+                  <dd className="num bg-gradient-to-b from-accent-amber to-[#e07c1f] bg-clip-text text-[46px] font-extrabold leading-none text-transparent sm:text-[56px]">
                     <CountUp value={f.value} />
                   </dd>
+                  <span className="mx-auto mt-3 block h-0.5 w-8 rounded-full bg-white/20 transition-all duration-300 group-hover:w-14 group-hover:bg-accent-amber" />
                   <dt className="mt-3 text-[12.5px] font-bold uppercase tracking-[0.12em] text-white/65">
                     {f.label}
                   </dt>
@@ -413,7 +424,8 @@ export function HomePage() {
       </section>
 
       {/* ══ WHY CHOOSE US ══════════════════════════════════════════════ */}
-      <Section>
+      <Section className="relative overflow-hidden">
+        <Backdrop variant="cool" grid />
         <SectionHeading
           kicker="Why choose our schools"
           title="What a government school here offers"
@@ -423,8 +435,8 @@ export function HomePage() {
         <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {WHY_US.map((w, i) => (
             <Reveal key={w.title} variant="zoom" delay={(i % 3) * 100}>
-              <article className="group flex h-full gap-5 rounded-2xl bg-surface p-7 shadow ring-1 ring-rule transition-all hover:-translate-y-1 hover:shadow-lg">
-                <span className="inline-flex h-13 w-13 shrink-0 items-center justify-center rounded-xl bg-brand-700 p-3 text-white shadow-pill transition-colors group-hover:bg-accent-coral-deep">
+              <article className="lift-card group flex h-full gap-5 rounded-2xl bg-surface p-7 shadow ring-1 ring-rule hover:shadow-xl">
+                <span className="icon-pop inline-flex h-13 w-13 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-brand-600 to-brand-800 p-3 text-white shadow-pill">
                   <w.icon className="h-6 w-6" aria-hidden />
                 </span>
                 <div className="min-w-0">
@@ -450,7 +462,7 @@ export function HomePage() {
         />
         <div className="relative mx-auto max-w-5xl px-5 py-20 text-center sm:px-8">
           <Reveal>
-            <span className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-accent-amber text-ink shadow-lg">
+            <span className="float-y inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-accent-amber text-ink shadow-lg">
               <MonitorPlay className="h-7 w-7" aria-hidden />
             </span>
             <h2 className="mt-7 text-[28px] font-extrabold leading-[1.12] tracking-[-0.03em] text-white sm:text-[38px]">
@@ -465,7 +477,7 @@ export function HomePage() {
             </p>
             <Link
               to="/login"
-              className="mt-9 inline-flex items-center gap-2 rounded-lg bg-accent-amber px-8 py-4 text-[15px] font-extrabold text-ink shadow-lg transition-transform hover:-translate-y-0.5"
+              className="btn-sheen mt-9 inline-flex items-center gap-2 rounded-lg bg-accent-amber px-8 py-4 text-[15px] font-extrabold text-ink shadow-lg transition-transform hover:-translate-y-0.5"
             >
               Access Learning Portal
               <ArrowRight className="h-4 w-4" aria-hidden />
@@ -487,9 +499,9 @@ export function HomePage() {
             const t = TONE[f.tone];
             return (
               <Reveal key={f.title} variant="zoom" delay={(i % 3) * 90}>
-                <article className="flex h-full items-start gap-4 rounded-xl bg-surface p-5 shadow-sm ring-1 ring-rule transition-all hover:-translate-y-1 hover:shadow-lg">
+                <article className="lift-card group flex h-full items-start gap-4 rounded-xl bg-surface p-5 shadow-sm ring-1 ring-rule hover:shadow-xl">
                   <span
-                    className={`inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-lg ${t.soft} ${t.text}`}
+                    className={`icon-pop inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-lg ${t.soft} ${t.text}`}
                   >
                     <f.icon className="h-5 w-5" aria-hidden />
                   </span>
@@ -512,8 +524,9 @@ export function HomePage() {
                     src={f.src}
                     alt={f.alt}
                     loading="lazy"
-                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    className="photo-zoom h-full w-full object-cover"
                   />
+                  <span className="absolute inset-0 bg-gradient-to-t from-brand-900/45 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
                   <span className="num absolute left-4 top-4 rounded-lg bg-accent-amber px-3 py-1.5 text-[15px] font-extrabold text-ink shadow">
                     {f.count}
                   </span>
@@ -532,7 +545,7 @@ export function HomePage() {
         <div className="mt-10 text-center">
           <Link
             to="/facilities"
-            className="group inline-flex items-center gap-2 rounded-lg bg-brand-700 px-6 py-3 text-[14px] font-bold text-white shadow-pill transition-all hover:-translate-y-0.5 hover:bg-brand-600"
+            className="btn-sheen group inline-flex items-center gap-2 rounded-lg bg-brand-700 px-6 py-3 text-[14px] font-bold text-white shadow-pill transition-all hover:-translate-y-0.5 hover:bg-brand-600"
           >
             See all facilities
             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden />
@@ -541,7 +554,8 @@ export function HomePage() {
       </Section>
 
       {/* ══ SUBJECTS ═══════════════════════════════════════════════════ */}
-      <Section className="bg-surface">
+      <Section className="relative overflow-hidden bg-surface">
+        <Backdrop variant="mint" />
         <SectionHeading
           kicker="Academics"
           title="Twelve subjects across the curriculum"
@@ -550,7 +564,7 @@ export function HomePage() {
         <div className="mt-12 flex flex-wrap justify-center gap-3">
           {SUBJECTS.map((s, i) => (
             <Reveal key={s} delay={Math.min(i * 45, 400)}>
-              <span className="inline-block rounded-lg bg-paper px-5 py-3 text-[14px] font-bold text-ink-soft ring-1 ring-rule transition-all hover:-translate-y-0.5 hover:bg-brand-700 hover:text-white hover:ring-brand-700">
+              <span className="inline-block rounded-lg bg-paper px-5 py-3 text-[14px] font-bold text-ink-soft ring-1 ring-rule transition-all duration-300 hover:-translate-y-1 hover:bg-gradient-to-br hover:from-brand-600 hover:to-brand-800 hover:text-white hover:shadow-pill hover:ring-transparent">
                 {s}
               </span>
             </Reveal>
@@ -580,9 +594,11 @@ export function HomePage() {
             const t = TONE[a.tone];
             return (
               <Reveal key={a.title} variant="zoom" delay={(i % 3) * 100}>
-                <article className={`h-full rounded-2xl ${t.soft} p-7 transition-transform hover:-translate-y-1`}>
+                <article
+                  className={`group h-full rounded-2xl ${t.soft} p-7 transition-all duration-300 hover:-translate-y-2 hover:shadow-lg`}
+                >
                   <span
-                    className={`inline-flex h-13 w-13 items-center justify-center rounded-xl ${t.solid} p-3 text-white shadow-sm`}
+                    className={`icon-pop inline-flex h-13 w-13 items-center justify-center rounded-xl ${t.solid} p-3 text-white shadow-sm`}
                   >
                     <a.icon className="h-6 w-6" aria-hidden />
                   </span>
@@ -598,7 +614,8 @@ export function HomePage() {
       </Section>
 
       {/* ══ GOVERNMENT INITIATIVES ═════════════════════════════════════ */}
-      <Section>
+      <Section className="relative overflow-hidden">
+        <Backdrop variant="warm" grid />
         <SectionHeading
           kicker="Government initiatives"
           title="Schemes supporting our students"
@@ -608,8 +625,8 @@ export function HomePage() {
         <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {INITIATIVES.map((g, i) => (
             <Reveal key={g.title} variant="zoom" delay={(i % 3) * 100}>
-              <article className="flex h-full flex-col rounded-2xl border-t-4 border-brand-600 bg-surface p-7 shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg">
-                <span className="inline-flex h-13 w-13 items-center justify-center rounded-xl bg-tint-brand p-3 text-brand-600">
+              <article className="lift-card group flex h-full flex-col rounded-2xl bg-surface p-7 shadow-sm ring-1 ring-rule hover:shadow-xl">
+                <span className="icon-pop inline-flex h-13 w-13 items-center justify-center rounded-xl bg-tint-brand p-3 text-brand-600">
                   <g.icon className="h-6 w-6" aria-hidden />
                 </span>
                 <h3 className="mt-5 text-[17px] font-extrabold tracking-[-0.02em] text-ink">
@@ -654,8 +671,8 @@ export function HomePage() {
           <div className="space-y-4">
             {NOTICES.map((n, i) => (
               <Reveal key={n.tag} variant="right" delay={i * 100}>
-                <article className="flex gap-5 rounded-xl bg-paper p-5 transition-transform hover:-translate-x-1">
-                  <div className="shrink-0 rounded-lg bg-brand-700 px-3 py-2 text-center text-white">
+                <article className="group flex gap-5 rounded-xl bg-paper p-5 ring-1 ring-transparent transition-all duration-300 hover:-translate-x-1.5 hover:bg-surface hover:shadow-md hover:ring-rule">
+                  <div className="icon-pop shrink-0 rounded-lg bg-gradient-to-br from-brand-600 to-brand-800 px-3 py-2 text-center text-white shadow-pill">
                     <span className="block text-[11px] font-extrabold uppercase tracking-[0.08em]">
                       {n.tag}
                     </span>
@@ -733,13 +750,14 @@ export function HomePage() {
         <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
           {GALLERY.slice(0, 8).map((g, i) => (
             <Reveal key={g.src + i} variant="zoom" delay={(i % 4) * 80}>
-              <div className="group aspect-square overflow-hidden rounded-xl">
+              <div className="group relative aspect-square overflow-hidden rounded-xl ring-1 ring-rule">
                 <img
                   src={g.src}
                   alt={g.alt}
                   loading="lazy"
-                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  className="photo-zoom h-full w-full object-cover"
                 />
+                <span className="absolute inset-0 bg-gradient-to-t from-brand-900/70 via-brand-900/10 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
               </div>
             </Reveal>
           ))}
@@ -747,7 +765,7 @@ export function HomePage() {
         <div className="mt-10 text-center">
           <Link
             to="/gallery"
-            className="group inline-flex items-center gap-2 rounded-lg bg-brand-700 px-6 py-3 text-[14px] font-bold text-white shadow-pill transition-all hover:-translate-y-0.5 hover:bg-brand-600"
+            className="btn-sheen group inline-flex items-center gap-2 rounded-lg bg-brand-700 px-6 py-3 text-[14px] font-bold text-white shadow-pill transition-all hover:-translate-y-0.5 hover:bg-brand-600"
           >
             View full gallery
             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden />

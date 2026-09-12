@@ -271,3 +271,133 @@ svg.lucide {
     transition-duration: 0.001ms !important;
   }
 }
+
+/* ── Bright-site flourishes ──────────────────────────────────────────────
+   Large colour blocks, floating shapes and a marker highlight behind a
+   phrase. All decorative; the reduced-motion block above disables it. */
+
+@keyframes blob-morph {
+  0%,
+  100% {
+    border-radius: 58% 42% 39% 61% / 47% 51% 49% 53%;
+  }
+  33% {
+    border-radius: 39% 61% 62% 38% / 58% 39% 61% 42%;
+  }
+  66% {
+    border-radius: 62% 38% 47% 53% / 39% 62% 38% 61%;
+  }
+}
+@keyframes spin-slow {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes wiggle {
+  0%,
+  100% {
+    transform: rotate(-3deg);
+  }
+  50% {
+    transform: rotate(3deg);
+  }
+}
+/* The marker sweeps in under a phrase once it is scrolled to. */
+@keyframes marker-in {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+@keyframes marquee-left {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@layer components {
+  .anim-blob {
+    animation: blob-morph 18s ease-in-out infinite;
+  }
+  .anim-spin-slow {
+    animation: spin-slow 26s linear infinite;
+  }
+  .anim-wiggle {
+    animation: wiggle 5s ease-in-out infinite;
+  }
+
+  /* A phrase with a colour swipe behind it. The swipe sits behind the text
+     and is drawn on, so the words stay readable even before it arrives. */
+  .marker {
+    position: relative;
+    display: inline-block;
+    white-space: nowrap;
+  }
+  .marker > span {
+    position: relative;
+    z-index: 1;
+  }
+  .marker::before {
+    content: '';
+    position: absolute;
+    left: -0.14em;
+    right: -0.14em;
+    bottom: 0.04em;
+    height: 0.42em;
+    border-radius: 0.22em;
+    background: var(--marker, #f5a623);
+    transform: scaleX(0);
+    transform-origin: left;
+    z-index: 0;
+  }
+  .reveal.is-in .marker::before,
+  .marker.is-in::before {
+    animation: marker-in 0.75s 0.35s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+
+  /* A row of items that slides continuously. Duplicated in the markup so
+     the loop is seamless at -50%. */
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    animation: marquee-left 38s linear infinite;
+  }
+  .marquee-mask {
+    mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+  }
+
+  /* A card blocked in one accent, with a matching thicker edge. */
+  .block-card {
+    border-radius: 24px;
+    padding: 1.75rem;
+    transition:
+      transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 0.25s ease;
+  }
+  .block-card:hover {
+    transform: translateY(-6px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .anim-blob,
+  .anim-spin-slow,
+  .anim-wiggle,
+  .marquee-track {
+    animation: none !important;
+  }
+  /* The swipe must still be there, just not drawn. */
+  .marker::before {
+    transform: scaleX(1) !important;
+    animation: none !important;
+  }
+  .block-card:hover {
+    transform: none !important;
+  }
+}

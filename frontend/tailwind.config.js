@@ -36,13 +36,15 @@ export default {
           800: '#25234f',
           900: '#1b1a3d',
         },
-        // Pastel accents, used to tell categories apart at a glance.
+        /* The accent family. Each carries three weights: the pastel itself
+           for a fill, a `deep` that stays legible as text on white, and a
+           `soft` for a whole card blocked in that colour. */
         accent: {
-          coral: '#f2789f',
-          mint: '#3bc9a0',
-          sky: '#56b8e8',
-          amber: '#f5a623',
-          violet: '#8b7cf6',
+          coral: { DEFAULT: '#f2789f', deep: '#c93567', soft: '#fde7ef' },
+          mint: { DEFAULT: '#3bc9a0', deep: '#0b7f66', soft: '#e0f7f0' },
+          sky: { DEFAULT: '#56b8e8', deep: '#1470a8', soft: '#e4f3fd' },
+          amber: { DEFAULT: '#f5a623', deep: '#a96a04', soft: '#fdf1dd' },
+          violet: { DEFAULT: '#8b7cf6', deep: '#5638d6', soft: '#eeeafe' },
         },
         // The soft tints those accents sit on inside icon tiles.
         tint: {

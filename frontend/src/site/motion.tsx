@@ -103,3 +103,29 @@ export function CountUp({
     </span>
   );
 }
+
+/**
+ * A phrase with a colour swipe drawn behind it once it is scrolled to. The
+ * text sits above the swipe, so it stays readable before the swipe arrives
+ * and wherever motion is switched off.
+ */
+export function Marker({
+  children,
+  color = '#f5a623',
+  className,
+}: {
+  children: React.ReactNode;
+  color?: string;
+  className?: string;
+}) {
+  const { ref, seen } = useInView<HTMLSpanElement>(0.5);
+  return (
+    <span
+      ref={ref}
+      className={clsx('marker', seen && 'is-in', className)}
+      style={{ ['--marker' as any]: color }}
+    >
+      <span>{children}</span>
+    </span>
+  );
+}

@@ -17,14 +17,102 @@ const C = {
   b600: '#3d3a8c',
   b700: '#2f2c6e',
   b800: '#25234f',
-  b900: '#1b1a3d',
   coral: '#f2789f',
+  coralDeep: '#c93567',
   mint: '#3bc9a0',
+  mintDeep: '#0b7f66',
   sky: '#56b8e8',
+  skyDeep: '#1470a8',
   amber: '#f5a623',
   violet: '#8b7cf6',
+  violetDeep: '#5638d6',
+  cream: '#fff8ec',
   white: '#ffffff',
 };
+
+/* ── Playful shapes, scattered behind sections ─────────────────────────── */
+
+/** A soft organic blob that slowly changes shape. */
+export function Blob({
+  className,
+  color = C.coral,
+  opacity = 0.5,
+}: {
+  className?: string;
+  color?: string;
+  opacity?: number;
+}) {
+  return (
+    <div
+      aria-hidden
+      className={`anim-blob pointer-events-none absolute ${className ?? ''}`}
+      style={{ background: color, opacity }}
+    />
+  );
+}
+
+/** A ring, a plus, a squiggle, a star — confetti for a section corner. */
+export function Doodle({
+  kind,
+  className,
+  color = C.amber,
+}: {
+  kind: 'ring' | 'plus' | 'squiggle' | 'star' | 'arc' | 'dots';
+  className?: string;
+  color?: string;
+}) {
+  const shapes = {
+    ring: (
+      <circle cx="24" cy="24" r="17" fill="none" stroke={color} strokeWidth="6" />
+    ),
+    plus: (
+      <path
+        d="M24 8 V40 M8 24 H40"
+        stroke={color}
+        strokeWidth="7"
+        strokeLinecap="round"
+      />
+    ),
+    squiggle: (
+      <path
+        d="M4 32 Q 14 12, 24 32 T 44 32"
+        fill="none"
+        stroke={color}
+        strokeWidth="6"
+        strokeLinecap="round"
+      />
+    ),
+    star: (
+      <path
+        d="M24 4 L29 18 L44 20 L33 30 L36 44 L24 37 L12 44 L15 30 L4 20 L19 18 Z"
+        fill={color}
+      />
+    ),
+    arc: (
+      <path
+        d="M6 38 A 20 20 0 0 1 42 38"
+        fill="none"
+        stroke={color}
+        strokeWidth="7"
+        strokeLinecap="round"
+      />
+    ),
+    dots: (
+      <g fill={color}>
+        {[10, 24, 38].map((x) =>
+          [10, 24, 38].map((y) => <circle key={`${x}-${y}`} cx={x} cy={y} r="3.5" />),
+        )}
+      </g>
+    ),
+  };
+  return (
+    <svg viewBox="0 0 48 48" className={className} role="presentation" aria-hidden>
+      {shapes[kind]}
+    </svg>
+  );
+}
+
+/* ── Scenes ────────────────────────────────────────────────────────────── */
 
 /**
  * The hero scene: a broadcast studio on the valley floor, its signal carried
@@ -33,24 +121,24 @@ const C = {
 export function ValleyBroadcastScene({ className }: { className?: string }) {
   return (
     <svg
-      viewBox="0 0 760 470"
+      viewBox="0 0 780 540"
       className={className}
       role="presentation"
       aria-hidden
       preserveAspectRatio="xMidYMid meet"
     >
       <defs>
-        <linearGradient id="vb-sky" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#ffffff" stopOpacity="0.14" />
-          <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
+        <linearGradient id="vb-card" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#fffdf8" />
+          <stop offset="100%" stopColor="#f4f1ff" />
         </linearGradient>
-        <linearGradient id="vb-ridge-far" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#ffffff" stopOpacity="0.20" />
-          <stop offset="100%" stopColor="#ffffff" stopOpacity="0.06" />
+        <linearGradient id="vb-far" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={C.violet} stopOpacity="0.42" />
+          <stop offset="100%" stopColor={C.violet} stopOpacity="0.10" />
         </linearGradient>
-        <linearGradient id="vb-ridge-near" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#ffffff" stopOpacity="0.30" />
-          <stop offset="100%" stopColor="#ffffff" stopOpacity="0.10" />
+        <linearGradient id="vb-near" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={C.sky} stopOpacity="0.55" />
+          <stop offset="100%" stopColor={C.sky} stopOpacity="0.16" />
         </linearGradient>
         <linearGradient id="vb-screen" x1="0" y1="0" x2="1" y2="1">
           <stop offset="0%" stopColor={C.sky} />
@@ -58,35 +146,36 @@ export function ValleyBroadcastScene({ className }: { className?: string }) {
         </linearGradient>
       </defs>
 
-      {/* Sky wash and a low sun over the valley */}
-      <rect width="760" height="470" fill="url(#vb-sky)" rx="24" />
-      <circle cx="614" cy="96" r="34" fill={C.amber} opacity="0.55" className="anim-float" />
-      <circle cx="614" cy="96" r="52" fill={C.amber} opacity="0.16" />
+      {/* The whole scene sits on a warm card, so it reads as an object */}
+      <rect x="6" y="6" width="768" height="500" rx="40" fill="url(#vb-card)" />
 
-      {/* Ridgelines — the valley the division sits in */}
+      {/* Sun */}
+      <circle cx="640" cy="118" r="40" fill={C.amber} className="anim-float" />
+      <circle cx="640" cy="118" r="62" fill={C.amber} opacity="0.22" />
+
+      {/* Ridgelines */}
       <path
-        d="M0 236 L86 168 L132 200 L198 132 L262 196 L318 158 L372 214 L430 170 L498 224 L556 182 L620 226 L688 186 L760 232 L760 470 L0 470 Z"
-        fill="url(#vb-ridge-far)"
+        d="M6 268 L96 190 L146 226 L216 148 L284 222 L344 178 L400 242 L462 192 L530 254 L590 206 L654 256 L722 210 L774 252 L774 460 L6 460 Z"
+        fill="url(#vb-far)"
       />
-      {/* Snow caps */}
-      <path d="M198 132 L176 154 L188 158 L200 150 L212 160 L224 152 Z" fill={C.white} opacity="0.5" />
-      <path d="M86 168 L70 186 L80 189 L90 182 L100 190 L110 183 Z" fill={C.white} opacity="0.38" />
+      <path d="M216 148 L190 176 L205 181 L219 171 L233 183 L248 173 Z" fill={C.white} opacity="0.85" />
+      <path d="M96 190 L76 212 L89 216 L100 207 L112 217 L124 209 Z" fill={C.white} opacity="0.7" />
       <path
-        d="M0 306 L92 256 L164 292 L244 246 L322 300 L408 258 L486 306 L574 262 L654 304 L760 268 L760 470 L0 470 Z"
-        fill="url(#vb-ridge-near)"
+        d="M6 340 L102 284 L180 326 L268 274 L352 334 L444 288 L528 340 L622 292 L708 338 L774 302 L774 460 L6 460 Z"
+        fill="url(#vb-near)"
       />
 
-      {/* ── The studio, left: signal origin ───────────────────────────── */}
-      <g transform="translate(78 292)">
+      {/* ── Studio ─────────────────────────────────────────────────── */}
+      <g transform="translate(74 316)">
         {[0, 1.1, 2.2].map((d, i) => (
           <circle
             key={i}
-            cx="34"
-            cy="-4"
-            r="30"
+            cx="38"
+            cy="-6"
+            r="34"
             fill="none"
             stroke={C.mint}
-            strokeWidth="2"
+            strokeWidth="3"
             style={{
               transformBox: 'fill-box',
               transformOrigin: 'center',
@@ -94,181 +183,158 @@ export function ValleyBroadcastScene({ className }: { className?: string }) {
             }}
           />
         ))}
-        <rect x="4" y="8" width="60" height="46" rx="10" fill={C.white} opacity="0.95" />
-        <rect x="12" y="16" width="44" height="24" rx="5" fill={C.b700} />
-        <circle cx="34" cy="28" r="5" fill={C.mint} />
-        <rect x="30" y="-26" width="8" height="34" rx="4" fill={C.white} opacity="0.9" />
-        <circle cx="34" cy="-30" r="7" fill={C.mint} />
-        <text x="34" y="70" textAnchor="middle" fill={C.white} fontSize="12" fontWeight="700" opacity="0.75">
+        <rect x="4" y="10" width="68" height="52" rx="14" fill={C.b700} />
+        <rect x="14" y="20" width="48" height="26" rx="7" fill={C.mint} />
+        <rect x="34" y="-32" width="9" height="42" rx="4.5" fill={C.b700} />
+        <circle cx="38" cy="-36" r="9" fill={C.mint} />
+        <text x="38" y="82" textAnchor="middle" fill={C.b700} fontSize="14" fontWeight="800">
           Studio
         </text>
       </g>
 
-      {/* ── Signal paths to each school ───────────────────────────────── */}
+      {/* ── Signal paths ───────────────────────────────────────────── */}
       {[
-        'M146 286 C 250 196, 320 208, 372 262',
-        'M146 290 C 300 232, 430 210, 528 254',
-        'M146 296 C 340 300, 560 268, 668 278',
+        'M150 312 C 250 216, 330 226, 382 282',
+        'M150 316 C 310 250, 440 228, 540 274',
+        'M150 322 C 350 322, 570 288, 676 300',
       ].map((d, i) => (
         <path
           key={i}
           d={d}
           fill="none"
-          stroke={C.white}
-          strokeOpacity="0.55"
-          strokeWidth="2"
+          stroke={[C.coral, C.violet, C.mint][i]}
+          strokeOpacity="0.85"
+          strokeWidth="3.5"
           strokeLinecap="round"
-          strokeDasharray="7 11"
+          strokeDasharray="9 13"
           style={{ animation: `dash-flow ${5 + i * 1.4}s linear infinite` }}
         />
       ))}
 
-      {/* ── Three schools receiving, each with a panel ─────────────────── */}
+      {/* ── Schools ────────────────────────────────────────────────── */}
       {[
-        { x: 336, y: 262, s: 1, name: 'School' },
-        { x: 492, y: 254, s: 0.9, name: 'School' },
-        { x: 632, y: 278, s: 1.02, name: 'School' },
+        { x: 344, y: 282, roof: C.coral },
+        { x: 502, y: 274, roof: C.violet },
+        { x: 640, y: 300, roof: C.mint },
       ].map((sc, i) => (
-        <g key={i} transform={`translate(${sc.x} ${sc.y}) scale(${sc.s})`}>
-          {/* building */}
-          <rect x="0" y="18" width="78" height="62" rx="9" fill={C.white} opacity="0.95" />
-          <path d="M-6 20 L39 -6 L84 20 Z" fill={C.coral} opacity="0.92" />
-          {/* a flag, because a school has one */}
-          <rect x="38" y="-30" width="2.5" height="26" fill={C.white} opacity="0.8" />
-          <path d="M40.5 -28 L58 -22 L40.5 -16 Z" fill={C.amber} />
-          {/* the interactive panel inside */}
-          <rect x="10" y="30" width="58" height="34" rx="5" fill="url(#vb-screen)" />
-          <rect x="14" y="34" width="30" height="3.5" rx="1.75" fill={C.white} opacity="0.85" />
-          <rect x="14" y="42" width="44" height="3.5" rx="1.75" fill={C.white} opacity="0.6" />
-          <rect x="14" y="50" width="24" height="3.5" rx="1.75" fill={C.white} opacity="0.45" />
-          {/* learners */}
-          <circle cx="20" cy="74" r="5" fill={C.b800} opacity="0.75" />
-          <circle cx="39" cy="74" r="5" fill={C.b800} opacity="0.75" />
-          <circle cx="58" cy="74" r="5" fill={C.b800} opacity="0.75" />
-          {/* live dot */}
+        <g key={i} transform={`translate(${sc.x} ${sc.y})`}>
+          <rect x="0" y="20" width="86" height="70" rx="14" fill={C.white} />
+          <path d="M-8 22 L43 -8 L94 22 Z" fill={sc.roof} />
+          <rect x="41" y="-36" width="3" height="30" fill={C.b700} />
+          <path d="M44 -34 L64 -27 L44 -20 Z" fill={C.amber} />
+          <rect x="11" y="33" width="64" height="38" rx="7" fill="url(#vb-screen)" />
+          <rect x="16" y="38" width="34" height="4" rx="2" fill={C.white} opacity="0.95" />
+          <rect x="16" y="47" width="50" height="4" rx="2" fill={C.white} opacity="0.7" />
+          <rect x="16" y="56" width="26" height="4" rx="2" fill={C.white} opacity="0.5" />
+          {[22, 43, 64].map((cx) => (
+            <circle key={cx} cx={cx} cy="82" r="6" fill={C.b600} />
+          ))}
           <circle
-            cx="70"
-            cy="26"
-            r="4"
+            cx="78"
+            cy="30"
+            r="5"
             fill={C.mint}
             style={{ animation: `ping-ring 2.6s ${i * 0.5}s ease-out infinite` }}
           />
-          <circle cx="70" cy="26" r="3" fill={C.mint} />
+          <circle cx="78" cy="30" r="3.5" fill={C.mintDeep} />
         </g>
       ))}
 
-      {/* Chinar-ish trees along the valley floor */}
+      {/* Trees */}
       {[
-        [214, 372],
-        [268, 388],
-        [452, 380],
-        [592, 394],
-        [706, 372],
+        [226, 404],
+        [284, 420],
+        [470, 412],
+        [606, 426],
+        [724, 404],
       ].map(([x, y], i) => (
-        <g key={i} transform={`translate(${x} ${y})`} opacity="0.5">
-          <rect x="-2" y="0" width="4" height="20" rx="2" fill={C.white} opacity="0.7" />
-          <circle cx="0" cy="-8" r="14" fill={C.mint} opacity="0.55" />
-          <circle cx="-9" cy="0" r="9" fill={C.mint} opacity="0.4" />
-          <circle cx="9" cy="-1" r="8" fill={C.mint} opacity="0.45" />
+        <g key={i} transform={`translate(${x} ${y})`}>
+          <rect x="-3" y="0" width="6" height="24" rx="3" fill={C.b600} opacity="0.5" />
+          <circle cx="0" cy="-10" r="17" fill={C.mint} opacity="0.85" />
+          <circle cx="-11" cy="1" r="11" fill={C.mint} opacity="0.6" />
+          <circle cx="11" cy="0" r="10" fill={C.mintDeep} opacity="0.35" />
         </g>
       ))}
 
-      {/* Valley floor */}
-      <path d="M0 404 Q 380 372 760 404 L760 470 L0 470 Z" fill={C.white} opacity="0.10" />
+      <path d="M6 436 Q 390 404 774 436 L774 506 L6 506 Z" fill={C.mint} opacity="0.16" />
     </svg>
   );
 }
 
-/** A teacher at the panel — used beside the "how it runs" copy. */
+/** A teacher at the panel — bolder, for the "how it runs" band. */
 export function ClassroomScene({ className }: { className?: string }) {
   return (
-    <svg viewBox="0 0 520 380" className={className} role="presentation" aria-hidden>
+    <svg viewBox="0 0 560 420" className={className} role="presentation" aria-hidden>
       <defs>
         <linearGradient id="cs-screen" x1="0" y1="0" x2="1" y2="1">
           <stop offset="0%" stopColor={C.b600} />
-          <stop offset="100%" stopColor={C.b800} />
+          <stop offset="100%" stopColor={C.violetDeep} />
         </linearGradient>
       </defs>
 
-      <rect x="24" y="24" width="472" height="300" rx="22" fill="#eef0fa" />
-      <circle cx="440" cy="70" r="40" fill={C.violet} opacity="0.16" className="anim-float" />
+      <rect x="10" y="10" width="540" height="360" rx="36" fill={C.cream} />
+      <circle cx="480" cy="76" r="46" fill={C.violet} opacity="0.25" className="anim-float" />
+      <circle cx="64" cy="322" r="30" fill={C.coral} opacity="0.3" />
 
-      {/* the panel */}
-      <rect x="70" y="62" width="300" height="186" rx="14" fill="url(#cs-screen)" />
-      <rect x="86" y="80" width="268" height="150" rx="8" fill={C.white} opacity="0.06" />
-      {/* a lesson on screen: a chart and some lines */}
-      <rect x="104" y="100" width="96" height="7" rx="3.5" fill={C.white} opacity="0.9" />
-      <rect x="104" y="116" width="150" height="5" rx="2.5" fill={C.white} opacity="0.45" />
+      <rect x="66" y="62" width="330" height="208" rx="20" fill="url(#cs-screen)" />
+      {/* a lesson on screen */}
+      <rect x="92" y="94" width="112" height="9" rx="4.5" fill={C.white} opacity="0.95" />
+      <rect x="92" y="113" width="168" height="6" rx="3" fill={C.white} opacity="0.5" />
       {[
-        [0, 44, C.coral],
-        [30, 66, C.amber],
-        [60, 34, C.sky],
-        [90, 78, C.mint],
-        [120, 56, C.violet],
+        [0, 52, C.coral],
+        [34, 78, C.amber],
+        [68, 40, C.sky],
+        [102, 92, C.mint],
+        [136, 64, C.violet],
       ].map(([dx, h, fill], i) => (
         <rect
           key={i}
-          x={106 + Number(dx)}
-          y={214 - Number(h)}
-          width="18"
+          x={94 + Number(dx)}
+          y={238 - Number(h)}
+          width="22"
           height={Number(h)}
-          rx="5"
+          rx="7"
           fill={String(fill)}
-          opacity="0.95"
         />
       ))}
-      <rect x="268" y="138" width="72" height="72" rx="12" fill={C.white} opacity="0.12" />
-      <circle cx="304" cy="166" r="14" fill={C.white} opacity="0.5" />
-      <rect x="282" y="188" width="44" height="6" rx="3" fill={C.white} opacity="0.35" />
+      <rect x="286" y="150" width="86" height="86" rx="18" fill={C.white} opacity="0.14" />
+      <circle cx="329" cy="182" r="17" fill={C.white} opacity="0.6" />
+      <rect x="303" y="208" width="52" height="7" rx="3.5" fill={C.white} opacity="0.4" />
 
-      {/* live pill */}
-      <g transform="translate(300 74)">
-        <rect x="0" y="0" width="58" height="22" rx="11" fill={C.coral} />
-        <circle cx="14" cy="11" r="4" fill={C.white}>
-          <animate attributeName="opacity" values="1;0.25;1" dur="1.8s" repeatCount="indefinite" />
+      {/* LIVE pill */}
+      <g transform="translate(318 78)">
+        <rect x="0" y="0" width="66" height="26" rx="13" fill={C.coralDeep} />
+        <circle cx="16" cy="13" r="5" fill={C.white}>
+          <animate attributeName="opacity" values="1;0.2;1" dur="1.8s" repeatCount="indefinite" />
         </circle>
-        <text x="34" y="15" textAnchor="middle" fill={C.white} fontSize="10" fontWeight="800">
+        <text x="40" y="18" textAnchor="middle" fill={C.white} fontSize="12" fontWeight="800">
           LIVE
         </text>
       </g>
 
       {/* teacher */}
-      <g transform="translate(396 150)">
-        <circle cx="0" cy="0" r="20" fill={C.amber} opacity="0.9" />
-        <path d="M-26 76 C -26 40, 26 40, 26 76 Z" fill={C.b600} />
+      <g transform="translate(432 166)">
+        <circle cx="0" cy="0" r="24" fill={C.amber} />
+        <path d="M-30 88 C -30 46, 30 46, 30 88 Z" fill={C.b600} />
       </g>
 
       {/* desks */}
       {[
-        [104, 282],
-        [212, 282],
-        [320, 282],
-      ].map(([x, y], i) => (
+        [110, 318, C.coral],
+        [230, 318, C.sky],
+        [350, 318, C.mint],
+      ].map(([x, y, c], i) => (
         <g key={i} transform={`translate(${x} ${y})`}>
-          <circle cx="0" cy="-16" r="13" fill={C.b700} opacity="0.85" />
-          <rect x="-30" y="0" width="60" height="10" rx="5" fill={C.b500} opacity="0.35" />
+          <circle cx="0" cy="-18" r="15" fill={String(c)} />
+          <rect x="-34" y="2" width="68" height="11" rx="5.5" fill={C.b600} opacity="0.25" />
         </g>
       ))}
     </svg>
   );
 }
 
-/** A soft dotted field, laid behind a section to stop it reading flat. */
-export function DotField({ className }: { className?: string }) {
-  return (
-    <svg className={className} role="presentation" aria-hidden>
-      <defs>
-        <pattern id="dotfield" width="26" height="26" patternUnits="userSpaceOnUse">
-          <circle cx="2" cy="2" r="1.6" fill={C.b500} opacity="0.16" />
-        </pattern>
-      </defs>
-      <rect width="100%" height="100%" fill="url(#dotfield)" />
-    </svg>
-  );
-}
-
-/** Ridgeline divider, so sections meet on a valley silhouette. */
-export function RidgeDivider({
+/** A soft wave, for meeting a full-bleed colour band. */
+export function WaveDivider({
   className,
   fill = '#ffffff',
   flip = false,
@@ -279,7 +345,7 @@ export function RidgeDivider({
 }) {
   return (
     <svg
-      viewBox="0 0 1440 110"
+      viewBox="0 0 1440 120"
       className={className}
       role="presentation"
       aria-hidden
@@ -287,7 +353,7 @@ export function RidgeDivider({
       style={flip ? { transform: 'scaleY(-1)' } : undefined}
     >
       <path
-        d="M0 62 L120 30 L214 60 L318 18 L430 66 L534 34 L646 72 L764 38 L880 74 L994 40 L1106 70 L1218 36 L1330 66 L1440 34 L1440 110 L0 110 Z"
+        d="M0 48 C 240 112, 480 0, 720 40 C 960 80, 1200 24, 1440 64 L1440 120 L0 120 Z"
         fill={fill}
       />
     </svg>

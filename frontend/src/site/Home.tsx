@@ -11,14 +11,20 @@ import {
   Mountain,
   ShieldCheck,
   Snowflake,
+  Sparkles,
   Users,
   Video,
   Wifi,
 } from 'lucide-react';
-import { IconTile, type Accent } from '../components/ui';
-import { DIVISION, FIGURES, Section, SectionHeading } from './PublicLayout';
-import { CountUp, Reveal } from './motion';
-import { ClassroomScene, DotField, RidgeDivider, ValleyBroadcastScene } from './illustrations';
+import { DIVISION, FIGURES, Section } from './PublicLayout';
+import { CountUp, Marker, Reveal } from './motion';
+import {
+  Blob,
+  ClassroomScene,
+  Doodle,
+  ValleyBroadcastScene,
+  WaveDivider,
+} from './illustrations';
 
 /** The curriculum the division's classes actually study. */
 const SUBJECTS = [
@@ -36,171 +42,201 @@ const SUBJECTS = [
   'Health & Physical Education',
 ];
 
-/** Why a hybrid classroom suits this district in particular. */
-const VALLEY: Array<{ icon: typeof Mountain; accent: Accent; title: string; body: string }> = [
+const VALLEY = [
   {
     icon: Mountain,
-    accent: 'violet',
-    title: 'Schools spread across the valley',
-    body: 'Anantnag’s schools sit far apart across mountainous ground. Moving a specialist teacher between them costs hours of the school day; moving the lesson costs nothing.',
+    tone: 'violet',
+    title: 'Schools far apart',
+    body: 'Anantnag’s schools sit across mountainous ground. Moving a specialist teacher between them costs hours of the school day. Moving the lesson costs nothing.',
   },
   {
     icon: Snowflake,
-    accent: 'sky',
+    tone: 'sky',
     title: 'Teaching that survives winter',
-    body: 'When weather keeps a class from the classroom, the session is still recorded and the timetable still stands — so the year is not lost to the months it is hardest to teach in.',
+    body: 'When weather keeps a class from the classroom, the session is still recorded and the timetable still stands — so the year is not lost to the hardest months.',
   },
   {
     icon: Wifi,
-    accent: 'mint',
-    title: 'Built for the connection available',
-    body: 'A panel in the room carries the lesson for the whole class, so a school needs one good link rather than a device and a connection for every learner.',
+    tone: 'mint',
+    title: 'One good link per room',
+    body: 'A panel carries the lesson for the whole class, so a school needs one connection — not a device and a connection for every learner in it.',
   },
-];
+] as const;
+
+type Tone = 'coral' | 'mint' | 'sky' | 'amber' | 'violet' | 'brand';
 
 const CAPABILITIES: Array<{
   icon: typeof Video;
-  accent: Accent;
+  tone: Tone;
   title: string;
   body: string;
+  /** Spans two columns in the grid, for the one that carries the most weight. */
+  big?: boolean;
 }> = [
   {
     icon: Video,
-    accent: 'coral',
+    tone: 'coral',
     title: 'Live & broadcast classes',
-    body: 'A lesson taught once in a studio reaches every panel scheduled to receive it, and is recorded for the learners who could not attend.',
+    body: 'A lesson taught once in a studio reaches every panel scheduled to receive it, and is recorded for whoever could not attend.',
+    big: true,
   },
   {
     icon: CalendarDays,
-    accent: 'violet',
+    tone: 'violet',
     title: 'One official timetable',
-    body: 'The academic office authors it. Teachers, learners and guardians each read their own slice — the period, the subject, and who takes it.',
+    body: 'Each period names its class, its subject and who takes it.',
   },
   {
     icon: ListChecks,
-    accent: 'mint',
+    tone: 'mint',
     title: 'Daily attendance',
-    body: 'The class teacher takes the register for their own class. Guardians are alerted when a learner falls below the 75% requirement.',
+    body: 'Taken by the class teacher. Guardians alerted below 75%.',
   },
   {
     icon: ClipboardList,
-    accent: 'sky',
+    tone: 'sky',
     title: 'Assignments & grading',
-    body: 'Work is set against a class, submitted in the portal and graded where it was set, with late submissions marked as late.',
+    body: 'Set against a class, submitted in the portal, graded where it was set — late work marked late.',
   },
   {
     icon: LibraryBig,
-    accent: 'amber',
-    title: 'Shared content library',
-    body: 'Material is prepared, reviewed and published once, then drawn on by every school rather than rebuilt at each of them.',
+    tone: 'amber',
+    title: 'Shared library',
+    body: 'Material published once, drawn on by every school.',
   },
   {
     icon: BarChart3,
-    accent: 'brand',
+    tone: 'brand',
     title: 'Reports & oversight',
-    body: 'Progress, attendance and panel utilisation roll up by class and by school, so the division office can see where support is needed.',
+    body: 'Progress, attendance and panel use, rolled up by class and school.',
   },
 ];
 
 const AUDIENCES = [
   {
     icon: Users,
-    accent: 'brand' as Accent,
+    tone: 'coral',
     role: 'Teachers',
-    body: 'Their own classes and subjects, their timetable, their registers and their grading — and nothing belonging to another teacher.',
+    body: 'Their own classes and subjects — and nothing belonging to another teacher.',
     points: ['Mark the daily register', 'Set and grade work', 'Request cover for a period'],
   },
   {
     icon: Video,
-    accent: 'violet' as Accent,
+    tone: 'violet',
     role: 'Learners',
-    body: 'Today’s lessons with the time and the teacher, their own attendance, assignments due, quizzes and the certificates they have earned.',
+    body: 'Today’s lessons with the time and the teacher who takes them.',
     points: ['Join the live class', 'See their own attendance', 'Submit work and sit quizzes'],
   },
   {
     icon: ShieldCheck,
-    accent: 'mint' as Accent,
+    tone: 'mint',
     role: 'Academic office',
-    body: 'Schools, the academic year, classes, subjects and people — set up in that order, then the timetable and registers that build on them.',
-    points: ['Publish the timetable', 'Assign class and subject teachers', 'Read division-wide reports'],
+    body: 'The whole school year, set up in the order it has to be built.',
+    points: ['Publish the timetable', 'Assign class & subject teachers', 'Read division reports'],
   },
-];
+] as const;
 
 const STEPS = [
   {
     n: '01',
+    tone: 'coral',
     title: 'The office sets the school up',
     body: 'Schools, the academic year, classes, the subjects each class studies, and the teachers and learners in them.',
   },
   {
     n: '02',
+    tone: 'violet',
     title: 'A timetable is published',
-    body: 'Each period names its class and its subject, so the portal knows which teacher takes it and which learners should be there.',
+    body: 'Each period names its class and subject, so the portal knows which teacher takes it and which learners should be there.',
   },
   {
     n: '03',
+    tone: 'mint',
     title: 'Lessons run and are recorded',
-    body: 'Studios broadcast to the panels. Registers are taken, work is set and graded, and all of it lands in one record.',
+    body: 'Studios broadcast to the panels. Registers are taken, work is graded, and all of it lands in one record.',
   },
-];
+] as const;
+
+/** Tailwind needs whole class names, so each tone is spelled out. */
+const TONE = {
+  coral: { soft: 'bg-accent-coral-soft', solid: 'bg-accent-coral', text: 'text-accent-coral-deep' },
+  mint: { soft: 'bg-accent-mint-soft', solid: 'bg-accent-mint', text: 'text-accent-mint-deep' },
+  sky: { soft: 'bg-accent-sky-soft', solid: 'bg-accent-sky', text: 'text-accent-sky-deep' },
+  amber: { soft: 'bg-accent-amber-soft', solid: 'bg-accent-amber', text: 'text-accent-amber-deep' },
+  violet: {
+    soft: 'bg-accent-violet-soft',
+    solid: 'bg-accent-violet',
+    text: 'text-accent-violet-deep',
+  },
+  brand: { soft: 'bg-tint-brand', solid: 'bg-brand-600', text: 'text-brand-600' },
+} as const;
+
+const HEX = {
+  coral: '#f2789f',
+  mint: '#3bc9a0',
+  sky: '#56b8e8',
+  amber: '#f5a623',
+  violet: '#8b7cf6',
+};
 
 export function HomePage() {
   return (
     <>
-      {/* ── Hero ─────────────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-brand-600 via-brand-700 to-brand-900 anim-sheen">
-        <div
-          aria-hidden
-          className="anim-drift pointer-events-none absolute -right-32 -top-40 h-[26rem] w-[26rem] rounded-full bg-accent-violet/25 blur-3xl"
+      {/* ══ HERO ═══════════════════════════════════════════════════════ */}
+      <section className="relative overflow-hidden bg-gradient-to-b from-[#fffaf2] via-paper to-paper">
+        <Blob className="-left-40 -top-32 h-[30rem] w-[30rem] blur-2xl" color="#ffe3ee" opacity={0.9} />
+        <Blob
+          className="-right-32 top-10 h-[26rem] w-[26rem] blur-2xl"
+          color="#e6e1ff"
+          opacity={0.9}
         />
-        <div
-          aria-hidden
-          className="anim-drift pointer-events-none absolute -bottom-40 -left-28 h-[26rem] w-[26rem] rounded-full bg-accent-coral/20 blur-3xl"
-          style={{ animationDelay: '-6s' }}
-        />
+        <Doodle kind="star" className="anim-wiggle absolute left-[6%] top-[22%] h-9 w-9" color={HEX.amber} />
+        <Doodle kind="ring" className="anim-float absolute right-[8%] bottom-[18%] h-12 w-12" color={HEX.mint} />
+        <Doodle kind="plus" className="anim-wiggle absolute left-[44%] top-[8%] h-7 w-7" color={HEX.coral} />
 
-        <div className="relative mx-auto grid max-w-6xl items-center gap-12 px-5 pb-24 pt-16 sm:px-8 lg:grid-cols-[1.05fr_1fr] lg:pb-28 lg:pt-20">
+        <div className="relative mx-auto grid max-w-6xl items-center gap-14 px-5 pb-10 pt-14 sm:px-8 lg:grid-cols-[1.02fr_1fr] lg:pt-20">
           <div>
             <Reveal>
-              <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3.5 py-1.5 text-[12px] font-semibold text-white/80 ring-1 ring-white/15 backdrop-blur-sm">
-                <span className="h-1.5 w-1.5 rounded-full bg-accent-mint" aria-hidden />
+              <span className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-[12.5px] font-bold text-brand-700 shadow-sm ring-1 ring-brand-100">
+                <Sparkles className="h-3.5 w-3.5 text-accent-amber" aria-hidden />
                 {DIVISION.department}
               </span>
             </Reveal>
 
-            <Reveal delay={90}>
-              <h1 className="mt-6 text-[34px] font-extrabold leading-[1.1] tracking-[-0.03em] text-white sm:text-[44px] lg:text-[52px]">
-                One classroom,
+            <Reveal delay={80}>
+              <h1 className="mt-7 text-[44px] font-extrabold leading-[1.02] tracking-[-0.04em] text-ink sm:text-[62px] lg:text-[72px]">
+                One classroom.
                 <br />
-                <span className="bg-gradient-to-r from-accent-sky via-white to-accent-coral bg-clip-text text-transparent">
-                  the whole valley
-                </span>{' '}
+                The whole{' '}
+                <Marker color="#ffd27a">
+                  <span>valley</span>
+                </Marker>{' '}
                 in it.
               </h1>
             </Reveal>
 
-            <Reveal delay={180}>
-              <p className="mt-6 max-w-xl text-[16px] leading-relaxed text-white/70 sm:text-[17px]">
-                The {DIVISION.programme} carries lessons from two broadcast studios to interactive
-                panels in schools across {DIVISION.division} — and keeps the timetable, the
-                register and the results for every one of them in a single official record.
+            <Reveal delay={160}>
+              <p className="mt-7 max-w-xl text-[17px] leading-relaxed text-ink-soft sm:text-[18px]">
+                Lessons taught from two broadcast studios, received on interactive panels in
+                schools right across {DIVISION.division} — with the timetable, the register and
+                the results for every one of them kept in a single record.
               </p>
             </Reveal>
 
-            <Reveal delay={260}>
+            <Reveal delay={240}>
               <div className="mt-9 flex flex-wrap items-center gap-3">
                 <Link
                   to="/login"
-                  className="group inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-[14px] font-bold text-brand-700 shadow-lg transition-all hover:-translate-y-0.5 hover:shadow-xl"
+                  className="group inline-flex items-center gap-2 rounded-full bg-brand-700 px-7 py-3.5 text-[15px] font-bold text-white shadow-pill transition-all hover:-translate-y-0.5 hover:bg-brand-600"
                 >
                   <LogIn className="h-4 w-4" aria-hidden />
                   Sign in to the portal
                 </Link>
                 <Link
                   to="/platform"
-                  className="group inline-flex items-center gap-2 rounded-full bg-white/10 px-6 py-3 text-[14px] font-semibold text-white ring-1 ring-white/20 backdrop-blur-sm transition-colors hover:bg-white/15"
+                  className="group inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-bold text-ink shadow-sm ring-1 ring-rule transition-all hover:-translate-y-0.5 hover:shadow"
                 >
-                  Explore the platform
+                  See what it does
                   <ArrowRight
                     className="h-4 w-4 transition-transform group-hover:translate-x-1"
                     aria-hidden
@@ -210,220 +246,310 @@ export function HomePage() {
             </Reveal>
           </div>
 
-          <Reveal delay={200}>
-            <ValleyBroadcastScene className="h-auto w-full" />
+          <Reveal delay={180}>
+            <ValleyBroadcastScene className="h-auto w-full drop-shadow-xl" />
           </Reveal>
         </div>
 
-        {/* Counting figures, on the ridgeline */}
-        <div className="relative mx-auto max-w-6xl px-5 pb-20 sm:px-8">
-          <dl className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
-            {FIGURES.map((f, i) => (
-              <Reveal key={f.label} delay={i * 90}>
-                <div className="rounded-2xl bg-white/10 px-5 py-4 ring-1 ring-white/10 backdrop-blur-sm transition-colors hover:bg-white/15">
-                  <dd className="num text-[28px] font-extrabold leading-none text-white">
-                    <CountUp value={f.value} />
-                  </dd>
-                  <dt className="mt-2 text-[12px] font-medium text-white/55">{f.label}</dt>
-                </div>
-              </Reveal>
-            ))}
+        {/* Figures, as big colour blocks */}
+        <div className="relative mx-auto max-w-6xl px-5 pb-20 pt-6 sm:px-8">
+          <dl className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+            {FIGURES.map((f, i) => {
+              const tones = ['coral', 'violet', 'mint', 'amber'] as const;
+              const t = TONE[tones[i]];
+              return (
+                <Reveal key={f.label} delay={i * 90}>
+                  <div className={`block-card ${t.soft} h-full`}>
+                    <dd className={`num text-[42px] font-extrabold leading-none ${t.text}`}>
+                      <CountUp value={f.value} />
+                    </dd>
+                    <dt className="mt-3 text-[13px] font-bold text-ink-soft">{f.label}</dt>
+                  </div>
+                </Reveal>
+              );
+            })}
           </dl>
         </div>
-
-        <RidgeDivider className="block h-14 w-full sm:h-20" fill="#f5f6fb" />
       </section>
 
-      {/* ── Why here ─────────────────────────────────────────────────── */}
-      <Section>
-        <SectionHeading
-          eyebrow="Why hybrid, here"
-          title="Built for the district it serves"
-          description="Anantnag is not a city campus. The programme is shaped around the distances, the winters and the connectivity the division actually works with."
-        />
+      {/* ══ FULL-BLEED CORAL BAND ══════════════════════════════════════ */}
+      <section className="relative overflow-hidden bg-accent-coral-deep">
+        <Doodle kind="dots" className="absolute left-[4%] top-[18%] h-16 w-16 opacity-30" color="#ffffff" />
+        <Doodle kind="arc" className="anim-float absolute right-[6%] bottom-[16%] h-16 w-16 opacity-40" color="#ffffff" />
+        <div className="relative mx-auto max-w-5xl px-5 py-20 text-center sm:px-8 lg:py-24">
+          <Reveal>
+            <p className="text-[13px] font-extrabold uppercase tracking-[0.18em] text-white/60">
+              The whole idea
+            </p>
+            <h2 className="mt-5 text-[32px] font-extrabold leading-[1.1] tracking-[-0.03em] text-white sm:text-[46px] lg:text-[54px]">
+              Teach it once.
+              <br />
+              Twenty-one schools receive it.
+            </h2>
+            <p className="mx-auto mt-6 max-w-2xl text-[16px] leading-relaxed text-white/75 sm:text-[17px]">
+              A specialist teacher cannot stand in twenty-one classrooms at nine in the morning.
+              The lesson can.
+            </p>
+          </Reveal>
+        </div>
+        <WaveDivider className="block h-16 w-full sm:h-24" fill="#f5f6fb" />
+      </section>
+
+      {/* ══ WHY HERE ═══════════════════════════════════════════════════ */}
+      <Section className="!pt-4">
+        <Reveal>
+          <p className="eyebrow mb-4 !text-accent-violet-deep">Why hybrid, here</p>
+          <h2 className="max-w-3xl text-[32px] font-extrabold leading-[1.08] tracking-[-0.03em] text-ink sm:text-[44px]">
+            Built for the district it{' '}
+            <Marker color="#a6f0d8">
+              <span>actually serves</span>
+            </Marker>
+          </h2>
+        </Reveal>
 
         <div className="mt-14 grid gap-5 md:grid-cols-3">
-          {VALLEY.map((v, i) => (
-            <Reveal key={v.title} delay={i * 110} as="article">
-              <article className="card-interactive h-full p-7">
-                <IconTile icon={v.icon} accent={v.accent} />
-                <h3 className="mt-5 text-[16px] font-bold tracking-[-0.01em] text-ink">
-                  {v.title}
-                </h3>
-                <p className="mt-2.5 text-[13.5px] leading-relaxed text-muted">{v.body}</p>
-              </article>
-            </Reveal>
-          ))}
+          {VALLEY.map((v, i) => {
+            const t = TONE[v.tone];
+            return (
+              <Reveal key={v.title} delay={i * 110}>
+                <article className={`block-card ${t.soft} h-full`}>
+                  <span
+                    className={`inline-flex h-14 w-14 items-center justify-center rounded-[18px] ${t.solid} text-white shadow-sm`}
+                  >
+                    <v.icon className="h-6 w-6" aria-hidden />
+                  </span>
+                  <h3 className="mt-6 text-[21px] font-extrabold tracking-[-0.02em] text-ink">
+                    {v.title}
+                  </h3>
+                  <p className="mt-3 text-[14.5px] leading-relaxed text-ink-soft">{v.body}</p>
+                </article>
+              </Reveal>
+            );
+          })}
         </div>
       </Section>
 
-      {/* ── Subjects ─────────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden bg-surface px-5 py-16 sm:px-8 lg:py-20">
-        <DotField className="pointer-events-none absolute inset-0 h-full w-full opacity-60" />
-        <div className="relative mx-auto max-w-5xl text-center">
+      {/* ══ SUBJECTS MARQUEE ═══════════════════════════════════════════ */}
+      <section className="overflow-hidden bg-surface py-16 lg:py-20">
+        <div className="mx-auto mb-10 max-w-4xl px-5 text-center sm:px-8">
           <Reveal>
-            <p className="eyebrow mb-3 !text-brand-500">The curriculum</p>
-            <h2 className="text-[24px] font-extrabold tracking-[-0.025em] text-ink sm:text-[28px]">
-              Every subject a class studies, taught and recorded the same way
+            <p className="eyebrow mb-4 !text-accent-sky-deep">The curriculum</p>
+            <h2 className="text-[30px] font-extrabold leading-[1.1] tracking-[-0.03em] text-ink sm:text-[40px]">
+              Twelve subjects, taught and recorded the same way
             </h2>
           </Reveal>
-          <Reveal delay={120}>
-            <div className="mt-9 flex flex-wrap justify-center gap-2.5">
-              {SUBJECTS.map((s) => (
-                <span
-                  key={s}
-                  className="rounded-full bg-paper px-4 py-2 text-[13px] font-semibold text-ink-soft ring-1 ring-rule transition-all hover:-translate-y-0.5 hover:bg-tint-brand hover:text-brand-600 hover:ring-brand-200"
-                >
-                  {s}
-                </span>
-              ))}
-            </div>
-          </Reveal>
         </div>
+
+        {/* Two rows sliding, each duplicated so the loop is seamless */}
+        {[0, 1].map((row) => (
+          <div key={row} className="marquee-mask mt-4 overflow-hidden">
+            <div
+              className="marquee-track gap-4"
+              style={{
+                animationDuration: `${row === 0 ? 44 : 58}s`,
+                animationDirection: row === 1 ? 'reverse' : 'normal',
+              }}
+            >
+              {[...SUBJECTS, ...SUBJECTS].map((s, i) => {
+                const tones = ['coral', 'violet', 'mint', 'amber', 'sky'] as const;
+                const t = TONE[tones[i % tones.length]];
+                return (
+                  <span
+                    key={`${row}-${s}-${i}`}
+                    className={`shrink-0 rounded-full ${t.soft} px-7 py-4 text-[16px] font-extrabold ${t.text}`}
+                  >
+                    {s}
+                  </span>
+                );
+              })}
+            </div>
+          </div>
+        ))}
       </section>
 
-      {/* ── What it does ─────────────────────────────────────────────── */}
+      {/* ══ CAPABILITIES BENTO ═════════════════════════════════════════ */}
       <Section>
-        <SectionHeading
-          eyebrow="What the portal does"
-          title="Everything a hybrid school day needs, in one place"
-          description="Each part assumes the one before it — a timetable means something only once classes and subjects exist, and a register only once there are learners to mark."
-        />
+        <Reveal>
+          <p className="eyebrow mb-4 !text-accent-coral-deep">What the portal does</p>
+          <h2 className="max-w-3xl text-[32px] font-extrabold leading-[1.08] tracking-[-0.03em] text-ink sm:text-[44px]">
+            Everything a hybrid school day needs
+          </h2>
+        </Reveal>
 
         <div className="mt-14 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {CAPABILITIES.map((c, i) => (
-            <Reveal key={c.title} delay={(i % 3) * 100}>
-              <article className="card-interactive group h-full p-6">
-                <IconTile icon={c.icon} accent={c.accent} />
-                <h3 className="mt-5 text-[16px] font-bold tracking-[-0.01em] text-ink">
-                  {c.title}
-                </h3>
-                <p className="mt-2.5 text-[13.5px] leading-relaxed text-muted">{c.body}</p>
-              </article>
-            </Reveal>
-          ))}
+          {CAPABILITIES.map((c, i) => {
+            const t = TONE[c.tone];
+            return (
+              <Reveal key={c.title} delay={(i % 3) * 100} className={c.big ? 'md:col-span-2' : ''}>
+                <article
+                  className={`block-card h-full bg-surface shadow ring-1 ring-rule ${
+                    c.big ? 'md:flex md:items-center md:gap-8' : ''
+                  }`}
+                >
+                  <span
+                    className={`inline-flex h-14 w-14 shrink-0 items-center justify-center rounded-[18px] ${t.solid} text-white shadow-sm`}
+                  >
+                    <c.icon className="h-6 w-6" aria-hidden />
+                  </span>
+                  <div className={c.big ? 'mt-6 md:mt-0' : 'mt-6'}>
+                    <h3
+                      className={`font-extrabold tracking-[-0.02em] text-ink ${
+                        c.big ? 'text-[24px]' : 'text-[19px]'
+                      }`}
+                    >
+                      {c.title}
+                    </h3>
+                    <p className="mt-2.5 text-[14.5px] leading-relaxed text-muted">{c.body}</p>
+                  </div>
+                </article>
+              </Reveal>
+            );
+          })}
         </div>
       </Section>
 
-      {/* ── How it runs, beside the classroom ────────────────────────── */}
-      <Section className="bg-surface">
-        <div className="grid items-center gap-14 lg:grid-cols-2">
+      {/* ══ HOW IT RUNS ════════════════════════════════════════════════ */}
+      <section className="relative overflow-hidden bg-surface">
+        <Blob className="-right-24 top-20 h-96 w-96 blur-2xl" color="#eeeafe" opacity={0.9} />
+        <div className="relative mx-auto grid max-w-6xl items-center gap-14 px-5 py-16 sm:px-8 lg:grid-cols-2 lg:py-24">
           <Reveal>
             <ClassroomScene className="h-auto w-full" />
           </Reveal>
 
           <div>
-            <SectionHeading
-              eyebrow="How it runs"
-              title="Set up once, then the day takes care of itself"
-              align="left"
-            />
-            <ol className="mt-10 space-y-6">
-              {STEPS.map((s, i) => (
-                <Reveal key={s.n} delay={i * 110} as="li">
-                  <li className="flex gap-5">
-                    <span className="num flex h-11 w-11 shrink-0 items-center justify-center rounded-[14px] bg-tint-brand text-[13px] font-extrabold text-brand-600">
-                      {s.n}
-                    </span>
-                    <div className="min-w-0 pt-1">
-                      <h3 className="text-[15.5px] font-bold tracking-[-0.01em] text-ink">
-                        {s.title}
-                      </h3>
-                      <p className="mt-1.5 text-[13.5px] leading-relaxed text-muted">{s.body}</p>
-                    </div>
-                  </li>
-                </Reveal>
-              ))}
+            <Reveal>
+              <p className="eyebrow mb-4 !text-accent-amber-deep">How it runs</p>
+              <h2 className="text-[30px] font-extrabold leading-[1.08] tracking-[-0.03em] text-ink sm:text-[40px]">
+                Set up once, then the day takes care of itself
+              </h2>
+            </Reveal>
+
+            <ol className="mt-10 space-y-7">
+              {STEPS.map((s, i) => {
+                const t = TONE[s.tone];
+                return (
+                  <Reveal key={s.n} delay={i * 110}>
+                    <li className="flex gap-5">
+                      <span
+                        className={`num flex h-14 w-14 shrink-0 items-center justify-center rounded-[18px] ${t.solid} text-[16px] font-extrabold text-white shadow-sm`}
+                      >
+                        {s.n}
+                      </span>
+                      <div className="min-w-0 pt-1.5">
+                        <h3 className="text-[18px] font-extrabold tracking-[-0.02em] text-ink">
+                          {s.title}
+                        </h3>
+                        <p className="mt-2 text-[14.5px] leading-relaxed text-muted">{s.body}</p>
+                      </div>
+                    </li>
+                  </Reveal>
+                );
+              })}
             </ol>
           </div>
         </div>
-      </Section>
+      </section>
 
-      {/* ── Who signs in ─────────────────────────────────────────────── */}
+      {/* ══ ROLES ══════════════════════════════════════════════════════ */}
       <Section>
-        <SectionHeading
-          eyebrow="Who signs in"
-          title="Each role sees its own work, and only its own"
-          description="Access is decided on the server, not hidden in the interface — a teacher cannot reach another teacher's register by guessing a link."
-        />
+        <Reveal>
+          <p className="eyebrow mb-4 !text-accent-mint-deep">Who signs in</p>
+          <h2 className="max-w-3xl text-[32px] font-extrabold leading-[1.08] tracking-[-0.03em] text-ink sm:text-[44px]">
+            Each role sees its own work, and{' '}
+            <Marker color="#ffc9dd">
+              <span>only its own</span>
+            </Marker>
+          </h2>
+        </Reveal>
 
         <div className="mt-14 grid gap-5 md:grid-cols-3">
-          {AUDIENCES.map((a, i) => (
-            <Reveal key={a.role} delay={i * 110}>
-              <article className="card-interactive flex h-full flex-col p-7">
-                <IconTile icon={a.icon} accent={a.accent} />
-                <h3 className="mt-5 text-[16px] font-bold tracking-[-0.01em] text-ink">
-                  {a.role}
-                </h3>
-                <p className="mt-2.5 text-[13.5px] leading-relaxed text-muted">{a.body}</p>
-                <ul className="mt-5 space-y-2 border-t border-rule pt-5">
-                  {a.points.map((p) => (
-                    <li key={p} className="flex items-start gap-2.5 text-[13px] text-ink-soft">
-                      <span
-                        className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent-mint"
-                        aria-hidden
-                      />
-                      {p}
-                    </li>
-                  ))}
-                </ul>
-              </article>
-            </Reveal>
-          ))}
+          {AUDIENCES.map((a, i) => {
+            const t = TONE[a.tone];
+            return (
+              <Reveal key={a.role} delay={i * 110}>
+                <article className={`block-card ${t.soft} flex h-full flex-col`}>
+                  <span
+                    className={`inline-flex h-14 w-14 items-center justify-center rounded-[18px] ${t.solid} text-white shadow-sm`}
+                  >
+                    <a.icon className="h-6 w-6" aria-hidden />
+                  </span>
+                  <h3 className="mt-6 text-[22px] font-extrabold tracking-[-0.02em] text-ink">
+                    {a.role}
+                  </h3>
+                  <p className="mt-2.5 flex-1 text-[14.5px] leading-relaxed text-ink-soft">
+                    {a.body}
+                  </p>
+                  <ul className="mt-6 space-y-2.5 border-t border-ink/10 pt-5">
+                    {a.points.map((p) => (
+                      <li key={p} className="flex items-start gap-2.5 text-[13.5px] font-semibold text-ink-soft">
+                        <span className={`mt-1.5 h-2 w-2 shrink-0 rounded-full ${t.solid}`} aria-hidden />
+                        {p}
+                      </li>
+                    ))}
+                  </ul>
+                </article>
+              </Reveal>
+            );
+          })}
         </div>
       </Section>
 
-      {/* ── Certificates ─────────────────────────────────────────────── */}
-      <Section className="bg-surface">
-        <Reveal>
-          <div className="relative overflow-hidden rounded-[24px] bg-gradient-to-br from-brand-600 to-brand-800 px-8 py-12 sm:px-12">
-            <div
-              aria-hidden
-              className="anim-drift pointer-events-none absolute -right-16 -top-20 h-64 w-64 rounded-full bg-accent-amber/20 blur-3xl"
-            />
-            <div className="relative flex flex-wrap items-center justify-between gap-8">
+      {/* ══ CERTIFICATES ═══════════════════════════════════════════════ */}
+      <section className="relative overflow-hidden bg-accent-violet-deep">
+        <Doodle kind="squiggle" className="anim-float absolute left-[5%] top-[20%] h-14 w-14 opacity-35" color="#ffffff" />
+        <Doodle kind="star" className="anim-wiggle absolute right-[7%] top-[24%] h-10 w-10 opacity-40" color="#ffd27a" />
+        <div className="relative mx-auto max-w-6xl px-5 py-20 sm:px-8 lg:py-24">
+          <div className="flex flex-wrap items-center justify-between gap-10">
+            <Reveal>
               <div className="max-w-xl">
-                <IconTile icon={FileBadge} className="!bg-white/15 !text-white" />
-                <h2 className="mt-5 text-[24px] font-extrabold tracking-[-0.02em] text-white sm:text-[28px]">
+                <span className="inline-flex h-14 w-14 items-center justify-center rounded-[18px] bg-white/15 text-white">
+                  <FileBadge className="h-6 w-6" aria-hidden />
+                </span>
+                <h2 className="mt-6 text-[30px] font-extrabold leading-[1.1] tracking-[-0.03em] text-white sm:text-[40px]">
                   Every certificate can be checked
                 </h2>
-                <p className="mt-3 text-[14.5px] leading-relaxed text-white/70">
-                  A certificate issued by the portal carries a verification code. Anyone — an
-                  employer, a college, another department — can confirm it is genuine without an
-                  account.
+                <p className="mt-4 text-[16px] leading-relaxed text-white/75">
+                  A certificate issued by the portal carries a verification code. An employer, a
+                  college or another department can confirm it is genuine — no account needed.
                 </p>
               </div>
+            </Reveal>
+            <Reveal delay={140}>
               <Link
                 to="/verify"
-                className="group inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-[14px] font-bold text-brand-700 shadow-lg transition-all hover:-translate-y-0.5 hover:shadow-xl"
+                className="group inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-[15px] font-bold text-accent-violet-deep shadow-lg transition-all hover:-translate-y-0.5"
               >
                 Verify a certificate
-                <ArrowRight
-                  className="h-4 w-4 transition-transform group-hover:translate-x-1"
-                  aria-hidden
-                />
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden />
               </Link>
-            </div>
+            </Reveal>
           </div>
-        </Reveal>
-      </Section>
+        </div>
+      </section>
 
-      {/* ── Sign in ──────────────────────────────────────────────────── */}
-      <Section width="narrow" className="text-center">
-        <Reveal>
-          <h2 className="text-[26px] font-extrabold tracking-[-0.025em] text-ink sm:text-[30px]">
-            Already have an account?
-          </h2>
-          <p className="mx-auto mt-4 max-w-xl text-[15px] leading-relaxed text-muted">
-            Use the credentials issued by your school or the division office. If you have
-            forgotten them, the sign-in page can send a reset.
-          </p>
-          <Link to="/login" className="btn-primary mt-8 !rounded-full !px-7 !py-3 !text-[14px]">
-            <LogIn className="h-4 w-4" aria-hidden />
-            Sign in to the portal
-          </Link>
-        </Reveal>
-      </Section>
+      {/* ══ CTA ════════════════════════════════════════════════════════ */}
+      <section className="relative overflow-hidden bg-paper">
+        <Blob className="-left-28 bottom-0 h-80 w-80 blur-2xl" color="#ffe3ee" opacity={0.9} />
+        <Blob className="-right-24 top-0 h-80 w-80 blur-2xl" color="#e0f7f0" opacity={0.9} />
+        <div className="relative mx-auto max-w-3xl px-5 py-20 text-center sm:px-8 lg:py-28">
+          <Reveal>
+            <h2 className="text-[34px] font-extrabold leading-[1.06] tracking-[-0.035em] text-ink sm:text-[46px]">
+              Ready when you are
+            </h2>
+            <p className="mx-auto mt-5 max-w-xl text-[16px] leading-relaxed text-muted">
+              Accounts are issued by your school or the division office. Forgotten your password?
+              The sign-in page can send a reset.
+            </p>
+            <Link
+              to="/login"
+              className="mt-9 inline-flex items-center gap-2 rounded-full bg-brand-700 px-8 py-4 text-[15px] font-bold text-white shadow-pill transition-all hover:-translate-y-0.5 hover:bg-brand-600"
+            >
+              <LogIn className="h-4 w-4" aria-hidden />
+              Sign in to the portal
+            </Link>
+          </Reveal>
+        </div>
+      </section>
     </>
   );
 }

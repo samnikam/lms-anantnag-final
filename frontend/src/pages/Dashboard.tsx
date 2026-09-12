@@ -59,7 +59,7 @@ export function DashboardPage() {
   return (
     <>
       <PageHeader
-        title={`Hello ${user?.fullName.split(' ')[0]}, 👋`}
+        title={`Hello ${user?.fullName.split(' ')[0]}`}
         description={`${ROLE_LABELS[user!.role]}${user?.site ? ` · ${user.site.name}` : ''}`}
       />
       {data?.role === 'SUPER_ADMIN' && <SuperAdminDashboard data={data} />}

@@ -562,9 +562,11 @@ export function HomePage() {
                     className="photo-zoom h-full w-full object-cover"
                   />
                   <span className="absolute inset-0 bg-gradient-to-t from-brand-900/45 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-                  <span className="num absolute left-4 top-4 rounded-lg bg-accent-amber px-3 py-1.5 text-[15px] font-extrabold text-ink shadow">
-                    {f.count}
-                  </span>
+                  {f.count && (
+                    <span className="num absolute left-4 top-4 rounded-lg bg-accent-amber px-3 py-1.5 text-[15px] font-extrabold text-ink shadow">
+                      {f.count}
+                    </span>
+                  )}
                 </div>
                 <div className="p-6">
                   <h3 className="text-[18px] font-extrabold tracking-[-0.02em] text-ink">

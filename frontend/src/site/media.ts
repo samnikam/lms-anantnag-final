@@ -175,7 +175,9 @@ export const ABOUT: Record<string, Photo> = {
 };
 
 /** The equipment installed across the district, one photograph each. */
-export const FACILITIES: Array<Photo & { title: string; body: string; count: string }> = [
+export const FACILITIES: Array<
+  Photo & { title: string; body: string; /** Omitted where a count is meaningless. */ count?: string }
+> = [
   {
     src: unsplash('photo-1571260899304-425eee4c7efc', 1200),
     alt: 'A classroom with a large display at the front',
@@ -215,7 +217,6 @@ export const FACILITIES: Array<Photo & { title: string; body: string; count: str
     src: unsplash('photo-1588072432836-e10032774350', 1200),
     alt: 'A study space lined with books',
     title: 'Digital library',
-    count: '∞',
     body: 'Video, PDF, presentation and document resources prepared and reviewed once, then drawn on by every school rather than rebuilt at each of them.',
   },
 ];

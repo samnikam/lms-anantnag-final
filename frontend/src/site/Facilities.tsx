@@ -82,15 +82,16 @@ export function FacilitiesPage() {
                   />
                 </figure>
                 <div className="p-8 lg:p-10">
-                  <div className="flex items-baseline gap-4">
-                    <span className="num text-[46px] font-extrabold leading-none text-accent-coral-deep">
-                      <CountUp value={f.count === '∞' ? '' : f.count} />
-                      {f.count === '∞' && '∞'}
-                    </span>
-                    <span className="text-[12px] font-bold uppercase tracking-[0.1em] text-faint">
-                      installed
-                    </span>
-                  </div>
+                  {f.count && (
+                    <div className="flex items-baseline gap-4">
+                      <span className="num text-[46px] font-extrabold leading-none text-accent-coral-deep">
+                        <CountUp value={f.count} />
+                      </span>
+                      <span className="text-[12px] font-bold uppercase tracking-[0.1em] text-faint">
+                        installed
+                      </span>
+                    </div>
+                  )}
                   <h3 className="mt-4 text-[24px] font-extrabold tracking-[-0.025em] text-ink">
                     {f.title}
                   </h3>

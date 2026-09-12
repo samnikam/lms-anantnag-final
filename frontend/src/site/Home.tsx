@@ -19,7 +19,7 @@ import {
 import clsx from 'clsx';
 import { DIVISION, FIGURES, Section, SectionHeading } from './PublicLayout';
 import { CountUp, Reveal } from './motion';
-import { ABOUT, FACILITIES, GALLERY, HERO_SLIDES, ROLE_PHOTOS } from './media';
+import { ABOUT, FACILITIES, GALLERY, HERO_SLIDES, LANDMARKS, ROLE_PHOTOS } from './media';
 
 /** The four things a visitor most often arrives wanting. */
 const QUICK_LINKS = [
@@ -530,6 +530,43 @@ export function HomePage() {
               </Reveal>
             ))}
           </div>
+        </div>
+      </Section>
+
+      {/* ══ THE DISTRICT ═══════════════════════════════════════════════ */}
+      <Section className="bg-surface">
+        <SectionHeading
+          kicker="Anantnag District"
+          title="The valley these schools sit in"
+          description="From the Lidder at Pahalgam up to Amarnath, the district covers ground that makes reaching every classroom in person impossible. That is the problem this programme was built to answer."
+        />
+
+        <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {LANDMARKS.map((l, i) => (
+            <Reveal key={l.name} delay={(i % 3) * 100}>
+              <figure className="group relative h-72 overflow-hidden rounded-2xl shadow ring-1 ring-rule">
+                <img
+                  src={l.src}
+                  alt={l.alt}
+                  loading="lazy"
+                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-brand-900/92 via-brand-900/35 to-transparent" />
+                <figcaption className="absolute inset-x-0 bottom-0 p-6">
+                  <h3 className="text-[21px] font-extrabold tracking-[-0.02em] text-white">
+                    {l.name}
+                  </h3>
+                  <span className="mt-2 block h-0.5 w-10 rounded-full bg-accent-amber" />
+                  <p className="mt-3 text-[13px] leading-relaxed text-white/75">{l.note}</p>
+                  {l.credit && (
+                    <p className="mt-2.5 text-[10.5px] text-white/45">
+                      Photo: {l.credit.author} · {l.credit.license}
+                    </p>
+                  )}
+                </figcaption>
+              </figure>
+            </Reveal>
+          ))}
         </div>
       </Section>
 

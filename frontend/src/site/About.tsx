@@ -10,7 +10,7 @@ import {
   Wifi,
 } from 'lucide-react';
 import { CountUp, Reveal } from './motion';
-import { ABOUT, HERO_SLIDES } from './media';
+import { ABOUT, DISTRICT, HERO_SLIDES } from './media';
 import { DIVISION, FIGURES, PageBanner, Section, SectionHeading } from './PublicLayout';
 
 const CHALLENGES = [
@@ -69,8 +69,8 @@ export function AboutPage() {
       <PageBanner
         title="About Us"
         subtitle={`The ${DIVISION.programme} of the ${DIVISION.department}, delivered through the ${DIVISION.division}.`}
-        image={ABOUT.valley.src}
-        imageAlt={ABOUT.valley.alt}
+        image={DISTRICT.amarnathApproach.src}
+        imageAlt={DISTRICT.amarnathApproach.alt}
       />
 
       {/* ══ INTRODUCTION ═══════════════════════════════════════════════ */}
@@ -112,12 +112,20 @@ export function AboutPage() {
                 loading="lazy"
                 className="col-span-2 aspect-[16/10] w-full rounded-2xl object-cover shadow-lg"
               />
-              <img
-                src={ABOUT.campus.src}
-                alt={ABOUT.campus.alt}
-                loading="lazy"
-                className="aspect-square w-full rounded-2xl object-cover shadow"
-              />
+              <figure className="relative overflow-hidden rounded-2xl shadow">
+                <img
+                  src={DISTRICT.amarnathCave.src}
+                  alt={DISTRICT.amarnathCave.alt}
+                  loading="lazy"
+                  className="aspect-square w-full object-cover"
+                />
+                <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-brand-900/90 to-transparent px-4 pb-3 pt-8">
+                  <span className="text-[13px] font-extrabold text-white">Amarnath</span>
+                  <span className="block text-[10px] text-white/50">
+                    {DISTRICT.amarnathCave.credit!.author} · {DISTRICT.amarnathCave.credit!.license}
+                  </span>
+                </figcaption>
+              </figure>
               <div className="flex flex-col justify-center rounded-2xl bg-accent-amber p-6">
                 <span className="num text-[38px] font-extrabold leading-none text-ink">
                   <CountUp value="42" />

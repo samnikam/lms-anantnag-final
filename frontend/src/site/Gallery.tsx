@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 import clsx from 'clsx';
 import { Reveal } from './motion';
-import { GALLERY } from './media';
+import { CREDITED, GALLERY } from './media';
 import { PageBanner, Section, SectionHeading } from './PublicLayout';
 
 export function GalleryPage() {
@@ -68,9 +68,36 @@ export function GalleryPage() {
         </div>
 
         <p className="mt-12 rounded-xl bg-accent-amber-soft p-5 text-center text-[13.5px] leading-relaxed text-ink-soft">
-          These are stand-in photographs. Once the division supplies pictures of its own
-          classrooms, studios and learners, they replace these in a single file.
+          The photographs of Anantnag — Amarnath, Pahalgam, the Lidder, Betaab, Aru,
+          Chandanwari and Kokernag — are real pictures of those places. The classroom
+          photographs are stand-ins until the division supplies its own.
         </p>
+
+        {/* Creative Commons requires the photographer to be named. */}
+        <div className="mt-10 rounded-2xl bg-surface p-7 ring-1 ring-rule">
+          <h2 className="text-[15px] font-extrabold uppercase tracking-[0.1em] text-ink">
+            Photograph credits
+          </h2>
+          <p className="mt-2 text-[13px] text-muted">
+            District photographs are used under Creative Commons licences, with thanks to their
+            photographers.
+          </p>
+          <ul className="mt-5 grid gap-x-8 gap-y-2 sm:grid-cols-2">
+            {CREDITED.map((c) => (
+              <li key={c.src} className="text-[12.5px] text-muted">
+                <a
+                  href={c.credit!.page}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="font-semibold text-brand-700 underline-offset-2 hover:underline"
+                >
+                  {c.alt}
+                </a>{' '}
+                — {c.credit!.author}, {c.credit!.license}
+              </li>
+            ))}
+          </ul>
+        </div>
       </Section>
 
       {/* ══ LIGHTBOX ═══════════════════════════════════════════════════ */}
@@ -114,6 +141,11 @@ export function GalleryPage() {
               <span className="ml-3 text-white/40">
                 {open + 1} / {GALLERY.length}
               </span>
+              {GALLERY[open].credit && (
+                <span className="mt-1.5 block text-[11.5px] text-white/40">
+                  Photo: {GALLERY[open].credit!.author} · {GALLERY[open].credit!.license}
+                </span>
+              )}
             </figcaption>
           </figure>
 

@@ -263,26 +263,32 @@ export function HomePage() {
 
       {/* ══ QUICK INFORMATION ══════════════════════════════════════════ */}
       <section className="mx-auto max-w-6xl px-5 pt-14 sm:px-8">
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {QUICK_INFO.map((q, i) => {
-            const t = TONE[q.tone];
-            return (
-              <Reveal key={q.title} variant="zoom" delay={i * 80}>
-                <article className="lift-card group h-full rounded-xl bg-surface p-6 shadow-md ring-1 ring-rule hover:shadow-xl">
+        <Reveal>
+          <div className="grid overflow-hidden rounded-2xl bg-surface shadow-md ring-1 ring-rule sm:grid-cols-2 lg:grid-cols-4">
+            {QUICK_INFO.map((q, i) => {
+              const t = TONE[q.tone];
+              return (
+                <div
+                  key={q.title}
+                  className="group relative p-7 transition-colors hover:bg-paper sm:[&:not(:nth-child(2n))]:border-r lg:[&:not(:last-child)]:border-r [&:not(:last-child)]:border-b sm:[&:nth-last-child(-n+2)]:border-b-0 lg:[&:not(:last-child)]:border-b-0 border-rule"
+                >
+                  {/* The colour belongs to the column, not to a card. */}
                   <span
-                    className={`icon-pop inline-flex h-12 w-12 items-center justify-center rounded-xl ${t.solid} text-white shadow-sm`}
-                  >
+                    className={`absolute inset-x-0 top-0 h-1 ${t.solid} origin-left scale-x-0 transition-transform duration-500 group-hover:scale-x-100`}
+                    aria-hidden
+                  />
+                  <span className={`icon-pop inline-flex h-11 w-11 items-center justify-center rounded-xl ${t.soft} ${t.text}`}>
                     <q.icon className="h-5 w-5" aria-hidden />
                   </span>
                   <h3 className="mt-5 text-[16px] font-extrabold tracking-[-0.02em] text-ink">
                     {q.title}
                   </h3>
                   <p className="mt-2 text-[13px] leading-relaxed text-muted">{q.body}</p>
-                </article>
-              </Reveal>
-            );
-          })}
-        </div>
+                </div>
+              );
+            })}
+          </div>
+        </Reveal>
       </section>
 
       {/* ══ WELCOME ════════════════════════════════════════════════════ */}
@@ -426,28 +432,52 @@ export function HomePage() {
       {/* ══ WHY CHOOSE US ══════════════════════════════════════════════ */}
       <Section className="relative overflow-hidden">
         <Backdrop variant="cool" grid />
-        <SectionHeading
-          kicker="Why choose our schools"
-          title="What a government school here offers"
-          description="Six things the district commits to for every learner it enrols."
-        />
-
-        <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {WHY_US.map((w, i) => (
-            <Reveal key={w.title} variant="zoom" delay={(i % 3) * 100}>
-              <article className="lift-card group flex h-full gap-5 rounded-2xl bg-surface p-7 shadow ring-1 ring-rule hover:shadow-xl">
-                <span className="icon-pop inline-flex h-13 w-13 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-brand-600 to-brand-800 p-3 text-white shadow-pill">
-                  <w.icon className="h-6 w-6" aria-hidden />
-                </span>
-                <div className="min-w-0">
-                  <h3 className="text-[16.5px] font-extrabold tracking-[-0.02em] text-ink">
-                    {w.title}
-                  </h3>
-                  <p className="mt-2 text-[13.5px] leading-relaxed text-muted">{w.body}</p>
-                </div>
-              </article>
+        <div className="grid gap-14 lg:grid-cols-[0.85fr_1fr]">
+          <div className="lg:sticky lg:top-28 lg:self-start">
+            <Reveal variant="left">
+              <SectionHeading
+                kicker="Why choose our schools"
+                title="What a government school here offers"
+                align="left"
+              />
+              <p className="mt-5 text-[15px] leading-relaxed text-muted">
+                Six things the district commits to for every learner it enrols.
+              </p>
+              <img
+                src={ABOUT.welcome.src}
+                alt={ABOUT.welcome.alt}
+                loading="lazy"
+                className="mt-9 hidden aspect-[4/3] w-full rounded-2xl object-cover shadow-xl ring-1 ring-rule lg:block"
+              />
             </Reveal>
-          ))}
+          </div>
+
+          {/* A single rail down the list, rather than six separate cards. */}
+          <ol className="relative space-y-1 border-l-2 border-rule pl-8">
+            {WHY_US.map((w, i) => (
+              <Reveal key={w.title} variant="right" delay={i * 70} as="li">
+                <li className="group relative py-5">
+                  <span
+                    className="absolute -left-[41px] top-6 flex h-6 w-6 items-center justify-center rounded-full bg-surface ring-2 ring-rule transition-all duration-300 group-hover:scale-125 group-hover:bg-brand-700 group-hover:ring-brand-700"
+                    aria-hidden
+                  >
+                    <span className="h-2 w-2 rounded-full bg-brand-300 transition-colors group-hover:bg-white" />
+                  </span>
+                  <div className="flex items-start gap-4">
+                    <span className="icon-pop mt-0.5 inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-tint-brand text-brand-600 transition-colors group-hover:bg-brand-700 group-hover:text-white">
+                      <w.icon className="h-5 w-5" aria-hidden />
+                    </span>
+                    <div className="min-w-0">
+                      <h3 className="text-[17px] font-extrabold tracking-[-0.02em] text-ink">
+                        {w.title}
+                      </h3>
+                      <p className="mt-1.5 text-[14px] leading-relaxed text-muted">{w.body}</p>
+                    </div>
+                  </div>
+                </li>
+              </Reveal>
+            ))}
+          </ol>
         </div>
       </Section>
 
@@ -494,28 +524,33 @@ export function HomePage() {
           description="Equipment funded under the programme and deployed across the district's classrooms."
         />
 
-        <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {/* A ruled list, so this does not repeat the photo cards below it. */}
+        <div className="mt-14 grid gap-x-12 sm:grid-cols-2">
           {FACILITY_CARDS.map((f, i) => {
             const t = TONE[f.tone];
             return (
-              <Reveal key={f.title} variant="zoom" delay={(i % 3) * 90}>
-                <article className="lift-card group flex h-full items-start gap-4 rounded-xl bg-surface p-5 shadow-sm ring-1 ring-rule hover:shadow-xl">
+              <Reveal key={f.title} variant={i % 2 === 0 ? 'left' : 'right'} delay={(i % 2) * 80}>
+                <div className="group flex items-start gap-5 border-b border-rule py-6">
                   <span
-                    className={`icon-pop inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-lg ${t.soft} ${t.text}`}
+                    className={`icon-pop inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-xl ${t.soft} ${t.text} transition-colors`}
                   >
                     <f.icon className="h-5 w-5" aria-hidden />
                   </span>
-                  <div className="min-w-0">
-                    <h3 className="text-[15px] font-extrabold text-ink">{f.title}</h3>
-                    <p className="mt-1 text-[12.5px] leading-relaxed text-muted">{f.body}</p>
+                  <div className="min-w-0 flex-1">
+                    <h3 className="text-[16px] font-extrabold text-ink">{f.title}</h3>
+                    <p className="mt-1.5 text-[13px] leading-relaxed text-muted">{f.body}</p>
                   </div>
-                </article>
+                  <span
+                    className={`mt-5 hidden h-px flex-1 max-w-[2rem] ${t.solid} origin-right scale-x-0 transition-transform duration-500 group-hover:scale-x-100 sm:block`}
+                    aria-hidden
+                  />
+                </div>
               </Reveal>
             );
           })}
         </div>
 
-        <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {FACILITIES.slice(0, 3).map((f, i) => (
             <Reveal key={f.title} variant="zoom" delay={i * 110}>
               <article className="group h-full overflow-hidden rounded-2xl bg-surface shadow ring-1 ring-rule transition-all hover:-translate-y-1 hover:shadow-lg">
@@ -582,30 +617,34 @@ export function HomePage() {
       </Section>
 
       {/* ══ STUDENT LIFE ═══════════════════════════════════════════════ */}
-      <Section>
+      <Section className="relative overflow-hidden">
+        <Backdrop variant="warm" />
         <SectionHeading
           kicker="Student life"
           title="Learning, exploring and growing together"
           description="School is more than lessons. These are the things students take part in alongside them."
         />
 
-        <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {/* Deliberately unequal: the first tile is tall, the fourth wide. */}
+        <div className="mt-14 grid auto-rows-[188px] grid-cols-2 gap-4 lg:grid-cols-4">
           {STUDENT_LIFE.map((a, i) => {
             const t = TONE[a.tone];
+            const shape =
+              i === 0 ? 'row-span-2' : i === 3 ? 'lg:col-span-2' : i === 5 ? 'col-span-2 lg:col-span-1' : '';
             return (
-              <Reveal key={a.title} variant="zoom" delay={(i % 3) * 100}>
+              <Reveal key={a.title} variant="zoom" delay={(i % 4) * 90} className={shape}>
                 <article
-                  className={`group h-full rounded-2xl ${t.soft} p-7 transition-all duration-300 hover:-translate-y-2 hover:shadow-lg`}
+                  className={`group flex h-full flex-col justify-end overflow-hidden rounded-2xl ${t.soft} p-6 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl`}
                 >
                   <span
-                    className={`icon-pop inline-flex h-13 w-13 items-center justify-center rounded-xl ${t.solid} p-3 text-white shadow-sm`}
+                    className={`icon-pop mb-auto inline-flex h-12 w-12 items-center justify-center rounded-xl ${t.solid} text-white shadow-sm`}
                   >
-                    <a.icon className="h-6 w-6" aria-hidden />
+                    <a.icon className="h-5 w-5" aria-hidden />
                   </span>
                   <h3 className="mt-5 text-[17px] font-extrabold tracking-[-0.02em] text-ink">
                     {a.title}
                   </h3>
-                  <p className="mt-2 text-[13.5px] leading-relaxed text-ink-soft">{a.body}</p>
+                  <p className="mt-1.5 text-[13px] leading-relaxed text-ink-soft">{a.body}</p>
                 </article>
               </Reveal>
             );
@@ -614,41 +653,55 @@ export function HomePage() {
       </Section>
 
       {/* ══ GOVERNMENT INITIATIVES ═════════════════════════════════════ */}
-      <Section className="relative overflow-hidden">
-        <Backdrop variant="warm" grid />
-        <SectionHeading
-          kicker="Government initiatives"
-          title="Schemes supporting our students"
-          description="National and Union Territory programmes that government schools in the district come under."
+      <section className="relative overflow-hidden bg-brand-800">
+        <span aria-hidden className="orb -right-24 -top-28 h-96 w-96 bg-accent-violet/25" />
+        <span
+          aria-hidden
+          className="orb -bottom-24 -left-20 h-80 w-80 bg-accent-mint/20"
+          style={{ animationDelay: '-8s' }}
         />
+        <div className="relative mx-auto max-w-5xl px-5 py-20 sm:px-8">
+          <SectionHeading
+            kicker="Government initiatives"
+            title="Schemes supporting our students"
+            description="National and Union Territory programmes that government schools in the district come under."
+            light
+          />
 
-        <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {INITIATIVES.map((g, i) => (
-            <Reveal key={g.title} variant="zoom" delay={(i % 3) * 100}>
-              <article className="lift-card group flex h-full flex-col rounded-2xl bg-surface p-7 shadow-sm ring-1 ring-rule hover:shadow-xl">
-                <span className="icon-pop inline-flex h-13 w-13 items-center justify-center rounded-xl bg-tint-brand p-3 text-brand-600">
-                  <g.icon className="h-6 w-6" aria-hidden />
-                </span>
-                <h3 className="mt-5 text-[17px] font-extrabold tracking-[-0.02em] text-ink">
-                  {g.title}
-                </h3>
-                <p className="mt-2 flex-1 text-[13.5px] leading-relaxed text-muted">{g.body}</p>
-                {'href' in g && g.href && (
-                  <a
-                    href={g.href}
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    className="mt-5 inline-flex w-fit items-center gap-1.5 text-[12.5px] font-bold text-brand-700 transition-colors hover:text-accent-coral-deep"
-                  >
-                    Official information
-                    <ExternalLink className="h-3.5 w-3.5" aria-hidden />
-                  </a>
-                )}
-              </article>
-            </Reveal>
-          ))}
+          {/* Full-width rows with a rule between, not a grid of boxes. */}
+          <div className="mt-14 divide-y divide-white/10 border-y border-white/10">
+            {INITIATIVES.map((g, i) => (
+              <Reveal key={g.title} variant="right" delay={Math.min(i * 70, 300)}>
+                <div className="group flex flex-wrap items-center gap-x-7 gap-y-3 px-2 py-6 transition-colors hover:bg-white/[0.05] sm:flex-nowrap">
+                  <span className="num w-9 shrink-0 text-[15px] font-extrabold text-accent-amber/60 transition-colors group-hover:text-accent-amber">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  <span className="icon-pop inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white/10 text-white ring-1 ring-white/15">
+                    <g.icon className="h-5 w-5" aria-hidden />
+                  </span>
+                  <div className="min-w-[14rem] flex-1">
+                    <h3 className="text-[17px] font-extrabold tracking-[-0.02em] text-white">
+                      {g.title}
+                    </h3>
+                    <p className="mt-1 text-[13.5px] leading-relaxed text-white/60">{g.body}</p>
+                  </div>
+                  {'href' in g && g.href && (
+                    <a
+                      href={g.href}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      className="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-white/10 px-4 py-2 text-[12.5px] font-bold text-white ring-1 ring-white/15 transition-colors hover:bg-accent-amber hover:text-ink hover:ring-transparent"
+                    >
+                      Official information
+                      <ExternalLink className="h-3.5 w-3.5" aria-hidden />
+                    </a>
+                  )}
+                </div>
+              </Reveal>
+            ))}
+          </div>
         </div>
-      </Section>
+      </section>
 
       {/* ══ NOTICES ════════════════════════════════════════════════════ */}
       <Section className="bg-surface">
@@ -661,32 +714,33 @@ export function HomePage() {
             </p>
             <Link
               to="/login"
-              className="group mt-7 inline-flex items-center gap-2 rounded-lg bg-brand-700 px-6 py-3 text-[14px] font-bold text-white shadow-pill transition-all hover:-translate-y-0.5 hover:bg-brand-600"
+              className="btn-sheen group mt-7 inline-flex items-center gap-2 rounded-lg bg-brand-700 px-6 py-3 text-[14px] font-bold text-white shadow-pill transition-all hover:-translate-y-0.5 hover:bg-brand-600"
             >
               Sign in for announcements
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden />
             </Link>
           </div>
 
-          <div className="space-y-4">
+          {/* A dated timeline rather than three stacked cards. */}
+          <ol className="relative border-l-2 border-rule pl-8">
             {NOTICES.map((n, i) => (
-              <Reveal key={n.tag} variant="right" delay={i * 100}>
-                <article className="group flex gap-5 rounded-xl bg-paper p-5 ring-1 ring-transparent transition-all duration-300 hover:-translate-x-1.5 hover:bg-surface hover:shadow-md hover:ring-rule">
-                  <div className="icon-pop shrink-0 rounded-lg bg-gradient-to-br from-brand-600 to-brand-800 px-3 py-2 text-center text-white shadow-pill">
-                    <span className="block text-[11px] font-extrabold uppercase tracking-[0.08em]">
-                      {n.tag}
-                    </span>
-                  </div>
-                  <div className="min-w-0">
-                    <p className="text-[11.5px] font-bold uppercase tracking-[0.08em] text-faint">
-                      {n.date}
-                    </p>
-                    <p className="mt-1.5 text-[14px] leading-relaxed text-ink-soft">{n.text}</p>
-                  </div>
-                </article>
+              <Reveal key={n.tag} variant="right" delay={i * 100} as="li">
+                <li className="group relative pb-9 last:pb-0">
+                  <span
+                    className="absolute -left-[41px] top-1 flex h-6 w-6 items-center justify-center rounded-full bg-accent-amber ring-4 ring-surface transition-transform duration-300 group-hover:scale-125"
+                    aria-hidden
+                  />
+                  <span className="inline-block rounded-full bg-tint-brand px-3 py-1 text-[10.5px] font-extrabold uppercase tracking-[0.1em] text-brand-600">
+                    {n.tag}
+                  </span>
+                  <p className="mt-2.5 text-[11.5px] font-bold uppercase tracking-[0.08em] text-faint">
+                    {n.date}
+                  </p>
+                  <p className="mt-1.5 text-[14.5px] leading-relaxed text-ink-soft">{n.text}</p>
+                </li>
               </Reveal>
             ))}
-          </div>
+          </ol>
         </div>
       </Section>
 

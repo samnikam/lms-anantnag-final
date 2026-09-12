@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
 
 /** True once the element has been scrolled into view. It does not go back. */
-export function useInView<T extends HTMLElement>(threshold = 0.15) {
+function useInView<T extends HTMLElement>(threshold = 0.15) {
   const ref = useRef<T | null>(null);
   const [seen, setSeen] = useState(false);
 
@@ -100,32 +100,6 @@ export function CountUp({
   return (
     <span ref={ref} className={className}>
       {shown}
-    </span>
-  );
-}
-
-/**
- * A phrase with a colour swipe drawn behind it once it is scrolled to. The
- * text sits above the swipe, so it stays readable before the swipe arrives
- * and wherever motion is switched off.
- */
-export function Marker({
-  children,
-  color = '#f5a623',
-  className,
-}: {
-  children: React.ReactNode;
-  color?: string;
-  className?: string;
-}) {
-  const { ref, seen } = useInView<HTMLSpanElement>(0.5);
-  return (
-    <span
-      ref={ref}
-      className={clsx('marker', seen && 'is-in', className)}
-      style={{ ['--marker' as any]: color }}
-    >
-      <span>{children}</span>
     </span>
   );
 }

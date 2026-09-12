@@ -33,7 +33,9 @@ import { NotFoundPage, ForbiddenPage } from './pages/Errors';
 import { PublicLayout } from './site/PublicLayout';
 import { HomePage } from './site/Home';
 import { AboutPage } from './site/About';
-import { PlatformPage } from './site/Platform';
+import { AcademicsPage } from './site/Academics';
+import { FacilitiesPage } from './site/Facilities';
+import { GalleryPage } from './site/Gallery';
 import { ContactPage } from './site/Contact';
 
 /** Blocks a route whose role list does not include the signed-in role. */
@@ -64,7 +66,9 @@ export function App() {
         <Route element={<PublicLayout />}>
           <Route index element={<HomePage />} />
           <Route path="about" element={<AboutPage />} />
-          <Route path="platform" element={<PlatformPage />} />
+          <Route path="academics" element={<AcademicsPage />} />
+          <Route path="facilities" element={<FacilitiesPage />} />
+          <Route path="gallery" element={<GalleryPage />} />
           <Route path="contact" element={<ContactPage />} />
         </Route>
 
@@ -85,9 +89,11 @@ export function App() {
       <Route path="/verify/:token" element={<VerifyCertificatePage />} />
       <Route path="/reset-password" element={<ResetPasswordPage />} />
       <Route path="/login" element={<Navigate to="/" replace />} />
-      {/* The marketing pages are for visitors; a signed-in user goes to work. */}
+      {/* The public pages are for visitors; a signed-in user goes to work. */}
       <Route path="/about" element={<Navigate to="/" replace />} />
-      <Route path="/platform" element={<Navigate to="/" replace />} />
+      <Route path="/academics" element={<Navigate to="/" replace />} />
+      <Route path="/facilities" element={<Navigate to="/sites" replace />} />
+      <Route path="/gallery" element={<Navigate to="/" replace />} />
       <Route path="/contact" element={<Navigate to="/support" replace />} />
 
       <Route element={<Layout />}>

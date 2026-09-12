@@ -1,37 +1,52 @@
-import { useState } from 'react';
-import { Link, NavLink, Outlet } from 'react-router-dom';
-import { GraduationCap, LogIn, Menu, X } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
+import {
+  ChevronUp,
+  GraduationCap,
+  LogIn,
+  MapPin,
+  Menu,
+  Phone,
+  ShieldCheck,
+  X,
+} from 'lucide-react';
 import clsx from 'clsx';
 
 /**
- * The public face of the portal — what someone sees before they sign in.
- *
- * It shares the portal's tokens (brand, tint, rule, the display face) so the
- * two halves read as one product, but it keeps its own shell: a marketing
- * page wants a wide header and a footer, not the portal's sidebar.
+ * The public face of the portal — what a parent, a visitor or the department
+ * sees before signing in. It is laid out as a school website: a utility strip,
+ * a masthead with the crest, a photo-led body and a directory footer.
  */
 
 export const NAV_LINKS = [
   { to: '/', label: 'Home', end: true },
-  { to: '/about', label: 'About' },
-  { to: '/platform', label: 'Platform' },
+  { to: '/about', label: 'About Us' },
+  { to: '/academics', label: 'Academics' },
+  { to: '/facilities', label: 'Facilities' },
+  { to: '/gallery', label: 'Gallery' },
   { to: '/contact', label: 'Contact' },
 ];
 
-/** The department's own description of itself, kept in one place. */
+/**
+ * The programme's own description of itself. The bid names the R&B Division
+ * as Pahalgam, which sits within Anantnag district — both appear, each where
+ * it belongs.
+ */
 export const DIVISION = {
-  department: 'Public Works Department, Jammu & Kashmir',
-  division: 'R&B Division Anantnag',
-  programme: 'Hybrid Learning Portal',
+  department: 'Public Works Department, Government of Jammu & Kashmir',
+  shortDept: 'PWD, Government of J&K',
+  division: 'R&B Division Pahalgam',
+  district: 'Anantnag District',
+  programme: 'Hybrid Learning Programme',
   tender: 'GEM/2026/B/7822845',
   session: '2026–27',
 };
 
 export const FIGURES = [
   { value: '21', label: 'School sites' },
-  { value: '42', label: 'Interactive panels' },
+  { value: '42', label: 'Smart classrooms' },
   { value: '02', label: 'Broadcast studios' },
-  { value: DIVISION.session, label: 'Academic session' },
+  { value: '12', label: 'Subjects taught' },
 ];
 
 /** A page section with consistent rhythm and a centred measure. */
@@ -45,7 +60,7 @@ export function Section({
   width?: 'default' | 'narrow';
 }) {
   return (
-    <section className={clsx('px-5 py-16 sm:px-8 lg:py-24', className)}>
+    <section className={clsx('px-5 py-16 sm:px-8 lg:py-20', className)}>
       <div className={clsx('mx-auto', width === 'narrow' ? 'max-w-3xl' : 'max-w-6xl')}>
         {children}
       </div>
@@ -53,42 +68,83 @@ export function Section({
   );
 }
 
+/** The heading block every section opens with: a rule, a kicker, a title. */
 export function SectionHeading({
-  eyebrow,
+  kicker,
   title,
   description,
   align = 'center',
+  light = false,
 }: {
-  eyebrow?: string;
+  kicker?: string;
   title: string;
   description?: string;
   align?: 'center' | 'left';
+  light?: boolean;
 }) {
   return (
-    <div className={clsx('max-w-2xl', align === 'center' && 'mx-auto text-center')}>
-      {eyebrow && <p className="eyebrow mb-3 !text-brand-500">{eyebrow}</p>}
-      <h2 className="text-[26px] font-extrabold leading-tight tracking-[-0.025em] text-ink sm:text-[32px]">
+    <div className={clsx('max-w-3xl', align === 'center' && 'mx-auto text-center')}>
+      {kicker && (
+        <p
+          className={clsx(
+            'mb-3 text-[12px] font-extrabold uppercase tracking-[0.16em]',
+            light ? 'text-accent-amber' : 'text-accent-coral-deep',
+          )}
+        >
+          {kicker}
+        </p>
+      )}
+      <h2
+        className={clsx(
+          'text-[27px] font-extrabold leading-[1.15] tracking-[-0.025em] sm:text-[36px]',
+          light ? 'text-white' : 'text-ink',
+        )}
+      >
         {title}
       </h2>
+      {/* The short rule under a heading, as an institutional site uses. */}
+      <span
+        className={clsx(
+          'mt-5 block h-1 w-16 rounded-full bg-accent-amber',
+          align === 'center' && 'mx-auto',
+        )}
+      />
       {description && (
-        <p className="mt-4 text-[15px] leading-relaxed text-muted">{description}</p>
+        <p
+          className={clsx(
+            'mt-5 text-[15.5px] leading-relaxed',
+            light ? 'text-white/70' : 'text-muted',
+          )}
+        >
+          {description}
+        </p>
       )}
     </div>
   );
 }
 
-function Brand({ onClick }: { onClick?: () => void }) {
+function Crest({ onClick, light = false }: { onClick?: () => void; light?: boolean }) {
   return (
-    <Link to="/" onClick={onClick} className="group flex shrink-0 items-center gap-2.5">
-      <span className="flex h-10 w-10 items-center justify-center rounded-[13px] bg-gradient-to-br from-brand-500 to-brand-800 text-white shadow-pill transition-transform duration-300 group-hover:rotate-[-8deg] group-hover:scale-105">
-        <GraduationCap className="h-5 w-5" aria-hidden />
+    <Link to="/" onClick={onClick} className="group flex shrink-0 items-center gap-3">
+      <span className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-brand-500 to-brand-800 text-white shadow-pill ring-2 ring-accent-amber/60 transition-transform duration-300 group-hover:scale-105">
+        <GraduationCap className="h-6 w-6" aria-hidden />
       </span>
       <span className="min-w-0 leading-tight">
-        <span className="block truncate text-[15px] font-extrabold tracking-[-0.02em] text-ink">
-          Hybrid Learning
+        <span
+          className={clsx(
+            'block truncate text-[16px] font-extrabold tracking-[-0.02em]',
+            light ? 'text-white' : 'text-ink',
+          )}
+        >
+          Hybrid Learning Portal
         </span>
-        <span className="block truncate text-[11px] font-medium text-faint">
-          PWD J&amp;K · Anantnag
+        <span
+          className={clsx(
+            'block truncate text-[11px] font-semibold',
+            light ? 'text-white/60' : 'text-muted',
+          )}
+        >
+          {DIVISION.division} · {DIVISION.district}
         </span>
       </span>
     </Link>
@@ -97,20 +153,70 @@ function Brand({ onClick }: { onClick?: () => void }) {
 
 export function PublicLayout() {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const { pathname } = useLocation();
+
+  // A new page starts at the top, and with the mobile menu closed.
+  useEffect(() => {
+    setOpen(false);
+    window.scrollTo({ top: 0 });
+  }, [pathname]);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   const linkClass = ({ isActive }: { isActive: boolean }) =>
     clsx(
-      'link-underline rounded-full px-3.5 py-2 text-[13.5px] font-semibold transition-colors',
-      isActive ? 'bg-tint-brand text-brand-600' : 'text-muted hover:bg-slate-50 hover:text-ink',
+      'relative rounded-lg px-3 py-2 text-[13.5px] font-bold uppercase tracking-[0.04em] transition-colors',
+      'after:absolute after:inset-x-3 after:-bottom-0.5 after:h-[3px] after:rounded-full after:bg-accent-amber after:transition-transform',
+      isActive
+        ? 'text-brand-700 after:scale-x-100'
+        : 'text-ink-soft after:scale-x-0 hover:text-brand-700 hover:after:scale-x-100',
     );
 
   return (
     <div className="flex min-h-screen flex-col bg-paper">
-      <header className="sticky top-0 z-40 border-b border-rule/70 bg-paper/85 backdrop-blur-md">
-        <div className="mx-auto flex h-[72px] max-w-6xl items-center gap-4 px-5 sm:px-8">
-          <Brand />
+      {/* ── Utility strip ───────────────────────────────────────────── */}
+      <div className="hidden bg-brand-800 text-white lg:block">
+        <div className="mx-auto flex h-10 max-w-6xl items-center justify-between gap-6 px-8 text-[12px]">
+          <div className="flex items-center gap-6">
+            <span className="flex items-center gap-1.5 text-white/70">
+              <MapPin className="h-3.5 w-3.5" aria-hidden />
+              {DIVISION.district}, Jammu &amp; Kashmir
+            </span>
+            <span className="flex items-center gap-1.5 text-white/70">
+              <Phone className="h-3.5 w-3.5" aria-hidden />
+              Through your school office
+            </span>
+          </div>
+          <div className="flex items-center gap-5">
+            <Link
+              to="/verify"
+              className="flex items-center gap-1.5 font-semibold text-white/80 transition-colors hover:text-accent-amber"
+            >
+              <ShieldCheck className="h-3.5 w-3.5" aria-hidden />
+              Verify a certificate
+            </Link>
+            <span className="text-white/40">Session {DIVISION.session}</span>
+          </div>
+        </div>
+      </div>
 
-          <nav className="ml-auto hidden items-center gap-1 lg:flex" aria-label="Main">
+      {/* ── Masthead ────────────────────────────────────────────────── */}
+      <header
+        className={clsx(
+          'sticky top-0 z-40 bg-surface transition-shadow',
+          scrolled ? 'shadow-md' : 'shadow-sm',
+        )}
+      >
+        <div className="mx-auto flex h-[76px] max-w-6xl items-center gap-4 px-5 sm:px-8">
+          <Crest />
+
+          <nav className="ml-auto hidden items-center gap-0.5 lg:flex" aria-label="Main">
             {NAV_LINKS.map((l) => (
               <NavLink key={l.to} to={l.to} end={l.end} className={linkClass}>
                 {l.label}
@@ -118,8 +224,11 @@ export function PublicLayout() {
             ))}
           </nav>
 
-          {/* The way in, kept top-right on every page. */}
-          <Link to="/login" className="btn-primary ml-auto !rounded-full lg:ml-3">
+          {/* The way in, held top-right on every page. */}
+          <Link
+            to="/login"
+            className="ml-auto inline-flex items-center gap-2 rounded-lg bg-brand-700 px-5 py-2.5 text-[13.5px] font-bold text-white shadow-pill transition-all hover:-translate-y-0.5 hover:bg-brand-600 lg:ml-4"
+          >
             <LogIn className="h-4 w-4" aria-hidden />
             Login
           </Link>
@@ -129,22 +238,26 @@ export function PublicLayout() {
             onClick={() => setOpen((v) => !v)}
             aria-label={open ? 'Close menu' : 'Open menu'}
             aria-expanded={open}
-            className="rounded-xl bg-surface p-2 text-ink-soft shadow-sm ring-1 ring-rule transition-colors hover:text-ink lg:hidden"
+            className="rounded-lg bg-paper p-2.5 text-ink-soft ring-1 ring-rule transition-colors hover:text-brand-700 lg:hidden"
           >
             {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
         </div>
 
         {open && (
-          <nav className="border-t border-rule bg-surface px-5 py-3 lg:hidden" aria-label="Mobile">
-            <div className="mx-auto flex max-w-6xl flex-col gap-1">
+          <nav className="border-t border-rule bg-surface px-5 pb-4 pt-2 lg:hidden" aria-label="Mobile">
+            <div className="mx-auto flex max-w-6xl flex-col">
               {NAV_LINKS.map((l) => (
                 <NavLink
                   key={l.to}
                   to={l.to}
                   end={l.end}
-                  onClick={() => setOpen(false)}
-                  className={linkClass}
+                  className={({ isActive }) =>
+                    clsx(
+                      'border-b border-rule py-3 text-[14px] font-bold uppercase tracking-[0.04em] last:border-0',
+                      isActive ? 'text-brand-700' : 'text-ink-soft',
+                    )
+                  }
                 >
                   {l.label}
                 </NavLink>
@@ -158,59 +271,143 @@ export function PublicLayout() {
         <Outlet />
       </main>
 
-      <footer className="border-t border-rule bg-surface">
-        <div className="mx-auto grid max-w-6xl gap-10 px-5 py-14 sm:px-8 md:grid-cols-[1.4fr_1fr_1fr]">
-          <div>
-            <Brand />
-            <p className="mt-4 max-w-sm text-[13px] leading-relaxed text-muted">
-              A hybrid classroom programme for {DIVISION.division}: lessons taught from two
-              studios and received on interactive panels at schools across the division.
+      {/* ── Footer ──────────────────────────────────────────────────── */}
+      <footer className="bg-brand-900 text-white">
+        <div className="mx-auto grid max-w-6xl gap-10 px-5 py-14 sm:px-8 md:grid-cols-2 lg:grid-cols-4">
+          <div className="lg:col-span-1">
+            <Crest light />
+            <p className="mt-5 text-[13px] leading-relaxed text-white/55">
+              A hybrid classroom programme of the {DIVISION.shortDept}, carrying lessons from two
+              studios to interactive panels in schools across {DIVISION.district}.
             </p>
           </div>
 
           <div>
-            <p className="eyebrow mb-3">Portal</p>
-            <ul className="space-y-2 text-[13px]">
+            <p className="text-[12px] font-extrabold uppercase tracking-[0.14em] text-accent-amber">
+              Quick Links
+            </p>
+            <ul className="mt-5 space-y-2.5 text-[13.5px]">
               {NAV_LINKS.map((l) => (
                 <li key={l.to}>
-                  <Link to={l.to} className="text-muted transition-colors hover:text-brand-600">
+                  <Link to={l.to} className="text-white/60 transition-colors hover:text-white">
                     {l.label}
                   </Link>
                 </li>
               ))}
+            </ul>
+          </div>
+
+          <div>
+            <p className="text-[12px] font-extrabold uppercase tracking-[0.14em] text-accent-amber">
+              Portal
+            </p>
+            <ul className="mt-5 space-y-2.5 text-[13.5px]">
               <li>
-                <Link to="/login" className="text-muted transition-colors hover:text-brand-600">
-                  Sign in
+                <Link to="/login" className="text-white/60 transition-colors hover:text-white">
+                  Student &amp; Parent Login
                 </Link>
               </li>
               <li>
-                <Link to="/verify" className="text-muted transition-colors hover:text-brand-600">
-                  Verify a certificate
+                <Link to="/login" className="text-white/60 transition-colors hover:text-white">
+                  Teacher Login
+                </Link>
+              </li>
+              <li>
+                <Link to="/kiosk-login" className="text-white/60 transition-colors hover:text-white">
+                  Classroom Panel Sign-in
+                </Link>
+              </li>
+              <li>
+                <Link to="/verify" className="text-white/60 transition-colors hover:text-white">
+                  Verify a Certificate
+                </Link>
+              </li>
+              <li>
+                <Link to="/forgot-password" className="text-white/60 transition-colors hover:text-white">
+                  Forgotten Password
                 </Link>
               </li>
             </ul>
           </div>
 
           <div>
-            <p className="eyebrow mb-3">Office</p>
-            <address className="space-y-2 text-[13px] not-italic leading-relaxed text-muted">
-              <div className="font-semibold text-ink-soft">{DIVISION.department}</div>
+            <p className="text-[12px] font-extrabold uppercase tracking-[0.14em] text-accent-amber">
+              Division Office
+            </p>
+            <address className="mt-5 space-y-2.5 text-[13.5px] not-italic leading-relaxed text-white/60">
+              <div className="font-semibold text-white/85">{DIVISION.department}</div>
               <div>{DIVISION.division}</div>
-              <div>Anantnag, Jammu &amp; Kashmir</div>
-              <div className="code text-[11px] text-faint">{DIVISION.tender}</div>
+              <div>{DIVISION.district}, Jammu &amp; Kashmir</div>
+              <div className="pt-2">
+                <span className="text-[11px] uppercase tracking-[0.1em] text-white/40">
+                  Programme reference
+                </span>
+                <div className="code text-[12px] text-white/70">{DIVISION.tender}</div>
+              </div>
             </address>
           </div>
         </div>
 
-        <div className="border-t border-rule">
-          <div className="mx-auto flex max-w-6xl flex-col gap-2 px-5 py-5 text-[12px] text-faint sm:flex-row sm:items-center sm:justify-between sm:px-8">
+        <div className="border-t border-white/10">
+          <div className="mx-auto flex max-w-6xl flex-col gap-3 px-5 py-5 text-[12px] text-white/45 sm:flex-row sm:items-center sm:justify-between sm:px-8">
             <p>
-              © {new Date().getFullYear()} {DIVISION.department}. All rights reserved.
+              © {new Date().getFullYear()} {DIVISION.shortDept}. All rights reserved.
             </p>
-            <p>Session {DIVISION.session} · Encrypted sign-in · Role-based access</p>
+            <button
+              type="button"
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              className="inline-flex items-center gap-1.5 font-semibold text-white/60 transition-colors hover:text-accent-amber"
+            >
+              Back to top
+              <ChevronUp className="h-3.5 w-3.5" aria-hidden />
+            </button>
           </div>
         </div>
       </footer>
     </div>
+  );
+}
+
+/**
+ * The banner every inner page opens with: a photograph, the page name and a
+ * trail back to the front page — the convention on an institutional site.
+ */
+export function PageBanner({
+  title,
+  subtitle,
+  image,
+  imageAlt,
+}: {
+  title: string;
+  subtitle?: string;
+  image: string;
+  imageAlt?: string;
+}) {
+  return (
+    <section className="relative h-[260px] overflow-hidden bg-brand-900 sm:h-[320px]">
+      <img
+        src={image}
+        alt={imageAlt ?? ''}
+        aria-hidden={!imageAlt}
+        className="absolute inset-0 h-full w-full object-cover"
+      />
+      <div className="absolute inset-0 bg-gradient-to-r from-brand-900/95 via-brand-900/80 to-brand-900/45" />
+      <div className="relative mx-auto flex h-full max-w-6xl flex-col justify-center px-5 sm:px-8">
+        <nav aria-label="Breadcrumb" className="mb-4 text-[12.5px] font-semibold text-white/55">
+          <Link to="/" className="transition-colors hover:text-accent-amber">
+            Home
+          </Link>
+          <span className="px-2 text-white/30">/</span>
+          <span className="text-accent-amber">{title}</span>
+        </nav>
+        <h1 className="text-[30px] font-extrabold leading-[1.1] tracking-[-0.03em] text-white sm:text-[42px]">
+          {title}
+        </h1>
+        {subtitle && (
+          <p className="mt-4 max-w-2xl text-[15.5px] leading-relaxed text-white/70">{subtitle}</p>
+        )}
+        <span className="mt-5 block h-1 w-16 rounded-full bg-accent-amber" />
+      </div>
+    </section>
   );
 }

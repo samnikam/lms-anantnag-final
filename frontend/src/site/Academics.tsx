@@ -93,7 +93,7 @@ export function AcademicsPage() {
 
         <div className="mt-14 grid gap-6 md:grid-cols-3">
           {STREAMS.map((s, i) => (
-            <Reveal key={s.title} delay={i * 110}>
+            <Reveal key={s.title} variant="zoom" delay={i * 110}>
               <article className="h-full rounded-2xl bg-surface p-7 shadow ring-1 ring-rule">
                 <span
                   className={`inline-block rounded-lg px-4 py-2 text-[12.5px] font-extrabold uppercase tracking-[0.08em] ${s.tone}`}
@@ -145,7 +145,7 @@ export function AcademicsPage() {
       {/* ══ ASSESSMENT & LANGUAGES ═════════════════════════════════════ */}
       <Section>
         <div className="grid items-center gap-12 lg:grid-cols-2">
-          <Reveal>
+          <Reveal variant="left">
             <img
               src={ABOUT.welcome.src}
               alt={ABOUT.welcome.alt}
@@ -154,7 +154,7 @@ export function AcademicsPage() {
             />
           </Reveal>
 
-          <Reveal delay={120}>
+          <Reveal variant="right" delay={120}>
             <SectionHeading kicker="Assessment" title="Examinations and results" align="left" />
             <div className="mt-6 space-y-4 text-[15px] leading-relaxed text-muted">
               <p>

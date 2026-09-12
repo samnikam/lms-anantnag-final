@@ -126,7 +126,7 @@ export function ContactPage() {
 
         <div className="mt-14 grid gap-6 md:grid-cols-2">
           {ROUTES.map((r, i) => (
-            <Reveal key={r.title} delay={(i % 2) * 110}>
+            <Reveal key={r.title} variant={i % 2 === 0 ? 'left' : 'right'} delay={(i % 2) * 110}>
               <article className={`flex h-full flex-col rounded-2xl ${r.tone} p-8`}>
                 <span
                   className={`inline-flex h-14 w-14 items-center justify-center rounded-xl ${r.solid} text-white shadow-sm`}
@@ -204,7 +204,7 @@ export function ContactPage() {
 
         <ol className="mt-14 grid gap-6 md:grid-cols-3">
           {ESCALATION.map((e, i) => (
-            <Reveal key={e.who} delay={i * 110}>
+            <Reveal key={e.who} variant="zoom" delay={i * 110}>
               <li className="relative h-full rounded-2xl bg-paper p-7">
                 <span className="text-[11.5px] font-extrabold uppercase tracking-[0.14em] text-accent-coral-deep">
                   {e.step}

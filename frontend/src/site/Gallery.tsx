@@ -47,6 +47,7 @@ export function GalleryPage() {
           {GALLERY.map((g, i) => (
             <Reveal
               key={g.src + i}
+              variant="zoom"
               delay={(i % 4) * 80}
               className={clsx(i % 7 === 0 && 'row-span-2', i % 5 === 0 && 'sm:col-span-2')}
             >

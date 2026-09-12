@@ -104,6 +104,15 @@ const AUDIENCE = [
   },
 ] as const;
 
+/** The strip that reads across under the hero. */
+const TICKER = [
+  `Admissions for session ${DIVISION.session} are handled by your school office`,
+  'Live lessons are recorded and available for catch-up in the portal',
+  'Guardians are alerted automatically below 75% attendance',
+  'Certificates can be verified by anyone, without an account',
+  'The portal is available in English, Hindi, Urdu and Kashmiri',
+];
+
 /** Standing notices. Live announcements sit inside the portal once signed in. */
 const NOTICES = [
   {
@@ -155,9 +164,10 @@ export function HomePage() {
             aria-hidden={i !== slide}
           >
             <img
+              key={`${s.src}-${i === slide}`}
               src={s.src}
               alt={s.alt}
-              className="h-full w-full object-cover"
+              className={clsx('h-full w-full object-cover', i === slide && 'ken-burns')}
               loading={i === 0 ? 'eager' : 'lazy'}
             />
             {/* A readable ground for the type, whatever the photograph is. */}
@@ -166,20 +176,29 @@ export function HomePage() {
         ))}
 
         <div className="relative mx-auto flex h-full max-w-6xl items-center px-5 sm:px-8">
-          <div className="max-w-2xl">
-            <p className="text-[12px] font-extrabold uppercase tracking-[0.18em] text-accent-amber">
+          <div className="max-w-2xl" key={slide}>
+            <p
+              className="reveal is-in text-[12px] font-extrabold uppercase tracking-[0.18em] text-accent-amber"
+              style={{ animationDelay: '80ms' }}
+            >
               {HERO_SLIDES[slide].kicker}
             </p>
             <h1
-              key={slide}
               className="reveal is-in mt-5 text-[32px] font-extrabold leading-[1.08] tracking-[-0.03em] text-white sm:text-[46px] lg:text-[56px]"
+              style={{ animationDelay: '180ms' }}
             >
               {HERO_SLIDES[slide].heading}
             </h1>
-            <p className="mt-6 max-w-xl text-[16px] leading-relaxed text-white/75 sm:text-[17px]">
+            <p
+              className="reveal is-in mt-6 max-w-xl text-[16px] leading-relaxed text-white/75 sm:text-[17px]"
+              style={{ animationDelay: '300ms' }}
+            >
               {HERO_SLIDES[slide].sub}
             </p>
-            <div className="mt-9 flex flex-wrap gap-3">
+            <div
+              className="reveal is-in mt-9 flex flex-wrap gap-3"
+              style={{ animationDelay: '420ms' }}
+            >
               <Link
                 to="/login"
                 className="inline-flex items-center gap-2 rounded-lg bg-accent-amber px-7 py-3.5 text-[14.5px] font-extrabold text-ink shadow-lg transition-transform hover:-translate-y-0.5"
@@ -235,6 +254,30 @@ export function HomePage() {
         </div>
       </section>
 
+      {/* ══ NOTICE TICKER ══════════════════════════════════════════════ */}
+      <div className="border-b border-rule bg-brand-700">
+        <div className="mx-auto flex max-w-6xl items-stretch">
+          <span className="flex shrink-0 items-center gap-2 bg-accent-amber px-5 py-3 text-[12px] font-extrabold uppercase tracking-[0.1em] text-ink">
+            <span className="pulse-ring h-2 w-2 rounded-full bg-accent-coral-deep" aria-hidden />
+            Notices
+          </span>
+          {/* Duplicated so the loop meets itself; hovering pauses it. */}
+          <div className="relative flex-1 overflow-hidden">
+            <div className="ticker-track items-center">
+              {[...TICKER, ...TICKER].map((t, i) => (
+                <span
+                  key={i}
+                  className="flex shrink-0 items-center gap-3 px-7 py-3 text-[13.5px] text-white/85"
+                >
+                  <span className="h-1.5 w-1.5 rounded-full bg-accent-amber" aria-hidden />
+                  {t}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* ══ QUICK LINKS ════════════════════════════════════════════════ */}
       <section className="relative z-10 mx-auto -mt-14 max-w-6xl px-5 sm:px-8">
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -260,7 +303,7 @@ export function HomePage() {
       {/* ══ WELCOME ════════════════════════════════════════════════════ */}
       <Section>
         <div className="grid items-center gap-12 lg:grid-cols-2">
-          <Reveal>
+          <Reveal variant="left">
             <div className="relative">
               <img
                 src={ABOUT.welcome.src}
@@ -286,7 +329,7 @@ export function HomePage() {
             </div>
           </Reveal>
 
-          <Reveal delay={120}>
+          <Reveal variant="right" delay={120}>
             <SectionHeading
               kicker="Welcome"
               title="Learning that reaches every school in the valley"
@@ -390,7 +433,7 @@ export function HomePage() {
 
         <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {FACILITIES.slice(0, 3).map((f, i) => (
-            <Reveal key={f.title} delay={i * 110}>
+            <Reveal key={f.title} variant="zoom" delay={i * 110}>
               <article className="group h-full overflow-hidden rounded-2xl bg-surface shadow ring-1 ring-rule transition-all hover:-translate-y-1 hover:shadow-lg">
                 <div className="relative aspect-[16/10] overflow-hidden">
                   <img
@@ -513,7 +556,7 @@ export function HomePage() {
 
           <div className="space-y-4">
             {NOTICES.map((n, i) => (
-              <Reveal key={n.tag} delay={i * 100}>
+              <Reveal key={n.tag} variant="right" delay={i * 100}>
                 <article className="flex gap-5 rounded-xl bg-paper p-5 transition-transform hover:-translate-x-1">
                   <div className="shrink-0 rounded-lg bg-brand-700 px-3 py-2 text-center text-white">
                     <span className="block text-[11px] font-extrabold uppercase tracking-[0.08em]">
@@ -543,7 +586,7 @@ export function HomePage() {
 
         <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {LANDMARKS.map((l, i) => (
-            <Reveal key={l.name} delay={(i % 3) * 100}>
+            <Reveal key={l.name} variant="zoom" delay={(i % 3) * 100}>
               <figure className="group relative h-72 overflow-hidden rounded-2xl shadow ring-1 ring-rule">
                 <img
                   src={l.src}
@@ -557,7 +600,9 @@ export function HomePage() {
                     {l.name}
                   </h3>
                   <span className="mt-2 block h-0.5 w-10 rounded-full bg-accent-amber" />
-                  <p className="mt-3 text-[13px] leading-relaxed text-white/75">{l.note}</p>
+                  <p className="hover-caption mt-3 text-[13px] leading-relaxed text-white/75">
+                    {l.note}
+                  </p>
                   {l.credit && (
                     <p className="mt-2.5 text-[10.5px] text-white/45">
                       Photo: {l.credit.author} · {l.credit.license}
@@ -579,7 +624,7 @@ export function HomePage() {
         />
         <div className="mt-12 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
           {GALLERY.slice(0, 8).map((g, i) => (
-            <Reveal key={g.src + i} delay={(i % 4) * 80}>
+            <Reveal key={g.src + i} variant="zoom" delay={(i % 4) * 80}>
               <div className="group aspect-square overflow-hidden rounded-xl">
                 <img
                   src={g.src}

@@ -67,7 +67,7 @@ export function FacilitiesPage() {
 
         <div className="mt-14 space-y-8">
           {FACILITIES.map((f, i) => (
-            <Reveal key={f.title} delay={60}>
+            <Reveal key={f.title} variant={i % 2 === 1 ? 'right' : 'left'} delay={60}>
               <article
                 className={`grid items-center gap-8 overflow-hidden rounded-2xl bg-surface shadow ring-1 ring-rule lg:grid-cols-2 ${
                   i % 2 === 1 ? 'lg:[&>figure]:order-2' : ''
@@ -138,7 +138,7 @@ export function FacilitiesPage() {
                 body: 'An interactive panel and OPS PC per classroom, signed in as a shared device rather than as a person.',
               },
             ].map((b, i) => (
-              <Reveal key={b.label} delay={i * 110}>
+              <Reveal key={b.label} variant="zoom" delay={i * 110}>
                 <div className="h-full rounded-2xl bg-white/[0.07] p-8 text-center ring-1 ring-white/10">
                   <span className="num block text-[52px] font-extrabold leading-none text-accent-amber">
                     <CountUp value={b.n} />
@@ -177,7 +177,7 @@ export function FacilitiesPage() {
 
         <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {RESILIENCE.map((r, i) => (
-            <Reveal key={r.title} delay={(i % 3) * 100}>
+            <Reveal key={r.title} variant="zoom" delay={(i % 3) * 100}>
               <article className="h-full rounded-2xl border-l-4 border-accent-mint bg-surface p-7 shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg">
                 <span className="inline-flex h-13 w-13 items-center justify-center rounded-xl bg-accent-mint-soft p-3 text-accent-mint-deep">
                   <r.icon className="h-6 w-6" aria-hidden />

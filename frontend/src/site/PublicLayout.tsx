@@ -11,6 +11,7 @@ import {
   X,
 } from 'lucide-react';
 import clsx from 'clsx';
+import { BackToTop, ScrollProgress } from './motion';
 
 /**
  * The public face of the portal — what a parent, a visitor or the department
@@ -123,11 +124,24 @@ export function SectionHeading({
   );
 }
 
-function Crest({ onClick, light = false }: { onClick?: () => void; light?: boolean }) {
+function Crest({
+  onClick,
+  light = false,
+  compact = false,
+}: {
+  onClick?: () => void;
+  light?: boolean;
+  compact?: boolean;
+}) {
   return (
     <Link to="/" onClick={onClick} className="group flex shrink-0 items-center gap-3">
-      <span className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-brand-500 to-brand-800 text-white shadow-pill ring-2 ring-accent-amber/60 transition-transform duration-300 group-hover:scale-105">
-        <GraduationCap className="h-6 w-6" aria-hidden />
+      <span
+        className={clsx(
+          'flex items-center justify-center rounded-full bg-gradient-to-br from-brand-500 to-brand-800 text-white shadow-pill ring-2 ring-accent-amber/60 transition-all duration-300 group-hover:rotate-[-6deg] group-hover:scale-110',
+          compact ? 'h-10 w-10' : 'h-12 w-12',
+        )}
+      >
+        <GraduationCap className={clsx('transition-all', compact ? 'h-5 w-5' : 'h-6 w-6')} aria-hidden />
       </span>
       <span className="min-w-0 leading-tight">
         <span
@@ -180,6 +194,8 @@ export function PublicLayout() {
 
   return (
     <div className="flex min-h-screen flex-col bg-paper">
+      <ScrollProgress />
+
       {/* ── Utility strip ───────────────────────────────────────────── */}
       <div className="hidden bg-brand-800 text-white lg:block">
         <div className="mx-auto flex h-10 max-w-6xl items-center justify-between gap-6 px-8 text-[12px]">
@@ -213,8 +229,13 @@ export function PublicLayout() {
           scrolled ? 'shadow-md' : 'shadow-sm',
         )}
       >
-        <div className="mx-auto flex h-[76px] max-w-6xl items-center gap-4 px-5 sm:px-8">
-          <Crest />
+        <div
+          className={clsx(
+            'mx-auto flex max-w-6xl items-center gap-4 px-5 transition-all duration-300 sm:px-8',
+            scrolled ? 'h-[64px]' : 'h-[84px]',
+          )}
+        >
+          <Crest compact={scrolled} />
 
           <nav className="ml-auto hidden items-center gap-0.5 lg:flex" aria-label="Main">
             {NAV_LINKS.map((l) => (
@@ -290,7 +311,7 @@ export function PublicLayout() {
             <ul className="mt-5 space-y-2.5 text-[13.5px]">
               {NAV_LINKS.map((l) => (
                 <li key={l.to}>
-                  <Link to={l.to} className="text-white/60 transition-colors hover:text-white">
+                  <Link to={l.to} className="draw-underline text-white/60 transition-colors hover:text-white">
                     {l.label}
                   </Link>
                 </li>
@@ -304,27 +325,27 @@ export function PublicLayout() {
             </p>
             <ul className="mt-5 space-y-2.5 text-[13.5px]">
               <li>
-                <Link to="/login" className="text-white/60 transition-colors hover:text-white">
+                <Link to="/login" className="draw-underline text-white/60 transition-colors hover:text-white">
                   Student &amp; Parent Login
                 </Link>
               </li>
               <li>
-                <Link to="/login" className="text-white/60 transition-colors hover:text-white">
+                <Link to="/login" className="draw-underline text-white/60 transition-colors hover:text-white">
                   Teacher Login
                 </Link>
               </li>
               <li>
-                <Link to="/kiosk-login" className="text-white/60 transition-colors hover:text-white">
+                <Link to="/kiosk-login" className="draw-underline text-white/60 transition-colors hover:text-white">
                   Classroom Panel Sign-in
                 </Link>
               </li>
               <li>
-                <Link to="/verify" className="text-white/60 transition-colors hover:text-white">
+                <Link to="/verify" className="draw-underline text-white/60 transition-colors hover:text-white">
                   Verify a Certificate
                 </Link>
               </li>
               <li>
-                <Link to="/forgot-password" className="text-white/60 transition-colors hover:text-white">
+                <Link to="/forgot-password" className="draw-underline text-white/60 transition-colors hover:text-white">
                   Forgotten Password
                 </Link>
               </li>
@@ -362,6 +383,8 @@ export function PublicLayout() {
           </div>
         </div>
       </footer>
+
+      <BackToTop />
     </div>
   );
 }

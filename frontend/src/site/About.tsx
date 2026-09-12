@@ -104,7 +104,7 @@ export function AboutPage() {
       {/* ══ INTRODUCTION ═══════════════════════════════════════════════ */}
       <Section>
         <div className="grid items-center gap-12 lg:grid-cols-2">
-          <Reveal>
+          <Reveal variant="left">
             <SectionHeading
               kicker="Our Programme"
               title="A classroom that stretches across the district"
@@ -132,7 +132,7 @@ export function AboutPage() {
             </div>
           </Reveal>
 
-          <Reveal delay={120}>
+          <Reveal variant="right" delay={120}>
             <div className="grid grid-cols-2 gap-4">
               <img
                 src={ABOUT.welcome.src}
@@ -177,7 +177,7 @@ export function AboutPage() {
 
         <div className="mt-14 grid gap-6 md:grid-cols-3">
           {PILLARS.map((p, i) => (
-            <Reveal key={p.title} delay={i * 110}>
+            <Reveal key={p.title} variant="zoom" delay={i * 110}>
               <article className="h-full rounded-2xl bg-paper p-8 text-center">
                 <span className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-brand-700 text-white shadow-pill">
                   <p.icon className="h-7 w-7" aria-hidden />
@@ -244,7 +244,7 @@ export function AboutPage() {
 
         <div className="mt-14 grid gap-6 md:grid-cols-3">
           {CHALLENGES.map((c, i) => (
-            <Reveal key={c.title} delay={i * 110}>
+            <Reveal key={c.title} variant="zoom" delay={i * 110}>
               <article className="h-full rounded-2xl border-t-4 border-accent-coral bg-paper p-7">
                 <span className="inline-flex h-14 w-14 items-center justify-center rounded-xl bg-accent-coral-soft text-accent-coral-deep">
                   <c.icon className="h-6 w-6" aria-hidden />
@@ -277,7 +277,7 @@ export function AboutPage() {
           />
           <ul className="mt-12 grid gap-4 md:grid-cols-2">
             {OBJECTIVES.map((o, i) => (
-              <Reveal key={o} delay={(i % 2) * 90}>
+              <Reveal key={o} variant={i % 2 === 0 ? 'left' : 'right'} delay={(i % 2) * 90}>
                 <li className="flex h-full items-start gap-3.5 rounded-xl bg-white/[0.07] p-5 ring-1 ring-white/10">
                   <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-accent-amber" aria-hidden />
                   <span className="text-[14.5px] leading-relaxed text-white/80">{o}</span>

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { ArrowUp } from 'lucide-react';
 import clsx from 'clsx';
 
 /** True once the element has been scrolled into view. It does not go back. */
@@ -31,18 +32,29 @@ function useInView<T extends HTMLElement>(threshold = 0.15) {
   return { ref, seen };
 }
 
+const VARIANTS = {
+  up: '',
+  left: 'reveal-left',
+  right: 'reveal-right',
+  zoom: 'reveal-zoom',
+} as const;
+
 /**
- * Fades its children up as they come into view. `delay` staggers a row of
- * cards so they arrive one after another rather than all at once.
+ * Brings its children in as they are scrolled to. `delay` staggers a row of
+ * cards so they arrive one after another, and `variant` decides the
+ * direction — a left-hand column entering from the left reads better than
+ * everything on the page rising from below.
  */
 export function Reveal({
   children,
   delay = 0,
+  variant = 'up',
   className,
   as: Tag = 'div',
 }: {
   children: React.ReactNode;
   delay?: number;
+  variant?: keyof typeof VARIANTS;
   className?: string;
   as?: 'div' | 'li' | 'article' | 'section';
 }) {
@@ -50,7 +62,7 @@ export function Reveal({
   return (
     <Tag
       ref={ref as any}
-      className={clsx('reveal', seen && 'is-in', className)}
+      className={clsx('reveal', VARIANTS[variant], seen && 'is-in', className)}
       style={{ animationDelay: `${delay}ms` }}
     >
       {children}
@@ -101,5 +113,61 @@ export function CountUp({
     <span ref={ref} className={className}>
       {shown}
     </span>
+  );
+}
+
+/** How far down the page the reader is, drawn as a bar across the very top. */
+export function ScrollProgress() {
+  const [pct, setPct] = useState(0);
+
+  useEffect(() => {
+    const onScroll = () => {
+      const h = document.documentElement;
+      const max = h.scrollHeight - h.clientHeight;
+      setPct(max > 0 ? (h.scrollTop / max) * 100 : 0);
+    };
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+    };
+  }, []);
+
+  return (
+    <div className="pointer-events-none fixed inset-x-0 top-0 z-[60] h-[3px]" aria-hidden>
+      <div
+        className="h-full bg-gradient-to-r from-accent-amber via-accent-coral to-accent-violet"
+        style={{ width: `${pct}%` }}
+      />
+    </div>
+  );
+}
+
+/** Appears once the reader is well down the page, and takes them back up. */
+export function BackToTop() {
+  const [show, setShow] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setShow(window.scrollY > 600);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  return (
+    <button
+      type="button"
+      onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+      aria-label="Back to top"
+      className={clsx(
+        'fixed bottom-6 right-6 z-50 flex h-12 w-12 items-center justify-center rounded-full',
+        'bg-brand-700 text-white shadow-lg transition-all duration-300 hover:bg-brand-600',
+        show ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-4 opacity-0',
+      )}
+    >
+      <ArrowUp className="h-5 w-5" aria-hidden />
+    </button>
   );
 }

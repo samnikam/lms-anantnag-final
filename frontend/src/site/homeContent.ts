@@ -170,14 +170,3 @@ export const INITIATIVES = [
   },
 ] as const;
 
-/* ── Gallery categories ────────────────────────────────────────────────── */
-
-export const GALLERY_CATEGORIES = [
-  'Campus',
-  'Classrooms',
-  'Students',
-  'Sports',
-  'Events',
-  'Activities',
-] as const;
-

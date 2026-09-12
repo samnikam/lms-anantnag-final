@@ -18,7 +18,6 @@ import { CountUp, Reveal } from './motion';
 import { ABOUT, FACILITIES, GALLERY, HERO_SLIDES, LANDMARKS, ROLE_PHOTOS } from './media';
 import {
   FACILITY_CARDS,
-  GALLERY_CATEGORIES,
   HEAD_MESSAGE,
   HEAD_OF_INSTITUTION,
   INITIATIVES,
@@ -782,50 +781,6 @@ export function HomePage() {
               </figure>
             </Reveal>
           ))}
-        </div>
-      </Section>
-
-      {/* ══ GALLERY STRIP ══════════════════════════════════════════════ */}
-      <Section>
-        <SectionHeading
-          kicker="Gallery"
-          title="Life in the classrooms"
-          description="Photographs from the programme's classrooms and the district it serves."
-        />
-        <div className="mt-10 flex flex-wrap justify-center gap-2.5">
-          {GALLERY_CATEGORIES.map((c) => (
-            <span
-              key={c}
-              className="rounded-full bg-surface px-4 py-2 text-[12.5px] font-bold text-ink-soft ring-1 ring-rule"
-            >
-              {c}
-            </span>
-          ))}
-        </div>
-
-        <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-          {GALLERY.slice(0, 8).map((g, i) => (
-            <Reveal key={g.src + i} variant="zoom" delay={(i % 4) * 80}>
-              <div className="group relative aspect-square overflow-hidden rounded-xl ring-1 ring-rule">
-                <img
-                  src={g.src}
-                  alt={g.alt}
-                  loading="lazy"
-                  className="photo-zoom h-full w-full object-cover"
-                />
-                <span className="absolute inset-0 bg-gradient-to-t from-brand-900/70 via-brand-900/10 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-              </div>
-            </Reveal>
-          ))}
-        </div>
-        <div className="mt-10 text-center">
-          <Link
-            to="/gallery"
-            className="btn-sheen group inline-flex items-center gap-2 rounded-lg bg-brand-700 px-6 py-3 text-[14px] font-bold text-white shadow-pill transition-all hover:-translate-y-0.5 hover:bg-brand-600"
-          >
-            View full gallery
-            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden />
-          </Link>
         </div>
       </Section>
 

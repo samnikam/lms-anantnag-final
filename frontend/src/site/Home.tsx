@@ -3,19 +3,13 @@ import { Link } from 'react-router-dom';
 import {
   ArrowRight,
   Award,
-  BookOpen,
   CalendarDays,
   ChevronLeft,
   ChevronRight,
-  ClipboardList,
   ExternalLink,
   ListChecks,
   MonitorPlay,
   Quote,
-  Radio,
-  ShieldCheck,
-  Trophy,
-  Users,
   Video,
 } from 'lucide-react';
 import clsx from 'clsx';
@@ -23,16 +17,12 @@ import { DIVISION, FIGURES, Section, SectionHeading } from './PublicLayout';
 import { CountUp, Reveal } from './motion';
 import { ABOUT, FACILITIES, GALLERY, HERO_SLIDES, LANDMARKS, ROLE_PHOTOS } from './media';
 import {
-  ACHIEVEMENTS,
-  ACHIEVEMENT_AREAS,
   FACILITY_CARDS,
   GALLERY_CATEGORIES,
   HEAD_MESSAGE,
   HEAD_OF_INSTITUTION,
-  IMPORTANT_LINKS,
   INITIATIVES,
   QUICK_INFO,
-  STAGES,
   STUDENT_LIFE,
   WHY_US,
 } from './homeContent';
@@ -73,65 +63,7 @@ const SUBJECTS = [
   'Health & Physical Education',
 ];
 
-const HOW = [
-  {
-    icon: Radio,
-    n: '01',
-    title: 'Taught from the studio',
-    body: 'A specialist teacher delivers the lesson once from one of two production studios, with camera, lighting and acoustic treatment.',
-  },
-  {
-    icon: MonitorPlay,
-    n: '02',
-    title: 'Received on the panel',
-    body: 'The session relays simultaneously to every classroom scheduled to receive it. The panel opens the day’s lesson on its own — no learner signs in on a shared screen.',
-  },
-  {
-    icon: ClipboardList,
-    n: '03',
-    title: 'Recorded in the register',
-    body: 'The class teacher marks the roll, the session records for catch-up, and progress, attendance and results land in one place.',
-  },
-];
 
-const AUDIENCE = [
-  {
-    key: 'student',
-    icon: BookOpen,
-    title: 'For Students',
-    points: [
-      'Today’s lessons with time and teacher',
-      'Join the live class from the portal',
-      'Assignments, quizzes and results',
-      'Your own attendance record',
-      'Certificates on completion',
-    ],
-  },
-  {
-    key: 'teacher',
-    icon: Users,
-    title: 'For Teachers',
-    points: [
-      'Your classes, subjects and timetable',
-      'Mark the daily register',
-      'Set, collect and grade work',
-      'Question bank and examinations',
-      'Learner progress at a glance',
-    ],
-  },
-  {
-    key: 'parent',
-    icon: ShieldCheck,
-    title: 'For Parents',
-    points: [
-      'Your child’s attendance and results',
-      'Assignment deadlines and status',
-      'Timetable and upcoming classes',
-      'Alerts below the 75% requirement',
-      'Certificates to view and download',
-    ],
-  },
-] as const;
 
 /** The strip that reads across under the hero. */
 const TICKER = [
@@ -480,34 +412,6 @@ export function HomePage() {
         </div>
       </section>
 
-      {/* ══ HOW IT WORKS ═══════════════════════════════════════════════ */}
-      <Section className="bg-surface">
-        <SectionHeading
-          kicker="How a lesson reaches you"
-          title="One lesson, taught once, received everywhere"
-          description="Two studios feed forty-two classrooms. That ratio shapes everything about how the programme runs."
-        />
-
-        <div className="mt-14 grid gap-6 md:grid-cols-3">
-          {HOW.map((h, i) => (
-            <Reveal key={h.n} delay={i * 120}>
-              <article className="relative h-full rounded-2xl bg-paper p-7 text-center">
-                <span className="num absolute right-5 top-4 text-[40px] font-extrabold leading-none text-brand-100">
-                  {h.n}
-                </span>
-                <span className="relative inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-brand-700 text-white shadow-pill">
-                  <h.icon className="h-7 w-7" aria-hidden />
-                </span>
-                <h3 className="relative mt-6 text-[19px] font-extrabold tracking-[-0.02em] text-ink">
-                  {h.title}
-                </h3>
-                <p className="relative mt-3 text-[14px] leading-relaxed text-muted">{h.body}</p>
-              </article>
-            </Reveal>
-          ))}
-        </div>
-      </Section>
-
       {/* ══ WHY CHOOSE US ══════════════════════════════════════════════ */}
       <Section>
         <SectionHeading
@@ -532,48 +436,6 @@ export function HomePage() {
               </article>
             </Reveal>
           ))}
-        </div>
-      </Section>
-
-      {/* ══ ACADEMICS PREVIEW ══════════════════════════════════════════ */}
-      <Section className="bg-surface">
-        <SectionHeading
-          kicker="Academics"
-          title="Learning at every stage"
-          description="From the first years of school through to the examination classes."
-        />
-
-        <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {STAGES.map((st, i) => {
-            const t = TONE[st.tone];
-            return (
-              <Reveal key={st.stage} variant="zoom" delay={(i % 4) * 90}>
-                <article className={`flex h-full flex-col rounded-2xl ${t.soft} p-7`}>
-                  <span
-                    className={`inline-flex w-fit rounded-lg ${t.solid} px-3 py-1.5 text-[11.5px] font-extrabold uppercase tracking-[0.08em] text-white`}
-                  >
-                    {st.grades}
-                  </span>
-                  <h3 className="mt-5 text-[20px] font-extrabold tracking-[-0.02em] text-ink">
-                    {st.stage}
-                  </h3>
-                  <p className="mt-2.5 flex-1 text-[13.5px] leading-relaxed text-ink-soft">
-                    {st.body}
-                  </p>
-                </article>
-              </Reveal>
-            );
-          })}
-        </div>
-
-        <div className="mt-10 text-center">
-          <Link
-            to="/academics"
-            className="group inline-flex items-center gap-2 rounded-lg bg-brand-700 px-6 py-3 text-[14px] font-bold text-white shadow-pill transition-all hover:-translate-y-0.5 hover:bg-brand-600"
-          >
-            Explore academics
-            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden />
-          </Link>
         </div>
       </Section>
 
@@ -705,47 +567,6 @@ export function HomePage() {
         </div>
       </Section>
 
-      {/* ══ FOR STUDENTS / TEACHERS / PARENTS ══════════════════════════ */}
-      <Section>
-        <SectionHeading
-          kicker="Who the portal is for"
-          title="Each role sees its own work"
-          description="Access is decided on the server — a teacher cannot reach another teacher's register, and a parent sees only their own child."
-        />
-
-        <div className="mt-14 grid gap-6 md:grid-cols-3">
-          {AUDIENCE.map((a, i) => (
-            <Reveal key={a.key} delay={i * 110}>
-              <article className="h-full overflow-hidden rounded-2xl bg-surface shadow ring-1 ring-rule">
-                <div className="relative aspect-[16/9] overflow-hidden">
-                  <img
-                    src={ROLE_PHOTOS[a.key].src}
-                    alt={ROLE_PHOTOS[a.key].alt}
-                    loading="lazy"
-                    className="h-full w-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-brand-900/85 to-transparent" />
-                  <div className="absolute bottom-4 left-5 flex items-center gap-2.5">
-                    <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent-amber text-ink">
-                      <a.icon className="h-4.5 w-4.5" aria-hidden />
-                    </span>
-                    <h3 className="text-[18px] font-extrabold text-white">{a.title}</h3>
-                  </div>
-                </div>
-                <ul className="space-y-3 p-6">
-                  {a.points.map((p) => (
-                    <li key={p} className="flex items-start gap-2.5 text-[13.5px] text-ink-soft">
-                      <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent-coral" aria-hidden />
-                      {p}
-                    </li>
-                  ))}
-                </ul>
-              </article>
-            </Reveal>
-          ))}
-        </div>
-      </Section>
-
       {/* ══ STUDENT LIFE ═══════════════════════════════════════════════ */}
       <Section>
         <SectionHeading
@@ -774,56 +595,6 @@ export function HomePage() {
             );
           })}
         </div>
-      </Section>
-
-      {/* ══ ACHIEVEMENTS ═══════════════════════════════════════════════ */}
-      <Section className="bg-surface">
-        <SectionHeading
-          kicker="Achievements"
-          title="Celebrating our students"
-          description="Recognition earned by learners across the district, in and beyond the classroom."
-        />
-
-        {ACHIEVEMENTS.length > 0 ? (
-          <div className="mt-14 grid gap-6 md:grid-cols-3">
-            {ACHIEVEMENTS.map((a, i) => (
-              <Reveal key={a.title} variant="zoom" delay={(i % 3) * 100}>
-                <article className="h-full rounded-2xl bg-paper p-7">
-                  <span className="inline-flex h-13 w-13 items-center justify-center rounded-xl bg-accent-amber p-3 text-ink">
-                    <Trophy className="h-6 w-6" aria-hidden />
-                  </span>
-                  <p className="mt-5 text-[11.5px] font-bold uppercase tracking-[0.1em] text-faint">
-                    {a.when}
-                  </p>
-                  <h3 className="mt-1.5 text-[17px] font-extrabold tracking-[-0.02em] text-ink">
-                    {a.title}
-                  </h3>
-                  <p className="mt-2 text-[13.5px] leading-relaxed text-muted">{a.detail}</p>
-                </article>
-              </Reveal>
-            ))}
-          </div>
-        ) : (
-          <>
-            {/* Nothing is invented here. The areas stand until the division
-                supplies real achievements to publish. */}
-            <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {ACHIEVEMENT_AREAS.map((a, i) => (
-                <Reveal key={a.title} variant="zoom" delay={(i % 3) * 90}>
-                  <div className="flex h-full items-center gap-4 rounded-xl bg-paper p-5">
-                    <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-accent-amber-soft text-accent-amber-deep">
-                      <a.icon className="h-5 w-5" aria-hidden />
-                    </span>
-                    <h3 className="text-[14.5px] font-extrabold text-ink">{a.title}</h3>
-                  </div>
-                </Reveal>
-              ))}
-            </div>
-            <p className="mt-8 text-center text-[13.5px] text-muted">
-              Student and school achievements will be published here as they are confirmed.
-            </p>
-          </>
-        )}
       </Section>
 
       {/* ══ GOVERNMENT INITIATIVES ═════════════════════════════════════ */}
@@ -984,79 +755,6 @@ export function HomePage() {
         </div>
       </Section>
 
-      {/* ══ IMPORTANT LINKS ════════════════════════════════════════════ */}
-      <Section className="bg-surface">
-        <SectionHeading
-          kicker="Important links"
-          title="Departments, boards and portals"
-          description="Official destinations families and staff most often need."
-        />
-
-        <div className="mt-12 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {IMPORTANT_LINKS.map((l, i) => {
-            const inner = (
-              <>
-                <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-tint-brand text-brand-600 transition-colors group-hover:bg-brand-700 group-hover:text-white">
-                  <l.icon className="h-4.5 w-4.5" aria-hidden />
-                </span>
-                <span className="min-w-0 flex-1 text-[13.5px] font-bold text-ink">{l.label}</span>
-                {l.external ? (
-                  <ExternalLink className="h-3.5 w-3.5 shrink-0 text-faint" aria-hidden />
-                ) : (
-                  <ArrowRight
-                    className="h-4 w-4 shrink-0 text-faint transition-transform group-hover:translate-x-1"
-                    aria-hidden
-                  />
-                )}
-              </>
-            );
-            const cls =
-              'group flex h-full items-center gap-3.5 rounded-xl bg-paper p-4 ring-1 ring-rule transition-all hover:-translate-y-1 hover:shadow-md';
-            return (
-              <Reveal key={l.label} variant="zoom" delay={(i % 4) * 80}>
-                {l.external ? (
-                  <a href={l.href} target="_blank" rel="noreferrer noopener" className={cls}>
-                    {inner}
-                  </a>
-                ) : (
-                  <Link to={l.href} className={cls}>
-                    {inner}
-                  </Link>
-                )}
-              </Reveal>
-            );
-          })}
-        </div>
-      </Section>
-
-      {/* ══ CLOSING CTA ════════════════════════════════════════════════ */}
-      <section className="relative overflow-hidden bg-brand-900">
-        <img
-          src={HERO_SLIDES[0].src}
-          alt=""
-          aria-hidden
-          loading="lazy"
-          className="absolute inset-0 h-full w-full object-cover opacity-20"
-        />
-        <div className="relative mx-auto max-w-3xl px-5 py-20 text-center sm:px-8">
-          <Reveal>
-            <h2 className="text-[30px] font-extrabold leading-[1.1] tracking-[-0.03em] text-white sm:text-[40px]">
-              Already have an account?
-            </h2>
-            <p className="mx-auto mt-5 max-w-xl text-[15.5px] leading-relaxed text-white/70">
-              Accounts are issued by your school or the division office. Students, teachers and
-              parents all sign in here.
-            </p>
-            <Link
-              to="/login"
-              className="mt-9 inline-flex items-center gap-2 rounded-lg bg-accent-amber px-8 py-4 text-[15px] font-extrabold text-ink shadow-lg transition-transform hover:-translate-y-0.5"
-            >
-              Login to the Portal
-              <ArrowRight className="h-4 w-4" aria-hidden />
-            </Link>
-          </Reveal>
-        </div>
-      </section>
     </>
   );
 }

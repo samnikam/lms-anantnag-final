@@ -1,9 +1,6 @@
 import {
   Accessibility,
-  Award,
   BookOpen,
-  Brush,
-  CalendarDays,
   Coins,
   Compass,
   Cpu,
@@ -15,10 +12,8 @@ import {
   Laptop,
   Leaf,
   LibraryBig,
-  Medal,
   MonitorPlay,
   Palette,
-  ScrollText,
   ShieldCheck,
   Sparkles,
   Trophy,
@@ -32,9 +27,8 @@ import {
  * edited without touching layout — and so what still needs the division's own
  * words is easy to find.
  *
- * TO FILL IN: `HEAD_OF_INSTITUTION.name` and `.role` are placeholders, and
- * ACHIEVEMENTS is deliberately empty until real ones are supplied. Nothing
- * here invents a person, a prize or a statistic.
+ * TO FILL IN: `HEAD_OF_INSTITUTION.name` and `.role` are placeholders.
+ * Nothing here invents a person, a prize or a statistic.
  */
 
 /* ── Quick information, immediately under the hero ─────────────────────── */
@@ -112,35 +106,6 @@ export const WHY_US = [
   },
 ] as const;
 
-/* ── Academic stages ───────────────────────────────────────────────────── */
-
-export const STAGES = [
-  {
-    stage: 'Primary',
-    grades: 'Classes 1–5',
-    tone: 'coral',
-    body: 'Strong foundations in literacy, numeracy and the habits of learning.',
-  },
-  {
-    stage: 'Middle School',
-    grades: 'Classes 6–8',
-    tone: 'violet',
-    body: 'Conceptual learning, exploration across subjects and skill development.',
-  },
-  {
-    stage: 'Secondary',
-    grades: 'Classes 9–10',
-    tone: 'mint',
-    body: 'Subject-focused study, examination preparation and career awareness.',
-  },
-  {
-    stage: 'Higher Secondary',
-    grades: 'Classes 11–12, where offered',
-    tone: 'amber',
-    body: 'Stream-based study for students continuing beyond the secondary stage.',
-  },
-] as const;
-
 /* ── Facilities, at a glance ───────────────────────────────────────────── */
 
 export const FACILITY_CARDS = [
@@ -162,31 +127,6 @@ export const STUDENT_LIFE = [
   { icon: BookOpen, tone: 'mint', title: 'Educational Activities', body: 'Quizzes, debates, reading and field learning.' },
   { icon: HandHeart, tone: 'coral', title: 'Community Programmes', body: 'Service, awareness drives and local initiatives.' },
 ] as const;
-
-/* ── Achievements ──────────────────────────────────────────────────────── */
-
-/**
- * The categories the division will publish achievements under. The list below
- * is empty on purpose — nothing appears on the page until real achievements
- * are supplied, and the section shows an honest placeholder instead.
- */
-export const ACHIEVEMENT_AREAS = [
-  { icon: Medal, title: 'Academic achievement' },
-  { icon: Volleyball, title: 'Sports' },
-  { icon: Trophy, title: 'District-level competitions' },
-  { icon: Drama, title: 'Cultural competitions' },
-  { icon: FlaskConical, title: 'Science exhibitions' },
-  { icon: Brush, title: 'Drawing & essay competitions' },
-] as const;
-
-export interface Achievement {
-  title: string;
-  detail: string;
-  when: string;
-}
-
-/** Add real entries here as they are confirmed; the section fills itself. */
-export const ACHIEVEMENTS: Achievement[] = [];
 
 /* ── Government initiatives ────────────────────────────────────────────── */
 
@@ -241,34 +181,3 @@ export const GALLERY_CATEGORIES = [
   'Activities',
 ] as const;
 
-/* ── Important links ───────────────────────────────────────────────────── */
-
-/**
- * External destinations were checked at the time of writing. JKBOSE resolves
- * but did not respond from the build machine, so confirm it before relying
- * on it publicly.
- */
-export const IMPORTANT_LINKS: Array<{
-  icon: typeof ScrollText;
-  label: string;
-  href: string;
-  external: boolean;
-}> = [
-  {
-    icon: Landmark,
-    label: 'J&K School Education Department',
-    href: 'https://schooleducation.jk.gov.in',
-    external: true,
-  },
-  { icon: ScrollText, label: 'JKBOSE', href: 'https://jkbose.nic.in', external: true },
-  {
-    icon: Coins,
-    label: 'National Scholarship Portal',
-    href: 'https://scholarships.gov.in',
-    external: true,
-  },
-  { icon: Award, label: 'Verify a Certificate', href: '/verify', external: false },
-  { icon: BookOpen, label: 'Student Portal', href: '/login', external: false },
-  { icon: Users, label: 'Parent Portal', href: '/login', external: false },
-  { icon: CalendarDays, label: 'Teacher Portal', href: '/login', external: false },
-];

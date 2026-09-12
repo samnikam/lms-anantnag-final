@@ -8,9 +8,48 @@ import {
   MonitorPlay,
   ShieldCheck,
 } from 'lucide-react';
+import { useState } from 'react';
+import { ChevronDown } from 'lucide-react';
+import clsx from 'clsx';
 import { Reveal } from './motion';
 import { ABOUT, GALLERY } from './media';
 import { DIVISION, PageBanner, Section, SectionHeading } from './PublicLayout';
+
+/** What families ask most often, answered without sending them elsewhere. */
+const FAQS: Array<[string, string]> = [
+  [
+    'How do we get an account for the portal?',
+    'Accounts are created by your school once a learner is enrolled. Students, parents and teachers each get their own sign-in; nobody needs to register themselves on this site.',
+  ],
+  [
+    'My child missed a live class. Is it lost?',
+    'No. Every studio session is recorded and linked afterwards to each class that was scheduled to receive it, so it can be watched later from the portal.',
+  ],
+  [
+    'Do students need their own laptop or phone?',
+    'Not for class. The lesson arrives on the panel in the room, which signs in as a shared classroom device. A personal account is only needed to check work, results or attendance from home.',
+  ],
+  [
+    'What happens if the internet or power fails during a lesson?',
+    'Each site has a battery-backed power supply, lessons can be cached on the classroom computer in advance, and video quality adapts to a weak link. If a feed is lost, the recording stands in.',
+  ],
+  [
+    'How will we know if attendance falls behind?',
+    'The portal calculates attendance continuously and alerts guardians automatically below the 75% requirement — in the portal, by email, and by SMS where a family has no reliable data connection.',
+  ],
+  [
+    'Can a parent see another child\u2019s records?',
+    'No. A parent account is linked to their own children only, and the check is made on the server for every request. Parents can view results and attendance but cannot change them.',
+  ],
+  [
+    'How is a certificate checked by a college or employer?',
+    'Each certificate carries a unique number and a verification code. Anyone can confirm it on this site without holding an account.',
+  ],
+  [
+    'Which languages is the portal available in?',
+    'English, Hindi, Urdu and Kashmiri are planned for the interface, so families are not held back by the language of a screen.',
+  ],
+];
 
 /**
  * Who to approach for what. The portal issues no accounts of its own — a
@@ -65,6 +104,9 @@ const ESCALATION = [
 ];
 
 export function ContactPage() {
+  // One answer open at a time, so the list stays scannable.
+  const [openFaq, setOpenFaq] = useState<number | null>(0);
+
   return (
     <>
       <PageBanner
@@ -106,6 +148,49 @@ export function ContactPage() {
               </article>
             </Reveal>
           ))}
+        </div>
+      </Section>
+
+      {/* ══ FAQ ════════════════════════════════════════════════════════ */}
+      <Section className="bg-surface" width="narrow">
+        <SectionHeading
+          kicker="Questions & answers"
+          title="What families ask most"
+          description="If your question is not here, your school office can answer it."
+        />
+
+        <div className="mt-14 space-y-3">
+          {FAQS.map(([q, a], i) => {
+            const isOpen = openFaq === i;
+            return (
+              <Reveal key={q} delay={Math.min(i * 60, 300)}>
+                <div className="overflow-hidden rounded-xl bg-paper ring-1 ring-rule">
+                  <h3>
+                    <button
+                      type="button"
+                      onClick={() => setOpenFaq(isOpen ? null : i)}
+                      aria-expanded={isOpen}
+                      className="flex w-full items-center justify-between gap-4 p-5 text-left"
+                    >
+                      <span className="text-[15px] font-bold text-ink">{q}</span>
+                      <ChevronDown
+                        className={clsx(
+                          'h-5 w-5 shrink-0 text-brand-700 transition-transform duration-300',
+                          isOpen && 'rotate-180',
+                        )}
+                        aria-hidden
+                      />
+                    </button>
+                  </h3>
+                  {isOpen && (
+                    <p className="border-t border-rule px-5 py-4 text-[14px] leading-relaxed text-muted">
+                      {a}
+                    </p>
+                  )}
+                </div>
+              </Reveal>
+            );
+          })}
         </div>
       </Section>
 
@@ -190,17 +275,18 @@ export function ContactPage() {
                 </span>
                 <div className="min-w-[16rem] flex-1">
                   <p className="text-[11.5px] font-extrabold uppercase tracking-[0.12em] text-ink/60">
-                    Programme reference
+                    Before you write to the office
                   </p>
-                  <p className="code mt-1.5 text-[20px] font-extrabold text-ink">
-                    {DIVISION.tender}
+                  <p className="mt-1.5 text-[19px] font-extrabold text-ink">
+                    Your school can answer most questions
                   </p>
                 </div>
               </div>
               <p className="mt-5 max-w-2xl text-[14px] leading-relaxed text-ink/75">
-                Quote this reference in any correspondence about the programme. Individual desk
-                contacts are issued to each school directly by the division office rather than
-                published on this site.
+                Enrolment, accounts, timetables and results are all held by your own school.
+                Contact details for each school are issued to families directly rather than
+                published here, and the division office handles the platform and the equipment
+                behind it.
               </p>
             </div>
           </Reveal>

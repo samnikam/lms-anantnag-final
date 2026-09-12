@@ -10,7 +10,7 @@ function Shell({ title, children }: { title: string; children: React.ReactNode }
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-brand-900 via-brand-800 to-brand-700 p-4">
       <div className="w-full max-w-md">
         <div className="mb-6 text-center text-white">
-          <h1 className="text-2xl font-semibold">Hybrid Learning LMS Portal</h1>
+          <h1 className="text-2xl font-semibold">Anantnag Smart Classrooms</h1>
           <p className="mt-1 text-sm text-brand-100">
             Public Works Department, J&amp;K — R&amp;B Division Anantnag
           </p>

@@ -37,8 +37,8 @@ export const DIVISION = {
   shortDept: 'PWD, Government of J&K',
   division: 'R&B Division Pahalgam',
   district: 'Anantnag District',
-  programme: 'Hybrid Learning Programme',
-  tender: 'GEM/2026/B/7822845',
+  /** How the programme is named to families, rather than in procurement. */
+  programme: 'Anantnag Smart Classrooms',
   session: '2026–27',
 };
 
@@ -136,7 +136,7 @@ function Crest({ onClick, light = false }: { onClick?: () => void; light?: boole
             light ? 'text-white' : 'text-ink',
           )}
         >
-          Hybrid Learning Portal
+          Anantnag Smart Classrooms
         </span>
         <span
           className={clsx(
@@ -277,8 +277,9 @@ export function PublicLayout() {
           <div className="lg:col-span-1">
             <Crest light />
             <p className="mt-5 text-[13px] leading-relaxed text-white/55">
-              A hybrid classroom programme of the {DIVISION.shortDept}, carrying lessons from two
-              studios to interactive panels in schools across {DIVISION.district}.
+              A government school programme bringing specialist teaching to classrooms across
+              {DIVISION.district} — taught live from two studios, received on the panel in the
+              room, and recorded so no lesson is lost.
             </p>
           </div>
 
@@ -338,11 +339,8 @@ export function PublicLayout() {
               <div className="font-semibold text-white/85">{DIVISION.department}</div>
               <div>{DIVISION.division}</div>
               <div>{DIVISION.district}, Jammu &amp; Kashmir</div>
-              <div className="pt-2">
-                <span className="text-[11px] uppercase tracking-[0.1em] text-white/40">
-                  Programme reference
-                </span>
-                <div className="code text-[12px] text-white/70">{DIVISION.tender}</div>
+              <div className="pt-2 text-[12.5px] text-white/50">
+                Enquiries are handled by your school office in the first instance.
               </div>
             </address>
           </div>

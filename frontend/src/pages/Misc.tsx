@@ -99,7 +99,7 @@ export function VerifyCertificatePage() {
         <div className="mb-6 text-center">
           <h1 className="text-xl font-semibold text-ink">Certificate verification</h1>
           <p className="mt-1 text-sm text-ink-soft">
-            Hybrid Learning LMS Portal — PWD J&amp;K, R&amp;B Division Anantnag
+            Anantnag Smart Classrooms — PWD J&amp;K, R&amp;B Division Pahalgam
           </p>
         </div>
 

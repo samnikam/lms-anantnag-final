@@ -1,10 +1,10 @@
 {
-  "name": "Hybrid Learning LMS Portal",
-  "short_name": "LMS Portal",
-  "description": "Hybrid Learning LMS — PWD J&K, R&B Division Pahalgam",
+  "name": "Anantnag Smart Classrooms",
+  "short_name": "Smart Classrooms",
+  "description": "Government school smart classrooms across Anantnag district — PWD J&K, R&B Division Pahalgam",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#1a3f75",
+  "theme_color": "#2f2c6e",
   "icons": []
 }

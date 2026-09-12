@@ -46,7 +46,7 @@ export function Layout() {
           </span>
           <div className="min-w-0">
             <p className="truncate text-[15px] font-extrabold tracking-[-0.02em] text-ink">
-              Hybrid Learning
+              Smart Classrooms
             </p>
             <p className="truncate text-[11px] font-medium text-faint">PWD J&amp;K · Anantnag</p>
           </div>

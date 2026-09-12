@@ -294,10 +294,10 @@ export function HomePage() {
             />
             <div className="mt-6 space-y-4 text-[15px] leading-relaxed text-muted">
               <p>
-                The {DIVISION.programme} is an initiative of the {DIVISION.department}, delivered
-                through the {DIVISION.division} in {DIVISION.district}. It was built on a simple
-                observation: a specialist teacher cannot stand in twenty-one classrooms at nine in
-                the morning — but the lesson can.
+{DIVISION.programme} is a government school initiative in {DIVISION.district},
+                run by the {DIVISION.division}. It began with a simple observation: a specialist
+                teacher cannot stand in twenty-one classrooms at nine in the morning — but the
+                lesson can.
               </p>
               <p>
                 Two broadcast studios carry lessons to 42 interactive panels installed in
@@ -355,7 +355,7 @@ export function HomePage() {
       {/* ══ HOW IT WORKS ═══════════════════════════════════════════════ */}
       <Section className="bg-surface">
         <SectionHeading
-          kicker="How hybrid learning works"
+          kicker="How a lesson reaches you"
           title="One lesson, taught once, received everywhere"
           description="Two studios feed forty-two classrooms. That ratio shapes everything about how the programme runs."
         />

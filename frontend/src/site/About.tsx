@@ -3,6 +3,9 @@ import {
   ArrowRight,
   Building2,
   CheckCircle2,
+  Eye,
+  HeartHandshake,
+  Quote,
   Radio,
   ShieldCheck,
   Snowflake,
@@ -12,6 +15,31 @@ import {
 import { CountUp, Reveal } from './motion';
 import { ABOUT, DISTRICT, HERO_SLIDES } from './media';
 import { DIVISION, FIGURES, PageBanner, Section, SectionHeading } from './PublicLayout';
+
+const PILLARS = [
+  {
+    icon: Eye,
+    title: 'Our Vision',
+    body: 'That a learner\u2019s subjects are decided by their curiosity, not by which specialist teacher their school was able to appoint.',
+  },
+  {
+    icon: Target,
+    title: 'Our Mission',
+    body: 'To carry good teaching to every participating classroom in the district, and to keep an honest, single record of what was taught, who attended and what they achieved.',
+  },
+  {
+    icon: HeartHandshake,
+    title: 'Our Commitment',
+    body: 'That the programme works on the connection, the power supply and the winter a valley school actually has \u2014 not on ideal conditions.',
+  },
+];
+
+const VALUES = [
+  ['Equity', 'The furthest classroom gets the same lesson as the nearest one.'],
+  ['Accountability', 'Every register, correction and privileged action is traceable.'],
+  ['Continuity', 'A missed session is recorded, not lost; a power cut is planned for.'],
+  ['Clarity', 'Learners, teachers and families each see exactly what concerns them.'],
+];
 
 const CHALLENGES = [
   {
@@ -68,7 +96,7 @@ export function AboutPage() {
     <>
       <PageBanner
         title="About Us"
-        subtitle={`The ${DIVISION.programme} of the ${DIVISION.department}, delivered through the ${DIVISION.division}.`}
+        subtitle={`A government school programme of the ${DIVISION.department}, run across ${DIVISION.district} by the ${DIVISION.division}.`}
         image={DISTRICT.amarnathApproach.src}
         imageAlt={DISTRICT.amarnathApproach.alt}
       />
@@ -84,9 +112,9 @@ export function AboutPage() {
             />
             <div className="mt-6 space-y-4 text-[15px] leading-relaxed text-muted">
               <p>
-                The {DIVISION.programme} was commissioned by the {DIVISION.department} under
-                procurement {DIVISION.tender}, and is delivered through the {DIVISION.division} in{' '}
-                {DIVISION.district}.
+{DIVISION.programme} is a programme of the {DIVISION.department}, run across{' '}
+                {DIVISION.district} by the {DIVISION.division}. It serves government schools in
+                the district — the classrooms furthest from a specialist teacher first.
               </p>
               <p>
                 It pairs classroom hardware with a purpose-built learning management portal. Two
@@ -137,6 +165,73 @@ export function AboutPage() {
             </div>
           </Reveal>
         </div>
+      </Section>
+
+      {/* ══ VISION, MISSION, COMMITMENT ════════════════════════════════ */}
+      <Section className="bg-surface">
+        <SectionHeading
+          kicker="What we stand for"
+          title="Vision, mission and commitment"
+          description="Three statements that decide what this programme does, and what it refuses to trade away."
+        />
+
+        <div className="mt-14 grid gap-6 md:grid-cols-3">
+          {PILLARS.map((p, i) => (
+            <Reveal key={p.title} delay={i * 110}>
+              <article className="h-full rounded-2xl bg-paper p-8 text-center">
+                <span className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-brand-700 text-white shadow-pill">
+                  <p.icon className="h-7 w-7" aria-hidden />
+                </span>
+                <h3 className="mt-6 text-[20px] font-extrabold tracking-[-0.02em] text-ink">
+                  {p.title}
+                </h3>
+                <span className="mx-auto mt-4 block h-1 w-12 rounded-full bg-accent-amber" />
+                <p className="mt-4 text-[14px] leading-relaxed text-muted">{p.body}</p>
+              </article>
+            </Reveal>
+          ))}
+        </div>
+
+        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {VALUES.map(([title, body], i) => (
+            <Reveal key={title} delay={(i % 4) * 90}>
+              <div className="h-full rounded-xl border-l-4 border-accent-mint bg-paper p-5">
+                <h4 className="text-[14.5px] font-extrabold text-ink">{title}</h4>
+                <p className="mt-1.5 text-[13px] leading-relaxed text-muted">{body}</p>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+      </Section>
+
+      {/* ══ A WORD FROM THE OFFICE ═════════════════════════════════════ */}
+      <Section>
+        <Reveal>
+          <div className="grid items-center gap-10 rounded-2xl bg-brand-800 p-8 sm:p-12 lg:grid-cols-[auto_1fr]">
+            <img
+              src={DISTRICT.pahalgamMeadow.src}
+              alt={DISTRICT.pahalgamMeadow.alt}
+              loading="lazy"
+              className="mx-auto aspect-square w-44 rounded-2xl object-cover shadow-lg lg:w-56"
+            />
+            <div>
+              <Quote className="h-8 w-8 text-accent-amber" aria-hidden />
+              <blockquote className="mt-5 text-[17px] font-medium leading-relaxed text-white/85 sm:text-[19px]">
+                A school in this district is not short of able learners. What it is often short of
+                is a teacher for one particular subject, on one particular morning, in a village
+                that takes half a day to reach. This programme was built to close that gap — not
+                to replace the teacher in the room, but to make sure no class goes without the
+                one it does not have.
+              </blockquote>
+              <p className="mt-6 text-[13px] font-bold uppercase tracking-[0.1em] text-accent-amber">
+                The Division Office
+              </p>
+              <p className="mt-1 text-[13px] text-white/50">
+                {DIVISION.division} · {DIVISION.district}
+              </p>
+            </div>
+          </div>
+        </Reveal>
       </Section>
 
       {/* ══ CHALLENGES ═════════════════════════════════════════════════ */}
@@ -228,8 +323,9 @@ export function AboutPage() {
                 ['Division', DIVISION.division],
                 ['District', DIVISION.district],
                 ['Programme', DIVISION.programme],
-                ['Procurement reference', DIVISION.tender],
                 ['Academic session', DIVISION.session],
+                ['Schools served', '21 sites across the district'],
+                ['Classrooms equipped', '42 interactive panels'],
               ].map(([k, v], i) => (
                 <div
                   key={k}

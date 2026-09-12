@@ -146,7 +146,7 @@ export const HERO_SLIDES: Array<Photo & { kicker: string; heading: string; sub: 
   {
     src: unsplash('photo-1509062522246-3755977927d7', 2000),
     alt: 'A classroom of desks facing a teaching board',
-    kicker: 'Hybrid Learning Programme',
+    kicker: 'Anantnag Smart Classrooms',
     heading: 'Every classroom in the district, taught together',
     sub: 'Lessons broadcast from two studios to interactive panels in schools across Anantnag.',
   },
@@ -174,7 +174,7 @@ export const ABOUT: Record<string, Photo> = {
   campus: DISTRICT.polytechnic,
 };
 
-/** The bid's own hardware, one photograph each. */
+/** The equipment installed across the district, one photograph each. */
 export const FACILITIES: Array<Photo & { title: string; body: string; count: string }> = [
   {
     src: unsplash('photo-1571260899304-425eee4c7efc', 1200),

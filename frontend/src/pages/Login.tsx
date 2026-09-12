@@ -65,7 +65,7 @@ export function LoginPage() {
           </span>
           <div>
             <div className="text-[19px] font-extrabold tracking-[-0.02em] text-white">
-              Hybrid Learning
+              Anantnag Smart Classrooms
             </div>
             <div className="text-[11px] font-medium text-white/55">
               Learning Management System · v1.0

@@ -283,8 +283,30 @@ export function HomePage() {
         </div>
       </section>
 
+      {/* ══ QUICK LINKS ════════════════════════════════════════════════ */}
+      <section className="relative z-10 mx-auto -mt-14 max-w-6xl px-5 sm:px-8">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {QUICK_LINKS.map((q, i) => (
+            <Reveal key={q.title} delay={i * 80}>
+              <Link
+                to={q.to}
+                className="group flex h-full items-center gap-4 rounded-xl bg-surface p-5 shadow-md ring-1 ring-rule transition-all hover:-translate-y-1 hover:shadow-lg"
+              >
+                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand-700 text-white transition-colors group-hover:bg-accent-coral-deep">
+                  <q.icon className="h-5 w-5" aria-hidden />
+                </span>
+                <span className="min-w-0">
+                  <span className="block text-[15px] font-extrabold text-ink">{q.title}</span>
+                  <span className="block text-[12.5px] text-muted">{q.body}</span>
+                </span>
+              </Link>
+            </Reveal>
+          ))}
+        </div>
+      </section>
+
       {/* ══ NOTICE TICKER ══════════════════════════════════════════════ */}
-      <div className="border-b border-rule bg-brand-700">
+      <div className="mt-14 border-y border-brand-800 bg-brand-700">
         <div className="mx-auto flex max-w-6xl items-stretch">
           <span className="flex shrink-0 items-center gap-2 bg-accent-amber px-5 py-3 text-[12px] font-extrabold uppercase tracking-[0.1em] text-ink">
             <span className="pulse-ring h-2 w-2 rounded-full bg-accent-coral-deep" aria-hidden />
@@ -308,7 +330,7 @@ export function HomePage() {
       </div>
 
       {/* ══ QUICK INFORMATION ══════════════════════════════════════════ */}
-      <section className="relative z-10 mx-auto -mt-14 max-w-6xl px-5 sm:px-8">
+      <section className="mx-auto max-w-6xl px-5 pt-14 sm:px-8">
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {QUICK_INFO.map((q, i) => {
             const t = TONE[q.tone];
@@ -328,28 +350,6 @@ export function HomePage() {
               </Reveal>
             );
           })}
-        </div>
-      </section>
-
-      {/* ══ QUICK LINKS ════════════════════════════════════════════════ */}
-      <section className="mx-auto mt-6 max-w-6xl px-5 sm:px-8">
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {QUICK_LINKS.map((q, i) => (
-            <Reveal key={q.title} delay={i * 80}>
-              <Link
-                to={q.to}
-                className="group flex h-full items-center gap-4 rounded-xl bg-surface p-5 shadow-md ring-1 ring-rule transition-all hover:-translate-y-1 hover:shadow-lg"
-              >
-                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand-700 text-white transition-colors group-hover:bg-accent-coral-deep">
-                  <q.icon className="h-5 w-5" aria-hidden />
-                </span>
-                <span className="min-w-0">
-                  <span className="block text-[15px] font-extrabold text-ink">{q.title}</span>
-                  <span className="block text-[12.5px] text-muted">{q.body}</span>
-                </span>
-              </Link>
-            </Reveal>
-          ))}
         </div>
       </section>
 

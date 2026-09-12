@@ -8,11 +8,13 @@ import {
   ChevronLeft,
   ChevronRight,
   ClipboardList,
+  ExternalLink,
   ListChecks,
   MonitorPlay,
   Quote,
   Radio,
   ShieldCheck,
+  Trophy,
   Users,
   Video,
 } from 'lucide-react';
@@ -20,6 +22,33 @@ import clsx from 'clsx';
 import { DIVISION, FIGURES, Section, SectionHeading } from './PublicLayout';
 import { CountUp, Reveal } from './motion';
 import { ABOUT, FACILITIES, GALLERY, HERO_SLIDES, LANDMARKS, ROLE_PHOTOS } from './media';
+import {
+  ACHIEVEMENTS,
+  ACHIEVEMENT_AREAS,
+  FACILITY_CARDS,
+  GALLERY_CATEGORIES,
+  HEAD_MESSAGE,
+  HEAD_OF_INSTITUTION,
+  IMPORTANT_LINKS,
+  INITIATIVES,
+  QUICK_INFO,
+  STAGES,
+  STUDENT_LIFE,
+  WHY_US,
+} from './homeContent';
+
+/** The accent families already used across the site, named for reuse. */
+const TONE = {
+  coral: { soft: 'bg-accent-coral-soft', solid: 'bg-accent-coral', text: 'text-accent-coral-deep' },
+  mint: { soft: 'bg-accent-mint-soft', solid: 'bg-accent-mint', text: 'text-accent-mint-deep' },
+  sky: { soft: 'bg-accent-sky-soft', solid: 'bg-accent-sky', text: 'text-accent-sky-deep' },
+  amber: { soft: 'bg-accent-amber-soft', solid: 'bg-accent-amber', text: 'text-accent-amber-deep' },
+  violet: {
+    soft: 'bg-accent-violet-soft',
+    solid: 'bg-accent-violet',
+    text: 'text-accent-violet-deep',
+  },
+} as const;
 
 /** The four things a visitor most often arrives wanting. */
 const QUICK_LINKS = [
@@ -278,8 +307,32 @@ export function HomePage() {
         </div>
       </div>
 
-      {/* ══ QUICK LINKS ════════════════════════════════════════════════ */}
+      {/* ══ QUICK INFORMATION ══════════════════════════════════════════ */}
       <section className="relative z-10 mx-auto -mt-14 max-w-6xl px-5 sm:px-8">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {QUICK_INFO.map((q, i) => {
+            const t = TONE[q.tone];
+            return (
+              <Reveal key={q.title} variant="zoom" delay={i * 80}>
+                <article className="h-full rounded-xl bg-surface p-6 shadow-md ring-1 ring-rule transition-all hover:-translate-y-1 hover:shadow-lg">
+                  <span
+                    className={`inline-flex h-12 w-12 items-center justify-center rounded-xl ${t.solid} text-white shadow-sm`}
+                  >
+                    <q.icon className="h-5 w-5" aria-hidden />
+                  </span>
+                  <h3 className="mt-5 text-[16px] font-extrabold tracking-[-0.02em] text-ink">
+                    {q.title}
+                  </h3>
+                  <p className="mt-2 text-[13px] leading-relaxed text-muted">{q.body}</p>
+                </article>
+              </Reveal>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* ══ QUICK LINKS ════════════════════════════════════════════════ */}
+      <section className="mx-auto mt-6 max-w-6xl px-5 sm:px-8">
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {QUICK_LINKS.map((q, i) => (
             <Reveal key={q.title} delay={i * 80}>
@@ -368,6 +421,38 @@ export function HomePage() {
         </div>
       </Section>
 
+      {/* ══ MESSAGE FROM THE HEAD OF INSTITUTION ═══════════════════════ */}
+      <Section className="bg-surface">
+        <div className="grid items-center gap-10 lg:grid-cols-[auto_1fr]">
+          <Reveal variant="left">
+            <img
+              src={ROLE_PHOTOS.teacher.src}
+              alt={ROLE_PHOTOS.teacher.alt}
+              loading="lazy"
+              className="mx-auto aspect-square w-48 rounded-2xl object-cover shadow-lg lg:w-60"
+            />
+          </Reveal>
+
+          <Reveal variant="right" delay={120}>
+            <SectionHeading
+              kicker="Message from the Head of Institution"
+              title="Learning that builds the whole person"
+              align="left"
+            />
+            <Quote className="mt-7 h-8 w-8 text-accent-amber" aria-hidden />
+            <blockquote className="mt-4 text-[17px] font-medium italic leading-relaxed text-ink-soft sm:text-[19px]">
+              {HEAD_MESSAGE}
+            </blockquote>
+            <div className="mt-7 border-l-4 border-accent-coral pl-5">
+              <p className="text-[15px] font-extrabold text-ink">{HEAD_OF_INSTITUTION.name}</p>
+              <p className="text-[12.5px] font-semibold uppercase tracking-[0.08em] text-muted">
+                {HEAD_OF_INSTITUTION.role}
+              </p>
+            </div>
+          </Reveal>
+        </div>
+      </Section>
+
       {/* ══ FIGURES ════════════════════════════════════════════════════ */}
       <section className="relative overflow-hidden bg-brand-800">
         <img
@@ -423,6 +508,110 @@ export function HomePage() {
         </div>
       </Section>
 
+      {/* ══ WHY CHOOSE US ══════════════════════════════════════════════ */}
+      <Section>
+        <SectionHeading
+          kicker="Why choose our schools"
+          title="What a government school here offers"
+          description="Six things the district commits to for every learner it enrols."
+        />
+
+        <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {WHY_US.map((w, i) => (
+            <Reveal key={w.title} variant="zoom" delay={(i % 3) * 100}>
+              <article className="group flex h-full gap-5 rounded-2xl bg-surface p-7 shadow ring-1 ring-rule transition-all hover:-translate-y-1 hover:shadow-lg">
+                <span className="inline-flex h-13 w-13 shrink-0 items-center justify-center rounded-xl bg-brand-700 p-3 text-white shadow-pill transition-colors group-hover:bg-accent-coral-deep">
+                  <w.icon className="h-6 w-6" aria-hidden />
+                </span>
+                <div className="min-w-0">
+                  <h3 className="text-[16.5px] font-extrabold tracking-[-0.02em] text-ink">
+                    {w.title}
+                  </h3>
+                  <p className="mt-2 text-[13.5px] leading-relaxed text-muted">{w.body}</p>
+                </div>
+              </article>
+            </Reveal>
+          ))}
+        </div>
+      </Section>
+
+      {/* ══ ACADEMICS PREVIEW ══════════════════════════════════════════ */}
+      <Section className="bg-surface">
+        <SectionHeading
+          kicker="Academics"
+          title="Learning at every stage"
+          description="From the first years of school through to the examination classes."
+        />
+
+        <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {STAGES.map((st, i) => {
+            const t = TONE[st.tone];
+            return (
+              <Reveal key={st.stage} variant="zoom" delay={(i % 4) * 90}>
+                <article className={`flex h-full flex-col rounded-2xl ${t.soft} p-7`}>
+                  <span
+                    className={`inline-flex w-fit rounded-lg ${t.solid} px-3 py-1.5 text-[11.5px] font-extrabold uppercase tracking-[0.08em] text-white`}
+                  >
+                    {st.grades}
+                  </span>
+                  <h3 className="mt-5 text-[20px] font-extrabold tracking-[-0.02em] text-ink">
+                    {st.stage}
+                  </h3>
+                  <p className="mt-2.5 flex-1 text-[13.5px] leading-relaxed text-ink-soft">
+                    {st.body}
+                  </p>
+                </article>
+              </Reveal>
+            );
+          })}
+        </div>
+
+        <div className="mt-10 text-center">
+          <Link
+            to="/academics"
+            className="group inline-flex items-center gap-2 rounded-lg bg-brand-700 px-6 py-3 text-[14px] font-bold text-white shadow-pill transition-all hover:-translate-y-0.5 hover:bg-brand-600"
+          >
+            Explore academics
+            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden />
+          </Link>
+        </div>
+      </Section>
+
+      {/* ══ DIGITAL & HYBRID LEARNING ══════════════════════════════════ */}
+      <section className="relative overflow-hidden bg-brand-800">
+        <img
+          src={GALLERY[5].src}
+          alt=""
+          aria-hidden
+          loading="lazy"
+          className="absolute inset-0 h-full w-full object-cover opacity-[0.14]"
+        />
+        <div className="relative mx-auto max-w-5xl px-5 py-20 text-center sm:px-8">
+          <Reveal>
+            <span className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-accent-amber text-ink shadow-lg">
+              <MonitorPlay className="h-7 w-7" aria-hidden />
+            </span>
+            <h2 className="mt-7 text-[28px] font-extrabold leading-[1.12] tracking-[-0.03em] text-white sm:text-[38px]">
+              Learning beyond the classroom
+            </h2>
+            <span className="mx-auto mt-5 block h-1 w-16 rounded-full bg-accent-amber" />
+            <p className="mx-auto mt-6 max-w-2xl text-[15.5px] leading-relaxed text-white/75">
+              Our schools are embracing digital and hybrid learning, giving students access to
+              interactive lessons, digital resources, live sessions and recorded educational
+              content. Technology complements the teacher in the room and helps learning continue
+              beyond the traditional classroom.
+            </p>
+            <Link
+              to="/login"
+              className="mt-9 inline-flex items-center gap-2 rounded-lg bg-accent-amber px-8 py-4 text-[15px] font-extrabold text-ink shadow-lg transition-transform hover:-translate-y-0.5"
+            >
+              Access Learning Portal
+              <ArrowRight className="h-4 w-4" aria-hidden />
+            </Link>
+          </Reveal>
+        </div>
+      </section>
+
       {/* ══ FACILITIES ═════════════════════════════════════════════════ */}
       <Section>
         <SectionHeading
@@ -431,7 +620,28 @@ export function HomePage() {
           description="Equipment funded under the programme and deployed across the district's classrooms."
         />
 
-        <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {FACILITY_CARDS.map((f, i) => {
+            const t = TONE[f.tone];
+            return (
+              <Reveal key={f.title} variant="zoom" delay={(i % 3) * 90}>
+                <article className="flex h-full items-start gap-4 rounded-xl bg-surface p-5 shadow-sm ring-1 ring-rule transition-all hover:-translate-y-1 hover:shadow-lg">
+                  <span
+                    className={`inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-lg ${t.soft} ${t.text}`}
+                  >
+                    <f.icon className="h-5 w-5" aria-hidden />
+                  </span>
+                  <div className="min-w-0">
+                    <h3 className="text-[15px] font-extrabold text-ink">{f.title}</h3>
+                    <p className="mt-1 text-[12.5px] leading-relaxed text-muted">{f.body}</p>
+                  </div>
+                </article>
+              </Reveal>
+            );
+          })}
+        </div>
+
+        <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {FACILITIES.slice(0, 3).map((f, i) => (
             <Reveal key={f.title} variant="zoom" delay={i * 110}>
               <article className="group h-full overflow-hidden rounded-2xl bg-surface shadow ring-1 ring-rule transition-all hover:-translate-y-1 hover:shadow-lg">
@@ -536,6 +746,122 @@ export function HomePage() {
         </div>
       </Section>
 
+      {/* ══ STUDENT LIFE ═══════════════════════════════════════════════ */}
+      <Section>
+        <SectionHeading
+          kicker="Student life"
+          title="Learning, exploring and growing together"
+          description="School is more than lessons. These are the things students take part in alongside them."
+        />
+
+        <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {STUDENT_LIFE.map((a, i) => {
+            const t = TONE[a.tone];
+            return (
+              <Reveal key={a.title} variant="zoom" delay={(i % 3) * 100}>
+                <article className={`h-full rounded-2xl ${t.soft} p-7 transition-transform hover:-translate-y-1`}>
+                  <span
+                    className={`inline-flex h-13 w-13 items-center justify-center rounded-xl ${t.solid} p-3 text-white shadow-sm`}
+                  >
+                    <a.icon className="h-6 w-6" aria-hidden />
+                  </span>
+                  <h3 className="mt-5 text-[17px] font-extrabold tracking-[-0.02em] text-ink">
+                    {a.title}
+                  </h3>
+                  <p className="mt-2 text-[13.5px] leading-relaxed text-ink-soft">{a.body}</p>
+                </article>
+              </Reveal>
+            );
+          })}
+        </div>
+      </Section>
+
+      {/* ══ ACHIEVEMENTS ═══════════════════════════════════════════════ */}
+      <Section className="bg-surface">
+        <SectionHeading
+          kicker="Achievements"
+          title="Celebrating our students"
+          description="Recognition earned by learners across the district, in and beyond the classroom."
+        />
+
+        {ACHIEVEMENTS.length > 0 ? (
+          <div className="mt-14 grid gap-6 md:grid-cols-3">
+            {ACHIEVEMENTS.map((a, i) => (
+              <Reveal key={a.title} variant="zoom" delay={(i % 3) * 100}>
+                <article className="h-full rounded-2xl bg-paper p-7">
+                  <span className="inline-flex h-13 w-13 items-center justify-center rounded-xl bg-accent-amber p-3 text-ink">
+                    <Trophy className="h-6 w-6" aria-hidden />
+                  </span>
+                  <p className="mt-5 text-[11.5px] font-bold uppercase tracking-[0.1em] text-faint">
+                    {a.when}
+                  </p>
+                  <h3 className="mt-1.5 text-[17px] font-extrabold tracking-[-0.02em] text-ink">
+                    {a.title}
+                  </h3>
+                  <p className="mt-2 text-[13.5px] leading-relaxed text-muted">{a.detail}</p>
+                </article>
+              </Reveal>
+            ))}
+          </div>
+        ) : (
+          <>
+            {/* Nothing is invented here. The areas stand until the division
+                supplies real achievements to publish. */}
+            <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {ACHIEVEMENT_AREAS.map((a, i) => (
+                <Reveal key={a.title} variant="zoom" delay={(i % 3) * 90}>
+                  <div className="flex h-full items-center gap-4 rounded-xl bg-paper p-5">
+                    <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-accent-amber-soft text-accent-amber-deep">
+                      <a.icon className="h-5 w-5" aria-hidden />
+                    </span>
+                    <h3 className="text-[14.5px] font-extrabold text-ink">{a.title}</h3>
+                  </div>
+                </Reveal>
+              ))}
+            </div>
+            <p className="mt-8 text-center text-[13.5px] text-muted">
+              Student and school achievements will be published here as they are confirmed.
+            </p>
+          </>
+        )}
+      </Section>
+
+      {/* ══ GOVERNMENT INITIATIVES ═════════════════════════════════════ */}
+      <Section>
+        <SectionHeading
+          kicker="Government initiatives"
+          title="Schemes supporting our students"
+          description="National and Union Territory programmes that government schools in the district come under."
+        />
+
+        <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {INITIATIVES.map((g, i) => (
+            <Reveal key={g.title} variant="zoom" delay={(i % 3) * 100}>
+              <article className="flex h-full flex-col rounded-2xl border-t-4 border-brand-600 bg-surface p-7 shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg">
+                <span className="inline-flex h-13 w-13 items-center justify-center rounded-xl bg-tint-brand p-3 text-brand-600">
+                  <g.icon className="h-6 w-6" aria-hidden />
+                </span>
+                <h3 className="mt-5 text-[17px] font-extrabold tracking-[-0.02em] text-ink">
+                  {g.title}
+                </h3>
+                <p className="mt-2 flex-1 text-[13.5px] leading-relaxed text-muted">{g.body}</p>
+                {'href' in g && g.href && (
+                  <a
+                    href={g.href}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="mt-5 inline-flex w-fit items-center gap-1.5 text-[12.5px] font-bold text-brand-700 transition-colors hover:text-accent-coral-deep"
+                  >
+                    Official information
+                    <ExternalLink className="h-3.5 w-3.5" aria-hidden />
+                  </a>
+                )}
+              </article>
+            </Reveal>
+          ))}
+        </div>
+      </Section>
+
       {/* ══ NOTICES ════════════════════════════════════════════════════ */}
       <Section className="bg-surface">
         <div className="grid gap-12 lg:grid-cols-[1fr_1.1fr]">
@@ -622,7 +948,18 @@ export function HomePage() {
           title="Life in the classrooms"
           description="Photographs from the programme's classrooms and the district it serves."
         />
-        <div className="mt-12 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+        <div className="mt-10 flex flex-wrap justify-center gap-2.5">
+          {GALLERY_CATEGORIES.map((c) => (
+            <span
+              key={c}
+              className="rounded-full bg-surface px-4 py-2 text-[12.5px] font-bold text-ink-soft ring-1 ring-rule"
+            >
+              {c}
+            </span>
+          ))}
+        </div>
+
+        <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
           {GALLERY.slice(0, 8).map((g, i) => (
             <Reveal key={g.src + i} variant="zoom" delay={(i % 4) * 80}>
               <div className="group aspect-square overflow-hidden rounded-xl">
@@ -644,6 +981,51 @@ export function HomePage() {
             View full gallery
             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden />
           </Link>
+        </div>
+      </Section>
+
+      {/* ══ IMPORTANT LINKS ════════════════════════════════════════════ */}
+      <Section className="bg-surface">
+        <SectionHeading
+          kicker="Important links"
+          title="Departments, boards and portals"
+          description="Official destinations families and staff most often need."
+        />
+
+        <div className="mt-12 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {IMPORTANT_LINKS.map((l, i) => {
+            const inner = (
+              <>
+                <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-tint-brand text-brand-600 transition-colors group-hover:bg-brand-700 group-hover:text-white">
+                  <l.icon className="h-4.5 w-4.5" aria-hidden />
+                </span>
+                <span className="min-w-0 flex-1 text-[13.5px] font-bold text-ink">{l.label}</span>
+                {l.external ? (
+                  <ExternalLink className="h-3.5 w-3.5 shrink-0 text-faint" aria-hidden />
+                ) : (
+                  <ArrowRight
+                    className="h-4 w-4 shrink-0 text-faint transition-transform group-hover:translate-x-1"
+                    aria-hidden
+                  />
+                )}
+              </>
+            );
+            const cls =
+              'group flex h-full items-center gap-3.5 rounded-xl bg-paper p-4 ring-1 ring-rule transition-all hover:-translate-y-1 hover:shadow-md';
+            return (
+              <Reveal key={l.label} variant="zoom" delay={(i % 4) * 80}>
+                {l.external ? (
+                  <a href={l.href} target="_blank" rel="noreferrer noopener" className={cls}>
+                    {inner}
+                  </a>
+                ) : (
+                  <Link to={l.href} className={cls}>
+                    {inner}
+                  </Link>
+                )}
+              </Reveal>
+            );
+          })}
         </div>
       </Section>
 

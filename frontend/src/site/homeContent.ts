@@ -1,0 +1,274 @@
+import {
+  Accessibility,
+  Award,
+  BookOpen,
+  Brush,
+  CalendarDays,
+  Coins,
+  Compass,
+  Cpu,
+  Drama,
+  FlaskConical,
+  GraduationCap,
+  HandHeart,
+  Landmark,
+  Laptop,
+  Leaf,
+  LibraryBig,
+  Medal,
+  MonitorPlay,
+  Palette,
+  ScrollText,
+  ShieldCheck,
+  Sparkles,
+  Trophy,
+  Users,
+  UtensilsCrossed,
+  Volleyball,
+} from 'lucide-react';
+
+/**
+ * The written content of the front page, kept out of the markup so it can be
+ * edited without touching layout — and so what still needs the division's own
+ * words is easy to find.
+ *
+ * TO FILL IN: `HEAD_OF_INSTITUTION.name` and `.role` are placeholders, and
+ * ACHIEVEMENTS is deliberately empty until real ones are supplied. Nothing
+ * here invents a person, a prize or a statistic.
+ */
+
+/* ── Quick information, immediately under the hero ─────────────────────── */
+
+export const QUICK_INFO = [
+  {
+    icon: GraduationCap,
+    tone: 'coral',
+    title: 'Quality Education',
+    body: 'Accessible, inclusive teaching for every learner in the district.',
+  },
+  {
+    icon: Laptop,
+    tone: 'violet',
+    title: 'Digital Learning',
+    body: 'Technology-enabled classrooms and modern learning resources.',
+  },
+  {
+    icon: Trophy,
+    tone: 'mint',
+    title: 'Holistic Development',
+    body: 'Academic, sporting, cultural and co-curricular growth together.',
+  },
+  {
+    icon: HandHeart,
+    tone: 'amber',
+    title: 'Community Focused',
+    body: 'Working alongside parents and the local community.',
+  },
+] as const;
+
+/* ── The head of institution's message ─────────────────────────────────── */
+
+export const HEAD_MESSAGE =
+  'Education is not only about academic achievement; it is about developing responsible, confident and capable individuals. We strive to provide every student with opportunities to learn, participate and grow.';
+
+/** Replace both fields with the actual office holder before publishing. */
+export const HEAD_OF_INSTITUTION = {
+  name: 'To be confirmed',
+  role: 'Head of Institution',
+};
+
+/* ── Why families choose these schools ─────────────────────────────────── */
+
+export const WHY_US = [
+  {
+    icon: Accessibility,
+    title: 'Inclusive Education',
+    body: 'Equal learning opportunities for students from every background in the district.',
+  },
+  {
+    icon: Users,
+    title: 'Experienced Educators',
+    body: 'Dedicated teachers focused on student learning and development.',
+  },
+  {
+    icon: MonitorPlay,
+    title: 'Digital Learning',
+    body: 'Technology-supported teaching, in the classroom and beyond it.',
+  },
+  {
+    icon: ShieldCheck,
+    title: 'Safe Learning Environment',
+    body: 'A supportive setting where students can learn with confidence.',
+  },
+  {
+    icon: Coins,
+    title: 'Affordable & Accessible',
+    body: 'Quality government education, open to the whole local community.',
+  },
+  {
+    icon: Sparkles,
+    title: 'Holistic Development',
+    body: 'Academics, sport, creativity, values and life skills together.',
+  },
+] as const;
+
+/* ── Academic stages ───────────────────────────────────────────────────── */
+
+export const STAGES = [
+  {
+    stage: 'Primary',
+    grades: 'Classes 1–5',
+    tone: 'coral',
+    body: 'Strong foundations in literacy, numeracy and the habits of learning.',
+  },
+  {
+    stage: 'Middle School',
+    grades: 'Classes 6–8',
+    tone: 'violet',
+    body: 'Conceptual learning, exploration across subjects and skill development.',
+  },
+  {
+    stage: 'Secondary',
+    grades: 'Classes 9–10',
+    tone: 'mint',
+    body: 'Subject-focused study, examination preparation and career awareness.',
+  },
+  {
+    stage: 'Higher Secondary',
+    grades: 'Classes 11–12, where offered',
+    tone: 'amber',
+    body: 'Stream-based study for students continuing beyond the secondary stage.',
+  },
+] as const;
+
+/* ── Facilities, at a glance ───────────────────────────────────────────── */
+
+export const FACILITY_CARDS = [
+  { icon: MonitorPlay, tone: 'coral', title: 'Smart Classrooms', body: 'Interactive panels carrying live and recorded lessons.' },
+  { icon: LibraryBig, tone: 'violet', title: 'Library', body: 'Reading material and a digital resource collection.' },
+  { icon: Cpu, tone: 'sky', title: 'Computer & Digital Lab', body: 'Hands-on computing and digital skills practice.' },
+  { icon: FlaskConical, tone: 'mint', title: 'Science Laboratory', body: 'Practical work supporting the science curriculum.' },
+  { icon: Volleyball, tone: 'amber', title: 'Playground & Sports', body: 'Space for games, athletics and physical education.' },
+  { icon: Leaf, tone: 'mint', title: 'Safe & Green Campus', body: 'A secure, well-kept environment for learning.' },
+] as const;
+
+/* ── Student life ──────────────────────────────────────────────────────── */
+
+export const STUDENT_LIFE = [
+  { icon: Volleyball, tone: 'coral', title: 'Sports & Fitness', body: 'Games, athletics and inter-school sport.' },
+  { icon: Drama, tone: 'violet', title: 'Cultural Activities', body: 'Music, drama and celebration of local heritage.' },
+  { icon: FlaskConical, tone: 'sky', title: 'Science & Innovation', body: 'Exhibitions, projects and practical enquiry.' },
+  { icon: Palette, tone: 'amber', title: 'Art & Creativity', body: 'Drawing, craft and creative expression.' },
+  { icon: BookOpen, tone: 'mint', title: 'Educational Activities', body: 'Quizzes, debates, reading and field learning.' },
+  { icon: HandHeart, tone: 'coral', title: 'Community Programmes', body: 'Service, awareness drives and local initiatives.' },
+] as const;
+
+/* ── Achievements ──────────────────────────────────────────────────────── */
+
+/**
+ * The categories the division will publish achievements under. The list below
+ * is empty on purpose — nothing appears on the page until real achievements
+ * are supplied, and the section shows an honest placeholder instead.
+ */
+export const ACHIEVEMENT_AREAS = [
+  { icon: Medal, title: 'Academic achievement' },
+  { icon: Volleyball, title: 'Sports' },
+  { icon: Trophy, title: 'District-level competitions' },
+  { icon: Drama, title: 'Cultural competitions' },
+  { icon: FlaskConical, title: 'Science exhibitions' },
+  { icon: Brush, title: 'Drawing & essay competitions' },
+] as const;
+
+export interface Achievement {
+  title: string;
+  detail: string;
+  when: string;
+}
+
+/** Add real entries here as they are confirmed; the section fills itself. */
+export const ACHIEVEMENTS: Achievement[] = [];
+
+/* ── Government initiatives ────────────────────────────────────────────── */
+
+/**
+ * National and UT programmes a government school in the district may come
+ * under. Confirm which apply before publishing, and remove the rest.
+ */
+export const INITIATIVES = [
+  {
+    icon: Landmark,
+    title: 'Samagra Shiksha',
+    body: 'The integrated national scheme for school education, from pre-primary to Class 12.',
+    href: 'https://samagrashiksha.jk.gov.in',
+  },
+  {
+    icon: UtensilsCrossed,
+    title: 'PM POSHAN',
+    body: 'The national mid-day meal scheme supporting nutrition and attendance.',
+    href: 'https://dsel.education.gov.in/pm-poshan',
+  },
+  {
+    icon: Laptop,
+    title: 'Digital Education',
+    body: 'Smart classrooms, digital content and hybrid teaching across the district.',
+  },
+  {
+    icon: Coins,
+    title: 'Scholarship & Student Support',
+    body: 'Central and UT scholarships available to eligible students.',
+    href: 'https://scholarships.gov.in',
+  },
+  {
+    icon: Accessibility,
+    title: 'Inclusive Education',
+    body: 'Support so that learners of all abilities and backgrounds can participate.',
+  },
+  {
+    icon: Compass,
+    title: 'Skill & Career Development',
+    body: 'Vocational exposure and career awareness alongside the curriculum.',
+  },
+] as const;
+
+/* ── Gallery categories ────────────────────────────────────────────────── */
+
+export const GALLERY_CATEGORIES = [
+  'Campus',
+  'Classrooms',
+  'Students',
+  'Sports',
+  'Events',
+  'Activities',
+] as const;
+
+/* ── Important links ───────────────────────────────────────────────────── */
+
+/**
+ * External destinations were checked at the time of writing. JKBOSE resolves
+ * but did not respond from the build machine, so confirm it before relying
+ * on it publicly.
+ */
+export const IMPORTANT_LINKS: Array<{
+  icon: typeof ScrollText;
+  label: string;
+  href: string;
+  external: boolean;
+}> = [
+  {
+    icon: Landmark,
+    label: 'J&K School Education Department',
+    href: 'https://schooleducation.jk.gov.in',
+    external: true,
+  },
+  { icon: ScrollText, label: 'JKBOSE', href: 'https://jkbose.nic.in', external: true },
+  {
+    icon: Coins,
+    label: 'National Scholarship Portal',
+    href: 'https://scholarships.gov.in',
+    external: true,
+  },
+  { icon: Award, label: 'Verify a Certificate', href: '/verify', external: false },
+  { icon: BookOpen, label: 'Student Portal', href: '/login', external: false },
+  { icon: Users, label: 'Parent Portal', href: '/login', external: false },
+  { icon: CalendarDays, label: 'Teacher Portal', href: '/login', external: false },
+];

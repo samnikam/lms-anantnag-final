@@ -4,58 +4,57 @@ export default {
   theme: {
     extend: {
       colors: {
-        /* A warm, institutional ground: ivory paper and a near-black with a
-           faint green cast, so nothing on the page reads cold or corporate. */
-        paper: '#f5f7f4',
+        /* A light blue-white ground, the way a school prospectus is printed:
+           the page itself is never quite white. */
+        paper: '#f7fafd',
         surface: '#ffffff',
-        ink: { DEFAULT: '#1b2420', soft: '#4a574f' },
+        ink: { DEFAULT: '#16233f', soft: '#44557a' },
         slate: {
-          ...{ 50: '#f7f9f7', 100: '#eff2ef', 200: '#e4e9e4', 300: '#cbd3cc' },
-          400: '#9aa39c',
-          500: '#66726b',
-          600: '#57635b',
-          700: '#4a574f',
-          800: '#2b3630',
-          900: '#1b2420',
+          ...{ 50: '#f6f9fc', 100: '#eef3f9', 200: '#e3eaf3', 300: '#c8d4e4' },
+          400: '#93a1b8',
+          500: '#5c6b85',
+          600: '#4d5c77',
+          700: '#44557a',
+          800: '#24345a',
+          900: '#16233f',
         },
-        muted: '#66726b',
-        faint: '#9aa39c',
-        rule: '#e4e9e4',
+        muted: '#5c6b85',
+        faint: '#93a1b8',
+        rule: '#e3eaf3',
         // Reserved for the two things a record can be: sealed, or attained.
-        seal: '#b3402f',
-        attained: '#1d7a57',
-        /* The primary voice: a deep forest green, the colour Indian state
-           education bodies most often use where a department is not blue. */
+        seal: '#c0392b',
+        attained: '#1a7a4a',
+        /* Navy carries the institution — masthead, footers, headings and
+           every solid button. */
         brand: {
-          50: '#f2f8f5',
-          100: '#ddeee5',
-          200: '#b9dcca',
-          300: '#86c3a6',
-          400: '#4f9f7c',
-          500: '#2d8060',
-          600: '#1e654b',
-          700: '#154e3a',
-          800: '#0f3a2b',
-          900: '#0a2a1f',
+          50: '#eef3fb',
+          100: '#dbe6f7',
+          200: '#b7cbee',
+          300: '#86a7de',
+          400: '#5580c9',
+          500: '#2f5bb0',
+          600: '#1f4496',
+          700: '#16357e',
+          800: '#102657',
+          900: '#0a1a3c',
         },
-        /* The accent family, kept under the same names so no markup changes,
-           but re-tinted earthier: gold, terracotta, sage, teal and plum in
-           place of the amber, pink, mint, sky and violet they began as. */
+        /* Bright blue and fresh green do the accent work, gold and orange
+           the warmth. The names are unchanged so no markup had to move. */
         accent: {
-          coral: { DEFAULT: '#d1714f', deep: '#a34527', soft: '#fbeee7' },
-          mint: { DEFAULT: '#4aa17c', deep: '#1d6a4c', soft: '#e6f2ec' },
-          sky: { DEFAULT: '#4f9aa8', deep: '#17616f', soft: '#e7f1f3' },
-          amber: { DEFAULT: '#d9a52c', deep: '#8f6608', soft: '#fbf2dc' },
-          violet: { DEFAULT: '#8c6a9e', deep: '#5d3f6e', soft: '#f1ebf4' },
+          sky: { DEFAULT: '#4a90d9', deep: '#15538f', soft: '#e8f2fb' },
+          mint: { DEFAULT: '#2f9e63', deep: '#167a4a', soft: '#e3f5ea' },
+          amber: { DEFAULT: '#f5b731', deep: '#8a6104', soft: '#fdf3dc' },
+          violet: { DEFAULT: '#2a8a9e', deep: '#125565', soft: '#e4f2f5' },
+          coral: { DEFAULT: '#d06b2a', deep: '#a84e15', soft: '#fcefe4' },
         },
         // The soft tints those accents sit on inside icon tiles.
         tint: {
-          coral: '#fbeee7',
-          mint: '#e6f2ec',
-          sky: '#e7f1f3',
-          amber: '#fbf2dc',
-          violet: '#f1ebf4',
-          brand: '#e9f2ed',
+          coral: '#fcefe4',
+          mint: '#e3f5ea',
+          sky: '#e8f2fb',
+          amber: '#fdf3dc',
+          violet: '#e4f2f5',
+          brand: '#e8eff9',
         },
       },
       fontFamily: {
@@ -74,12 +73,12 @@ export default {
       },
       boxShadow: {
         // Depth is carried by soft, wide light rather than by a hard edge.
-        sm: '0 1px 2px rgba(15, 42, 31, 0.05)',
-        DEFAULT: '0 1px 2px rgba(15, 42, 31, 0.05), 0 6px 16px -8px rgba(15, 42, 31, 0.12)',
-        md: '0 2px 4px rgba(15, 42, 31, 0.05), 0 10px 24px -10px rgba(15, 42, 31, 0.16)',
-        lg: '0 4px 8px rgba(15, 42, 31, 0.06), 0 18px 40px -14px rgba(15, 42, 31, 0.20)',
-        xl: '0 8px 16px rgba(15, 42, 31, 0.07), 0 30px 60px -20px rgba(15, 42, 31, 0.24)',
-        pill: '0 6px 16px -6px rgba(21, 78, 58, 0.42)',
+        sm: '0 1px 2px rgba(16, 38, 87, 0.05)',
+        DEFAULT: '0 1px 2px rgba(16, 38, 87, 0.05), 0 6px 16px -8px rgba(16, 38, 87, 0.12)',
+        md: '0 2px 4px rgba(16, 38, 87, 0.05), 0 10px 24px -10px rgba(16, 38, 87, 0.16)',
+        lg: '0 4px 8px rgba(16, 38, 87, 0.06), 0 18px 40px -14px rgba(16, 38, 87, 0.20)',
+        xl: '0 8px 16px rgba(16, 38, 87, 0.07), 0 30px 60px -20px rgba(16, 38, 87, 0.24)',
+        pill: '0 6px 16px -6px rgba(22, 53, 126, 0.42)',
         none: 'none',
       },
     },

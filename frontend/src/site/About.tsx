@@ -12,6 +12,7 @@ import {
   Wifi,
 } from 'lucide-react';
 import { CountUp, Reveal } from './motion';
+import { TONE } from './tone';
 import { ABOUT, DISTRICT, HERO_SLIDES } from './media';
 import {
   AT_A_GLANCE,
@@ -31,19 +32,6 @@ import {
   Section,
   SectionHeading,
 } from './PublicLayout';
-
-/** The accent families used across the site, named here for reuse. */
-const TONE = {
-  coral: { soft: 'bg-accent-coral-soft', solid: 'bg-accent-coral', text: 'text-accent-coral-deep' },
-  mint: { soft: 'bg-accent-mint-soft', solid: 'bg-accent-mint', text: 'text-accent-mint-deep' },
-  sky: { soft: 'bg-accent-sky-soft', solid: 'bg-accent-sky', text: 'text-accent-sky-deep' },
-  amber: { soft: 'bg-accent-amber-soft', solid: 'bg-accent-amber', text: 'text-accent-amber-deep' },
-  violet: {
-    soft: 'bg-accent-violet-soft',
-    solid: 'bg-accent-violet',
-    text: 'text-accent-violet-deep',
-  },
-} as const;
 
 const CHALLENGES = [
   {
@@ -187,7 +175,7 @@ export function AboutPage() {
                   className={`group flex items-center gap-3.5 rounded-full ${t.soft} py-3 pl-3 pr-7 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-lg`}
                 >
                   <span
-                    className={`icon-pop inline-flex h-11 w-11 items-center justify-center rounded-full ${t.solid} text-white shadow-sm`}
+                    className={`icon-pop inline-flex h-11 w-11 items-center justify-center rounded-full ${t.solid} ${t.on} shadow-sm`}
                   >
                     <v.icon className="h-5 w-5" aria-hidden />
                   </span>

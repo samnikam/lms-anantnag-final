@@ -11,21 +11,10 @@ import {
   Smartphone,
 } from 'lucide-react';
 import { CountUp, Reveal } from './motion';
+import { TONE } from './tone';
 import { GALLERY, HERO_SLIDES } from './media';
 import { CAMPUS, CAMPUS_NOTE, CAMPUS_PHOTO, FACILITY_BLOCKS } from './facilitiesContent';
 import { Backdrop, PageBanner, Section, SectionHeading } from './PublicLayout';
-
-const TONE = {
-  coral: { soft: 'bg-accent-coral-soft', solid: 'bg-accent-coral', text: 'text-accent-coral-deep' },
-  mint: { soft: 'bg-accent-mint-soft', solid: 'bg-accent-mint', text: 'text-accent-mint-deep' },
-  sky: { soft: 'bg-accent-sky-soft', solid: 'bg-accent-sky', text: 'text-accent-sky-deep' },
-  amber: { soft: 'bg-accent-amber-soft', solid: 'bg-accent-amber', text: 'text-accent-amber-deep' },
-  violet: {
-    soft: 'bg-accent-violet-soft',
-    solid: 'bg-accent-violet',
-    text: 'text-accent-violet-deep',
-  },
-} as const;
 
 /** How the programme copes with the conditions of a rural mountain district. */
 const RESILIENCE = [
@@ -107,7 +96,7 @@ export function FacilitiesPage() {
 
                   <div className="p-8 lg:p-12">
                     <span
-                      className={`icon-pop inline-flex h-14 w-14 items-center justify-center rounded-2xl ${t.solid} text-white shadow-pill`}
+                      className={`icon-pop inline-flex h-14 w-14 items-center justify-center rounded-2xl ${t.solid} ${t.on} shadow-pill`}
                     >
                       <f.icon className="h-6 w-6" aria-hidden />
                     </span>

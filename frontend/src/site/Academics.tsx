@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { ArrowRight, BookOpen, FileCheck2, Info, Languages, LogIn } from 'lucide-react';
 import { Reveal } from './motion';
+import { TONE } from './tone';
 import { ABOUT, GALLERY } from './media';
 import {
   ASSESSMENT,
@@ -14,18 +15,6 @@ import {
   TEACHING,
 } from './academicsContent';
 import { Backdrop, PageBanner, Section, SectionHeading } from './PublicLayout';
-
-const TONE = {
-  coral: { soft: 'bg-accent-coral-soft', solid: 'bg-accent-coral', text: 'text-accent-coral-deep' },
-  mint: { soft: 'bg-accent-mint-soft', solid: 'bg-accent-mint', text: 'text-accent-mint-deep' },
-  sky: { soft: 'bg-accent-sky-soft', solid: 'bg-accent-sky', text: 'text-accent-sky-deep' },
-  amber: { soft: 'bg-accent-amber-soft', solid: 'bg-accent-amber', text: 'text-accent-amber-deep' },
-  violet: {
-    soft: 'bg-accent-violet-soft',
-    solid: 'bg-accent-violet',
-    text: 'text-accent-violet-deep',
-  },
-} as const;
 
 const LANGUAGES = ['English', 'हिन्दी (Hindi)', 'اردو (Urdu)', 'کٲشُر (Kashmiri)'];
 
@@ -61,7 +50,7 @@ export function AcademicsPage() {
                 <Reveal key={st.stage} variant="zoom" delay={i * 110}>
                   <div className="group relative text-center">
                     <span
-                      className={`num relative z-10 mx-auto flex h-14 w-14 items-center justify-center rounded-full ${t.solid} text-[15px] font-extrabold text-white shadow-pill ring-4 ring-paper transition-transform duration-300 group-hover:scale-110`}
+                      className={`num relative z-10 mx-auto flex h-14 w-14 items-center justify-center rounded-full ${t.solid} ${t.on} text-[15px] font-extrabold shadow-pill ring-4 ring-paper transition-transform duration-300 group-hover:scale-110`}
                     >
                       {String(i + 1).padStart(2, '0')}
                     </span>
@@ -120,7 +109,7 @@ export function AcademicsPage() {
                 <Reveal key={s.title} variant="zoom" delay={i * 110}>
                   <article className="h-full rounded-2xl bg-white/[0.07] p-7 ring-1 ring-white/10 transition-colors hover:bg-white/[0.12]">
                     <span
-                      className={`inline-block rounded-lg ${t.solid} px-4 py-1.5 text-[11.5px] font-extrabold uppercase tracking-[0.08em] text-white`}
+                      className={`inline-block rounded-lg ${t.solid} ${t.on} px-4 py-1.5 text-[11.5px] font-extrabold uppercase tracking-[0.08em]`}
                     >
                       {s.title}
                     </span>
@@ -163,7 +152,7 @@ export function AcademicsPage() {
                   className={`group flex h-full flex-col justify-end overflow-hidden rounded-2xl ${t.soft} p-6 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl`}
                 >
                   <span
-                    className={`icon-pop mb-auto inline-flex h-12 w-12 items-center justify-center rounded-xl ${t.solid} text-white shadow-sm`}
+                    className={`icon-pop mb-auto inline-flex h-12 w-12 items-center justify-center rounded-xl ${t.solid} ${t.on} shadow-sm`}
                   >
                     <a.icon className="h-5 w-5" aria-hidden />
                   </span>

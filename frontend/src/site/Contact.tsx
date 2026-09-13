@@ -12,6 +12,7 @@ import { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 import clsx from 'clsx';
 import { Reveal } from './motion';
+import { TONE, type Tone } from './tone';
 import { ABOUT, GALLERY } from './media';
 import { DIVISION, PageBanner, Section, SectionHeading } from './PublicLayout';
 
@@ -58,39 +59,34 @@ const FAQS: Array<[string, string]> = [
  */
 const ROUTES: Array<{
   icon: typeof KeyRound;
-  tone: string;
-  solid: string;
+  tone: Tone;
   title: string;
   body: string;
   action?: { to: string; label: string };
 }> = [
   {
     icon: KeyRound,
-    tone: 'bg-accent-coral-soft',
-    solid: 'bg-accent-coral',
+    tone: 'coral',
     title: 'I cannot sign in',
     body: 'Accounts are issued by your school office. If you have one but have forgotten the password, the sign-in page can send you a reset link.',
     action: { to: '/login', label: 'Go to sign-in' },
   },
   {
     icon: LifeBuoy,
-    tone: 'bg-accent-mint-soft',
-    solid: 'bg-accent-mint',
+    tone: 'mint',
     title: 'Something in the portal is wrong',
     body: 'Raise a support ticket from inside the portal. It reaches the division office with your school and role already attached, and follows a defined escalation path.',
   },
   {
     icon: FileBadge,
-    tone: 'bg-accent-amber-soft',
-    solid: 'bg-accent-amber',
+    tone: 'amber',
     title: 'I need to check a certificate',
     body: 'Certificates issued by the portal carry a unique number and verification code. Anyone can confirm one is genuine without holding an account.',
     action: { to: '/verify', label: 'Verify a certificate' },
   },
   {
     icon: MonitorPlay,
-    tone: 'bg-accent-violet-soft',
-    solid: 'bg-accent-violet',
+    tone: 'violet',
     title: 'A classroom panel is not working',
     body: 'Report it through your school office. Panels report their own status to the portal, so the division office can usually see the fault before it is described.',
   },
@@ -125,11 +121,13 @@ export function ContactPage() {
         />
 
         <div className="mt-14 grid gap-6 md:grid-cols-2">
-          {ROUTES.map((r, i) => (
+          {ROUTES.map((r, i) => {
+            const t = TONE[r.tone];
+            return (
             <Reveal key={r.title} variant={i % 2 === 0 ? 'left' : 'right'} delay={(i % 2) * 110}>
-              <article className={`flex h-full flex-col rounded-2xl ${r.tone} p-8`}>
+              <article className={`flex h-full flex-col rounded-2xl ${t.soft} p-8`}>
                 <span
-                  className={`inline-flex h-14 w-14 items-center justify-center rounded-xl ${r.solid} text-white shadow-sm`}
+                  className={`icon-pop inline-flex h-14 w-14 items-center justify-center rounded-xl ${t.solid} ${t.on} shadow-sm`}
                 >
                   <r.icon className="h-6 w-6" aria-hidden />
                 </span>
@@ -147,7 +145,8 @@ export function ContactPage() {
                 )}
               </article>
             </Reveal>
-          ))}
+            );
+          })}
         </div>
       </Section>
 

@@ -15,6 +15,8 @@ import {
 import clsx from 'clsx';
 import { Backdrop, DIVISION, FIGURES, Section, SectionHeading } from './PublicLayout';
 import { CountUp, Reveal } from './motion';
+import { TONE } from './tone';
+import { CirclePhoto, DECOR, DoubleWave, Shape, Wave } from './decor';
 import { ABOUT, FACILITIES, GALLERY, HERO_SLIDES, LANDMARKS, ROLE_PHOTOS } from './media';
 import {
   FACILITY_CARDS,
@@ -25,19 +27,6 @@ import {
   STUDENT_LIFE,
   WHY_US,
 } from './homeContent';
-
-/** The accent families already used across the site, named for reuse. */
-const TONE = {
-  coral: { soft: 'bg-accent-coral-soft', solid: 'bg-accent-coral', text: 'text-accent-coral-deep' },
-  mint: { soft: 'bg-accent-mint-soft', solid: 'bg-accent-mint', text: 'text-accent-mint-deep' },
-  sky: { soft: 'bg-accent-sky-soft', solid: 'bg-accent-sky', text: 'text-accent-sky-deep' },
-  amber: { soft: 'bg-accent-amber-soft', solid: 'bg-accent-amber', text: 'text-accent-amber-deep' },
-  violet: {
-    soft: 'bg-accent-violet-soft',
-    solid: 'bg-accent-violet',
-    text: 'text-accent-violet-deep',
-  },
-} as const;
 
 /** The four things a visitor most often arrives wanting. */
 const QUICK_LINKS = [
@@ -176,8 +165,15 @@ export function HomePage() {
           </div>
         </div>
 
+        {/* The curve the hero photograph ends on. */}
+        <DoubleWave
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-16 w-full sm:h-24"
+          fill="#f7fafd"
+          behind="#e8f2fb"
+        />
+
         {/* Controls */}
-        <div className="absolute bottom-7 left-0 right-0">
+        <div className="absolute bottom-24 left-0 right-0 sm:bottom-28">
           <div className="mx-auto flex max-w-6xl items-center gap-3 px-5 sm:px-8">
             <button
               type="button"
@@ -295,21 +291,9 @@ export function HomePage() {
         <Backdrop variant="warm" />
         <div className="grid items-center gap-12 lg:grid-cols-2">
           <Reveal variant="left">
-            <div className="relative">
-              <img
-                src={ABOUT.welcome.src}
-                alt={ABOUT.welcome.alt}
-                loading="lazy"
-                className="aspect-[4/3] w-full rounded-2xl object-cover shadow-xl ring-1 ring-rule"
-              />
-              {/* A small second frame, the way a school site layers two. */}
-              <img
-                src={ABOUT.valley.src}
-                alt={ABOUT.valley.alt}
-                loading="lazy"
-                className="absolute -bottom-8 -right-4 hidden aspect-square w-40 rounded-2xl object-cover shadow-xl ring-4 ring-paper sm:block lg:w-48"
-              />
-              <div className="absolute -left-4 -top-4 rounded-xl bg-accent-amber px-5 py-3 shadow-lg">
+            <div className="group relative">
+              <CirclePhoto src={ABOUT.welcome.src} alt={ABOUT.welcome.alt} />
+              <div className="absolute bottom-2 right-0 rounded-xl bg-accent-amber px-5 py-3 shadow-lg">
                 <span className="num block text-[26px] font-extrabold leading-none text-ink">
                   <CountUp value="21" />
                 </span>
@@ -392,33 +376,28 @@ export function HomePage() {
       </Section>
 
       {/* ══ FIGURES ════════════════════════════════════════════════════ */}
-      <section className="relative overflow-hidden bg-brand-800">
-        <img
-          src={ABOUT.campus.src}
-          alt=""
-          aria-hidden
-          loading="lazy"
-          className="absolute inset-0 h-full w-full object-cover opacity-[0.12]"
+      <section className="relative overflow-hidden bg-accent-sky-soft">
+        <Wave className="block h-12 w-full rotate-180 sm:h-16" fill="#ffffff" />
+        <Shape
+          kind="triangle"
+          className="absolute left-[6%] top-[28%] hidden h-10 w-10 opacity-70 lg:block"
+          color={DECOR.green}
         />
-        <span
-          aria-hidden
-          className="orb -left-20 -top-24 h-96 w-96 bg-accent-violet/25"
+        <Shape
+          kind="waves"
+          className="absolute right-[5%] top-[30%] hidden h-14 w-14 opacity-60 lg:block"
+          color={DECOR.blue}
         />
-        <span
-          aria-hidden
-          className="orb -bottom-28 right-0 h-80 w-80 bg-accent-coral/20"
-          style={{ animationDelay: '-9s' }}
-        />
-        <div className="relative mx-auto max-w-6xl px-5 py-20 sm:px-8">
+        <div className="relative mx-auto max-w-6xl px-5 py-16 sm:px-8">
           <dl className="grid grid-cols-2 gap-8 lg:grid-cols-4">
             {FIGURES.map((f, i) => (
               <Reveal key={f.label} delay={i * 90}>
-                <div className="group rounded-2xl px-4 py-6 text-center transition-colors hover:bg-white/[0.06]">
-                  <dd className="num bg-gradient-to-b from-accent-amber to-[#a8791a] bg-clip-text text-[46px] font-extrabold leading-none text-transparent sm:text-[56px]">
+                <div className="group rounded-2xl px-4 py-6 text-center transition-colors hover:bg-white/60">
+                  <dd className="num text-[46px] font-extrabold leading-none text-brand-700 sm:text-[56px]">
                     <CountUp value={f.value} />
                   </dd>
-                  <span className="mx-auto mt-3 block h-0.5 w-8 rounded-full bg-white/20 transition-all duration-300 group-hover:w-14 group-hover:bg-accent-amber" />
-                  <dt className="mt-3 text-[12.5px] font-bold uppercase tracking-[0.12em] text-white/65">
+                  <span className="mx-auto mt-3 block h-0.5 w-8 rounded-full bg-brand-200 transition-all duration-300 group-hover:w-14 group-hover:bg-accent-mint" />
+                  <dt className="mt-3 text-[12.5px] font-bold uppercase tracking-[0.12em] text-brand-600">
                     {f.label}
                   </dt>
                 </div>
@@ -426,6 +405,7 @@ export function HomePage() {
             ))}
           </dl>
         </div>
+        <Wave className="block h-12 w-full sm:h-16" fill="#f7fafd" />
       </section>
 
       {/* ══ WHY CHOOSE US ══════════════════════════════════════════════ */}
@@ -489,7 +469,16 @@ export function HomePage() {
           loading="lazy"
           className="absolute inset-0 h-full w-full object-cover opacity-[0.14]"
         />
-        <div className="relative mx-auto max-w-5xl px-5 py-20 text-center sm:px-8">
+        <Wave
+          className="relative block h-12 w-full rotate-180 sm:h-16"
+          fill="#ffffff"
+        />
+        <Shape
+          kind="dots"
+          className="absolute left-[7%] top-[34%] hidden h-16 w-16 opacity-25 lg:block"
+          color="#ffffff"
+        />
+        <div className="relative mx-auto max-w-5xl px-5 pb-20 pt-10 text-center sm:px-8">
           <Reveal>
             <span className="float-y inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-accent-amber text-ink shadow-lg">
               <MonitorPlay className="h-7 w-7" aria-hidden />
@@ -513,6 +502,7 @@ export function HomePage() {
             </Link>
           </Reveal>
         </div>
+        <Wave className="relative block h-12 w-full sm:h-16" fill="#f7fafd" />
       </section>
 
       {/* ══ FACILITIES ═════════════════════════════════════════════════ */}
@@ -638,7 +628,7 @@ export function HomePage() {
                   className={`group flex h-full flex-col justify-end overflow-hidden rounded-2xl ${t.soft} p-6 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl`}
                 >
                   <span
-                    className={`icon-pop mb-auto inline-flex h-12 w-12 items-center justify-center rounded-xl ${t.solid} text-white shadow-sm`}
+                    className={`icon-pop mb-auto inline-flex h-12 w-12 items-center justify-center rounded-xl ${t.solid} ${t.on} shadow-sm`}
                   >
                     <a.icon className="h-5 w-5" aria-hidden />
                   </span>

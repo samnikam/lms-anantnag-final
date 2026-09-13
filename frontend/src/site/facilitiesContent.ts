@@ -11,7 +11,7 @@ import {
   Trees,
   Volleyball,
 } from 'lucide-react';
-import { DISTRICT, type Photo } from './media';
+import { DISTRICT, SCHOOL, type Photo } from './media';
 
 const unsplash = (id: string, w = 1200) =>
   `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&q=80`;
@@ -51,8 +51,7 @@ export const FACILITY_BLOCKS: Facility[] = [
     tone: 'violet',
     title: 'Library',
     body: 'A learning space where students can read, explore and develop independent learning habits, supported by the programme’s shared digital collection.',
-    src: unsplash('photo-1588072432836-e10032774350'),
-    alt: 'A reading space lined with books',
+    ...SCHOOL.library,
     varies: true,
   },
   {
@@ -61,16 +60,14 @@ export const FACILITY_BLOCKS: Facility[] = [
     title: 'Computer & digital learning',
     count: '42',
     body: 'Access to computers and digital resources to develop technology skills and support academic learning. An OPS computer sits behind every classroom panel.',
-    src: unsplash('photo-1516321318423-f06f85e504b3'),
-    alt: 'Students working at computers',
+    ...SCHOOL.computerLab,
   },
   {
     icon: FlaskConical,
     tone: 'mint',
     title: 'Science laboratory',
     body: 'Practical work supporting the science curriculum — experiments, demonstrations and the habits of careful observation.',
-    src: unsplash('photo-1523240795612-9a054b0db644'),
-    alt: 'A practical science session in progress',
+    ...SCHOOL.scienceLab,
     varies: true,
   },
   {
@@ -78,8 +75,7 @@ export const FACILITY_BLOCKS: Facility[] = [
     tone: 'amber',
     title: 'Sports facilities',
     body: 'Encouraging physical fitness, teamwork, discipline and sportsmanship, through games, athletics and physical education.',
-    src: unsplash('photo-1522202176988-66273c2fd55f'),
-    alt: 'Students taking part in a group activity outdoors',
+    ...SCHOOL.playground,
     varies: true,
   },
 ];

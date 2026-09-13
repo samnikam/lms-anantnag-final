@@ -139,6 +139,37 @@ export const LANDMARKS: Array<Photo & { name: string; note: string }> = [
   },
 ];
 
+/* ── Real school interiors, verified on Commons ────────────────────────── */
+
+/**
+ * Photographs of actual Indian school facilities. Unlike the stock set
+ * below, the subject of each of these is confirmed by its source record —
+ * which matters for a page that names what it is showing. They are not
+ * Anantnag schools, and nothing on the site claims they are.
+ */
+export const SCHOOL: Record<string, Photo> = {
+  scienceLab: {
+    src: commons('d/d4/Kodaikanal_International_School-04684.jpg/1920px-Kodaikanal_International_School-04684.jpg'),
+    alt: 'A school chemistry laboratory set up for practical work',
+    credit: cc('Rainer Halama', 'CC BY-SA 4.0', 'Kodaikanal_International_School-04684.jpg'),
+  },
+  playground: {
+    src: commons('2/2b/DNHS_School_Playground_2.jpg/1920px-DNHS_School_Playground_2.jpg'),
+    alt: 'An open school playing field',
+    credit: cc('Azharul Islam Barlaskar', 'CC BY-SA 4.0', 'DNHS_School_Playground_2.jpg'),
+  },
+  library: {
+    src: commons('f/f5/Library_of_Govt._Senior_Secondary_School_Doda_%28Sri_Muktsar_Sahib%29.jpg/1920px-Library_of_Govt._Senior_Secondary_School_Doda_%28Sri_Muktsar_Sahib%29.jpg'),
+    alt: 'The library of a government senior secondary school',
+    credit: cc('Stalinjeet Brar', 'CC BY-SA 4.0', 'Library_of_Govt._Senior_Secondary_School_Doda_(Sri_Muktsar_Sahib).jpg'),
+  },
+  computerLab: {
+    src: commons('5/56/SRMPS_Computer_Lab.jpg/1920px-SRMPS_Computer_Lab.jpg'),
+    alt: 'A school computer laboratory with workstations in rows',
+    credit: cc('Sanjaynegi', 'CC BY-SA 4.0', 'SRMPS_Computer_Lab.jpg'),
+  },
+};
+
 /* ── Classrooms and learners: stock, pending the division's own ────────── */
 
 /**
@@ -228,49 +259,54 @@ export const FACILITIES: Array<
     body: 'An online UPS with batteries at every site, so a power cut in the middle of a broadcast does not end the lesson for that school.',
   },
   {
-    src: unsplash('photo-1588072432836-e10032774350', 1200),
-    alt: 'A study space lined with books',
+    ...SCHOOL.library,
     title: 'Digital library',
     body: 'Video, PDF, presentation and document resources prepared and reviewed once, then drawn on by every school rather than rebuilt at each of them.',
   },
 ];
 
-/** Classrooms first, then the district around them. */
+/**
+ * Classrooms and school interiors first, then the district around them.
+ *
+ * The entries written as objects are stock and their subject is not
+ * verified; those spread from DISTRICT and SCHOOL are real photographs
+ * whose subject is confirmed by their source record.
+ */
 export const GALLERY: Photo[] = [
   { src: unsplash('photo-1509062522246-3755977927d7', 900), alt: 'A classroom set up for a lesson' },
-  { src: unsplash('photo-1522202176988-66273c2fd55f', 900), alt: 'Students working together' },
+  { src: unsplash('photo-1522202176988-66273c2fd55f', 900), alt: 'Students working together around a table' },
+  SCHOOL.scienceLab,
   DISTRICT.pahalgamValley,
-  { src: unsplash('photo-1580582932707-520aed937b7b', 900), alt: 'Children at their desks' },
+  { src: unsplash('photo-1580582932707-520aed937b7b', 900), alt: 'School children seated at their desks during a lesson' },
+  SCHOOL.computerLab,
   DISTRICT.amarnathCave,
   { src: unsplash('photo-1427504494785-3a9ca7044f45', 900), alt: 'A hall set for a large class' },
+  SCHOOL.library,
   DISTRICT.lidder,
-  { src: unsplash('photo-1516321318423-f06f85e504b3', 900), alt: 'Students at computers' },
+  SCHOOL.playground,
   DISTRICT.betaab,
-  { src: unsplash('photo-1588072432836-e10032774350', 900), alt: 'A library reading space' },
+  { src: unsplash('photo-1571260899304-425eee4c7efc', 900), alt: 'A classroom with a large display at the front' },
+  DISTRICT.anantnagTown,
   DISTRICT.aru,
-  { src: unsplash('photo-1571260899304-425eee4c7efc', 900), alt: 'A lesson underway in class' },
+  { src: unsplash('photo-1546410531-bb4caa6b424d', 900), alt: 'A classroom seen from the back' },
   DISTRICT.chandanwari,
-  { src: unsplash('photo-1546410531-bb4caa6b424d', 900), alt: 'A classroom from the back' },
+  { src: unsplash('photo-1524995997946-a1c2e315a42f', 900), alt: 'A learner studying with a laptop' },
+  DISTRICT.lidderRiver,
   DISTRICT.kokernag,
-  { src: unsplash('photo-1524995997946-a1c2e315a42f', 900), alt: 'Studying with a laptop' },
   DISTRICT.polytechnic,
   DISTRICT.amarnathApproach,
 ];
 
+/** The portrait beside the head of institution's message. */
 export const ROLE_PHOTOS: Record<string, Photo> = {
   teacher: {
     src: unsplash('photo-1577896851231-70ef18881754', 1000),
     alt: 'A teacher working with a class',
   },
-  student: {
-    src: unsplash('photo-1503676260728-1c00da094a0b', 1000),
-    alt: 'A learner at their studies',
-  },
-  parent: {
-    src: unsplash('photo-1606761568499-6d2451b23c66', 1000),
-    alt: 'A family looking at a screen together',
-  },
 };
 
 /** Every Creative Commons photograph used, for the credits list. */
-export const CREDITED: Photo[] = Object.values(DISTRICT).filter((p) => p.credit);
+export const CREDITED: Photo[] = [
+  ...Object.values(DISTRICT),
+  ...Object.values(SCHOOL),
+].filter((p) => p.credit);

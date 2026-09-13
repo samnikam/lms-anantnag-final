@@ -44,7 +44,7 @@ import {
   Table,
 } from '../components/ui';
 
-const CHART_COLORS = ['#2f2c6e', '#8b7cf6', '#56b8e8', '#3bc9a0', '#f2789f'];
+const CHART_COLORS = ['#154e3a', '#4aa17c', '#4f9aa8', '#d9a52c', '#d1714f'];
 
 export function DashboardPage() {
   const { user } = useAuth();
@@ -105,11 +105,11 @@ function SuperAdminDashboard({ data }: { data: any }) {
         <Card title="Users by role">
           <ResponsiveContainer width="100%" height={260}>
             <BarChart data={roleRows} layout="vertical" margin={{ left: 40 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#ececf4" horizontal={false} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#e4e9e4" horizontal={false} />
               <XAxis type="number" tick={{ fontSize: 12 }} />
               <YAxis type="category" dataKey="name" tick={{ fontSize: 12 }} width={130} />
               <Tooltip />
-              <Bar dataKey="count" fill="#2f2c6e" radius={[0, 8, 8, 0]} />
+              <Bar dataKey="count" fill="#154e3a" radius={[0, 8, 8, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </Card>

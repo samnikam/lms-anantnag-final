@@ -121,11 +121,11 @@ function SiteUtilization({ rows }: { rows: any[] }) {
       <Card title="Device uptime by site">
         <ResponsiveContainer width="100%" height={280}>
           <BarChart data={rows.map((r) => ({ name: r.siteCode, uptime: r.deviceUptimePct }))}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+            <CartesianGrid strokeDasharray="3 3" stroke="#e4e9e4" />
             <XAxis dataKey="name" tick={{ fontSize: 11 }} interval={0} angle={-45} textAnchor="end" height={60} />
             <YAxis domain={[0, 100]} tick={{ fontSize: 12 }} unit="%" />
             <Tooltip />
-            <Bar dataKey="uptime" fill="#1e4d8f" radius={[4, 4, 0, 0]} />
+            <Bar dataKey="uptime" fill="#154e3a" radius={[4, 4, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </Card>

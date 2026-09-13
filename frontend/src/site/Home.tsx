@@ -414,7 +414,7 @@ export function HomePage() {
             {FIGURES.map((f, i) => (
               <Reveal key={f.label} delay={i * 90}>
                 <div className="group rounded-2xl px-4 py-6 text-center transition-colors hover:bg-white/[0.06]">
-                  <dd className="num bg-gradient-to-b from-accent-amber to-[#e07c1f] bg-clip-text text-[46px] font-extrabold leading-none text-transparent sm:text-[56px]">
+                  <dd className="num bg-gradient-to-b from-accent-amber to-[#a8791a] bg-clip-text text-[46px] font-extrabold leading-none text-transparent sm:text-[56px]">
                     <CountUp value={f.value} />
                   </dd>
                   <span className="mx-auto mt-3 block h-0.5 w-8 rounded-full bg-white/20 transition-all duration-300 group-hover:w-14 group-hover:bg-accent-amber" />

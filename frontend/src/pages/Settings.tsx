@@ -129,7 +129,7 @@ export function SettingsPage() {
               <input
                 className="input h-10"
                 type="color"
-                value={branding.primaryColor ?? '#1a3f75'}
+                value={branding.primaryColor ?? '#154e3a'}
                 onChange={(e) => setBranding({ ...branding, primaryColor: e.target.value })}
               />
             </Field>

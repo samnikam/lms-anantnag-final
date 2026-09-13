@@ -182,7 +182,7 @@ export function EmptyState({
 const BADGE_TONES: Record<string, string> = {
   neutral: 'bg-slate-100 text-muted',
   good: 'bg-tint-mint text-attained',
-  warn: 'bg-tint-amber text-[#b87708]',
+  warn: 'bg-tint-amber text-[#8f6608]',
   bad: 'bg-tint-coral text-seal',
   info: 'bg-tint-brand text-brand-600',
 };

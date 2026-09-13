@@ -120,7 +120,8 @@ export function HomePage() {
               loading={i === 0 ? 'eager' : 'lazy'}
             />
             {/* A readable ground for the type, whatever the photograph is. */}
-            <div className="absolute inset-0 bg-gradient-to-r from-brand-900/95 via-brand-900/75 to-brand-900/30" />
+            <div className="absolute inset-0 bg-gradient-to-r from-brand-900/88 via-brand-900/55 to-brand-900/10" />
+            <div className="absolute inset-0 bg-gradient-to-t from-brand-900/45 to-transparent" />
           </div>
         ))}
 
@@ -461,13 +462,13 @@ export function HomePage() {
       </Section>
 
       {/* ══ DIGITAL & HYBRID LEARNING ══════════════════════════════════ */}
-      <section className="relative overflow-hidden bg-brand-800">
+      <section className="relative overflow-hidden bg-accent-mint-deep">
         <img
           src={GALLERY[5].src}
           alt=""
           aria-hidden
           loading="lazy"
-          className="absolute inset-0 h-full w-full object-cover opacity-[0.14]"
+          className="absolute inset-0 h-full w-full object-cover opacity-[0.13]"
         />
         <Wave
           className="relative block h-12 w-full rotate-180 sm:h-16"
@@ -487,7 +488,7 @@ export function HomePage() {
               Learning beyond the classroom
             </h2>
             <span className="mx-auto mt-5 block h-1 w-16 rounded-full bg-accent-amber" />
-            <p className="mx-auto mt-6 max-w-2xl text-[15.5px] leading-relaxed text-white/75">
+            <p className="mx-auto mt-6 max-w-2xl text-[15.5px] leading-relaxed text-white/90">
               Our schools are embracing digital and hybrid learning, giving students access to
               interactive lessons, digital resources, live sessions and recorded educational
               content. Technology complements the teacher in the room and helps learning continue
@@ -645,7 +646,7 @@ export function HomePage() {
 
       {/* ══ GOVERNMENT INITIATIVES ═════════════════════════════════════ */}
       <section className="relative overflow-hidden bg-brand-800">
-        <span aria-hidden className="orb -right-24 -top-28 h-96 w-96 bg-accent-violet/25" />
+        <span aria-hidden className="orb -right-24 -top-28 h-96 w-96 bg-accent-sky/20" />
         <span
           aria-hidden
           className="orb -bottom-24 -left-20 h-80 w-80 bg-accent-mint/20"

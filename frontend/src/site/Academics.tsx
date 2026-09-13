@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { ArrowRight, BookOpen, FileCheck2, Info, Languages, LogIn } from 'lucide-react';
 import { Reveal } from './motion';
+import { DECOR, Shape, Wave } from './decor';
 import { TONE } from './tone';
 import { ABOUT, GALLERY } from './media';
 import {
@@ -79,23 +80,23 @@ export function AcademicsPage() {
       </Section>
 
       {/* ══ CURRICULUM — one statement, then the subjects ══════════════ */}
-      <section className="relative overflow-hidden bg-brand-800">
-        <span aria-hidden className="orb -left-24 -top-28 h-96 w-96 bg-accent-violet/25" />
-        <span
-          aria-hidden
-          className="orb -bottom-24 -right-20 h-80 w-80 bg-accent-mint/20"
-          style={{ animationDelay: '-8s' }}
+      <section className="relative overflow-hidden bg-accent-sky-soft">
+        <Wave className="block h-12 w-full rotate-180 sm:h-16" fill="#ffffff" />
+        <Shape
+          kind="triangle"
+          className="absolute left-[5%] top-[22%] hidden h-10 w-10 opacity-60 lg:block"
+          color={DECOR.green}
         />
-        <div className="relative mx-auto max-w-6xl px-5 py-20 sm:px-8 lg:py-24">
+        <div className="relative mx-auto max-w-6xl px-5 pb-16 pt-6 sm:px-8">
           <div className="mx-auto max-w-3xl text-center">
             <Reveal>
               <span className="float-y inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-accent-amber text-ink shadow-lg">
                 <BookOpen className="h-7 w-7" aria-hidden />
               </span>
-              <p className="mt-7 text-[12px] font-extrabold uppercase tracking-[0.18em] text-accent-amber">
+              <p className="mt-7 text-[12px] font-extrabold uppercase tracking-[0.18em] text-accent-sky-deep">
                 Curriculum
               </p>
-              <blockquote className="mt-6 text-[20px] font-semibold leading-[1.45] tracking-[-0.015em] text-white sm:text-[26px]">
+              <blockquote className="mt-6 text-[20px] font-semibold leading-[1.45] tracking-[-0.015em] text-brand-800 sm:text-[26px]">
                 {CURRICULUM_STATEMENT}
               </blockquote>
               <span className="rule-grow is-in mx-auto mt-8 block h-1 w-20 rounded-full bg-gradient-to-r from-accent-amber to-accent-coral" />
@@ -107,7 +108,7 @@ export function AcademicsPage() {
               const t = TONE[s.tone];
               return (
                 <Reveal key={s.title} variant="zoom" delay={i * 110}>
-                  <article className="h-full rounded-2xl bg-white/[0.07] p-7 ring-1 ring-white/10 transition-colors hover:bg-white/[0.12]">
+                  <article className="h-full rounded-2xl bg-surface p-7 shadow-sm ring-1 ring-rule transition-shadow hover:shadow-lg">
                     <span
                       className={`inline-block rounded-lg ${t.solid} ${t.on} px-4 py-1.5 text-[11.5px] font-extrabold uppercase tracking-[0.08em]`}
                     >
@@ -117,7 +118,7 @@ export function AcademicsPage() {
                       {s.subjects.map((sub) => (
                         <li
                           key={sub}
-                          className="flex items-center gap-3 text-[15px] font-semibold text-white/85"
+                          className="flex items-center gap-3 text-[15px] font-semibold text-ink-soft"
                         >
                           <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${t.solid}`} aria-hidden />
                           {sub}
@@ -130,6 +131,7 @@ export function AcademicsPage() {
             })}
           </div>
         </div>
+        <Wave className="block h-12 w-full sm:h-16" fill="#ffffff" />
       </section>
 
       {/* ══ TEACHING & LEARNING — a bento of unequal tiles ═════════════ */}
@@ -311,7 +313,7 @@ export function AcademicsPage() {
       <Section className="bg-surface" width="narrow">
         <Reveal>
           <div className="relative overflow-hidden rounded-2xl bg-brand-800 p-9 text-center sm:p-12">
-            <span aria-hidden className="orb -right-16 -top-20 h-64 w-64 bg-accent-violet/25" />
+            <span aria-hidden className="orb -right-16 -top-20 h-64 w-64 bg-accent-sky/20" />
             <div className="relative">
               <span className="inline-flex h-14 w-14 items-center justify-center rounded-xl bg-white/15 text-white">
                 <Languages className="h-6 w-6" aria-hidden />

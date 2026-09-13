@@ -12,6 +12,7 @@ import {
   Wifi,
 } from 'lucide-react';
 import { CountUp, Reveal } from './motion';
+import { DECOR, Shape, Wave } from './decor';
 import { TONE } from './tone';
 import { ABOUT, DISTRICT, HERO_SLIDES } from './media';
 import {
@@ -94,27 +95,33 @@ export function AboutPage() {
       />
 
       {/* ══ OUR VISION — a single statement, given the whole width ═════ */}
-      <section className="relative overflow-hidden bg-brand-800">
-        <span aria-hidden className="orb -left-24 -top-28 h-96 w-96 bg-accent-violet/25" />
-        <span
-          aria-hidden
-          className="orb -bottom-24 -right-20 h-80 w-80 bg-accent-coral/20"
-          style={{ animationDelay: '-8s' }}
+      <section className="relative overflow-hidden bg-accent-sky-soft">
+        <Wave className="block h-12 w-full rotate-180 sm:h-16" fill="#ffffff" />
+        <Shape
+          kind="triangle"
+          className="absolute left-[7%] top-[34%] hidden h-11 w-11 opacity-60 lg:block"
+          color={DECOR.green}
         />
-        <div className="relative mx-auto max-w-4xl px-5 py-20 text-center sm:px-8 lg:py-24">
+        <Shape
+          kind="waves"
+          className="absolute right-[6%] top-[30%] hidden h-16 w-16 opacity-50 lg:block"
+          color={DECOR.blue}
+        />
+        <div className="relative mx-auto max-w-4xl px-5 pb-16 pt-8 text-center sm:px-8">
           <Reveal>
             <span className="float-y inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-accent-amber text-ink shadow-lg">
               <Eye className="h-7 w-7" aria-hidden />
             </span>
-            <p className="mt-7 text-[12px] font-extrabold uppercase tracking-[0.18em] text-accent-amber">
+            <p className="mt-7 text-[12px] font-extrabold uppercase tracking-[0.18em] text-accent-sky-deep">
               Our Vision
             </p>
-            <blockquote className="mt-6 text-[21px] font-semibold leading-[1.45] tracking-[-0.015em] text-white sm:text-[27px]">
+            <blockquote className="mt-6 text-[21px] font-semibold leading-[1.45] tracking-[-0.015em] text-brand-800 sm:text-[27px]">
               {VISION}
             </blockquote>
-            <span className="rule-grow is-in mx-auto mt-8 block h-1 w-20 rounded-full bg-gradient-to-r from-accent-amber to-accent-coral" />
+            <span className="rule-grow is-in mx-auto mt-8 block h-1 w-20 rounded-full bg-gradient-to-r from-accent-amber to-accent-mint" />
           </Reveal>
         </div>
+        <Wave className="block h-12 w-full sm:h-16" fill="#f7fafd" />
       </section>
 
       {/* ══ OUR MISSION — a numbered rail, not a grid ══════════════════ */}

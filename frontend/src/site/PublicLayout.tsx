@@ -414,7 +414,7 @@ export function PageBanner({
         aria-hidden={!imageAlt}
         className="absolute inset-0 h-full w-full object-cover"
       />
-      <div className="absolute inset-0 bg-gradient-to-r from-brand-900/95 via-brand-900/80 to-brand-900/45" />
+      <div className="absolute inset-0 bg-gradient-to-r from-brand-900/90 via-brand-900/62 to-brand-900/25" />
       <div className="relative mx-auto flex h-full max-w-6xl flex-col justify-center px-5 sm:px-8">
         <nav aria-label="Breadcrumb" className="mb-4 text-[12.5px] font-semibold text-white/55">
           <Link to="/" className="transition-colors hover:text-accent-amber">

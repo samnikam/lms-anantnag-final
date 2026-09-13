@@ -11,6 +11,7 @@ import {
   Smartphone,
 } from 'lucide-react';
 import { CountUp, Reveal } from './motion';
+import { Wave } from './decor';
 import { TONE } from './tone';
 import { GALLERY, HERO_SLIDES } from './media';
 import { CAMPUS, CAMPUS_NOTE, CAMPUS_PHOTO, FACILITY_BLOCKS } from './facilitiesContent';
@@ -122,33 +123,33 @@ export function FacilitiesPage() {
       </Section>
 
       {/* ══ CAMPUS — a checklist over a photograph ═════════════════════ */}
-      <section className="relative overflow-hidden bg-brand-800">
+      <section className="relative overflow-hidden bg-accent-sky-soft">
+        <Wave className="block h-12 w-full rotate-180 sm:h-16" fill="#f7fafd" />
         <img
           src={CAMPUS_PHOTO.src}
           alt=""
           aria-hidden
           loading="lazy"
-          className="absolute inset-0 h-full w-full object-cover opacity-[0.13]"
+          className="absolute inset-0 h-full w-full object-cover opacity-[0.06]"
         />
-        <div className="relative mx-auto max-w-6xl px-5 py-20 sm:px-8 lg:py-24">
+        <div className="relative mx-auto max-w-6xl px-5 pb-16 pt-6 sm:px-8">
           <SectionHeading
             kicker="Campus"
             title="Around the classroom"
             description="What a school site provides beyond the teaching rooms themselves."
-            light
           />
 
           <ul className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {CAMPUS.map((c, i) => (
               <Reveal key={c.label} variant="zoom" delay={(i % 3) * 90} as="li">
-                <li className="group flex h-full items-center gap-4 rounded-xl bg-white/[0.07] p-5 ring-1 ring-white/10 transition-colors hover:bg-white/[0.13]">
-                  <span className="icon-pop inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/10 text-white ring-1 ring-white/15">
+                <li className="group flex h-full items-center gap-4 rounded-xl bg-surface p-5 shadow-sm ring-1 ring-rule transition-all hover:-translate-y-1 hover:shadow-md">
+                  <span className="icon-pop inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-tint-brand text-brand-600">
                     <c.icon className="h-5 w-5" aria-hidden />
                   </span>
                   <span className="min-w-0 flex-1">
-                    <span className="block text-[15px] font-bold text-white">{c.label}</span>
+                    <span className="block text-[15px] font-bold text-ink">{c.label}</span>
                     {c.varies && (
-                      <span className="mt-0.5 block text-[11.5px] font-semibold uppercase tracking-[0.06em] text-accent-amber/80">
+                      <span className="mt-0.5 block text-[11.5px] font-semibold uppercase tracking-[0.06em] text-accent-coral-deep">
                         Varies by school
                       </span>
                     )}
@@ -159,12 +160,13 @@ export function FacilitiesPage() {
           </ul>
 
           <Reveal delay={200}>
-            <p className="mt-10 flex items-start gap-3.5 rounded-2xl bg-white/[0.07] p-6 text-[14px] leading-relaxed text-white/70 ring-1 ring-white/10">
-              <Info className="mt-0.5 h-5 w-5 shrink-0 text-accent-amber" aria-hidden />
+            <p className="mt-10 flex items-start gap-3.5 rounded-2xl bg-accent-amber-soft p-6 text-[14px] leading-relaxed text-ink-soft">
+              <Info className="mt-0.5 h-5 w-5 shrink-0 text-accent-amber-deep" aria-hidden />
               {CAMPUS_NOTE}
             </p>
           </Reveal>
         </div>
+        <Wave className="block h-12 w-full sm:h-16" fill="#ffffff" />
       </section>
 
       {/* ══ THE BROADCAST MODEL ════════════════════════════════════════ */}

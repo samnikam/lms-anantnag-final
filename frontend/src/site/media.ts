@@ -183,9 +183,13 @@ export const HERO_SLIDES: Array<
   Photo & { kicker: string; lead: string; word: string; tail: string; focus?: string }
 > = [
   {
-    src: unsplash('photo-1524178232363-1fb2b075b655', 2000),
-    alt: 'A teacher working with students at a classroom table',
-    focus: 'object-[72%_center]',
+    // Supplied by the division. Served from the project rather than a stock
+    // library, which is where the rest of these should end up too.
+    src: '/images/school-campus.jpg',
+    alt: 'A school building under snow, with school buses drawn up outside',
+    // The building sits centre-right; hold the crop there so the type on the
+    // left falls on the sky and trees rather than across the façade.
+    focus: 'object-[58%_center]',
     kicker: 'Anantnag Smart Classrooms',
     lead: 'We carry every lesson',
     word: 'FURTHER',

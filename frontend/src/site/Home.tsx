@@ -4,7 +4,6 @@ import {
   ArrowRight,
   Award,
   CalendarDays,
-  ChevronLeft,
   ChevronRight,
   ExternalLink,
   ListChecks,
@@ -102,117 +101,147 @@ export function HomePage() {
   return (
     <>
       {/* ══ HERO CAROUSEL ══════════════════════════════════════════════ */}
-      <section className="relative h-[520px] overflow-hidden bg-brand-900 sm:h-[600px] lg:h-[660px]">
-        {HERO_SLIDES.map((s, i) => (
-          <div
-            key={s.src}
-            className={clsx(
-              'absolute inset-0 transition-opacity duration-1000',
-              i === slide ? 'opacity-100' : 'pointer-events-none opacity-0',
-            )}
-            aria-hidden={i !== slide}
-          >
-            <img
-              key={`${s.src}-${i === slide}`}
-              src={s.src}
-              alt={s.alt}
-              className={clsx('h-full w-full object-cover', i === slide && 'ken-burns')}
-              loading={i === 0 ? 'eager' : 'lazy'}
-            />
-            {/* A readable ground for the type, whatever the photograph is. */}
-            <div className="absolute inset-0 bg-gradient-to-r from-brand-900/88 via-brand-900/55 to-brand-900/10" />
-            <div className="absolute inset-0 bg-gradient-to-t from-brand-900/45 to-transparent" />
-          </div>
-        ))}
-
-        <div className="relative mx-auto flex h-full max-w-6xl items-center px-5 sm:px-8">
-          <div className="max-w-2xl" key={slide}>
-            <p
-              className="reveal is-in text-[12px] font-extrabold uppercase tracking-[0.18em] text-accent-amber"
-              style={{ animationDelay: '80ms' }}
-            >
-              {HERO_SLIDES[slide].kicker}
-            </p>
-            <h1
-              className="reveal is-in mt-5 text-[32px] font-extrabold leading-[1.08] tracking-[-0.03em] text-white sm:text-[46px] lg:text-[56px]"
-              style={{ animationDelay: '180ms' }}
-            >
-              {HERO_SLIDES[slide].heading}
-            </h1>
-            <p
-              className="reveal is-in mt-6 max-w-xl text-[16px] leading-relaxed text-white/75 sm:text-[17px]"
-              style={{ animationDelay: '300ms' }}
-            >
-              {HERO_SLIDES[slide].sub}
-            </p>
+      <section className="relative overflow-hidden bg-brand-900">
+        <div className="relative h-[520px] sm:h-[580px] lg:h-[640px]">
+          {HERO_SLIDES.map((sl, i) => (
             <div
-              className="reveal is-in mt-9 flex flex-wrap gap-3"
-              style={{ animationDelay: '420ms' }}
+              key={sl.src}
+              className={clsx(
+                'absolute inset-0 transition-opacity duration-1000',
+                i === slide ? 'opacity-100' : 'pointer-events-none opacity-0',
+              )}
+              aria-hidden={i !== slide}
             >
-              <Link
-                to="/login"
-                className="btn-sheen inline-flex items-center gap-2 rounded-lg bg-accent-amber px-7 py-3.5 text-[14.5px] font-extrabold text-ink shadow-lg transition-transform hover:-translate-y-0.5"
-              >
-                Access the Portal
-                <ArrowRight className="h-4 w-4" aria-hidden />
-              </Link>
-              <Link
-                to="/about"
-                className="inline-flex items-center gap-2 rounded-lg bg-white/10 px-7 py-3.5 text-[14.5px] font-bold text-white ring-1 ring-white/25 backdrop-blur-sm transition-colors hover:bg-white/20"
-              >
-                About the Programme
-              </Link>
+              <img
+                key={`${sl.src}-${i === slide}`}
+                src={sl.src}
+                alt={sl.alt}
+                className={clsx(
+                  'h-full w-full object-cover',
+                  sl.focus ?? 'object-center',
+                  i === slide && 'ken-burns',
+                )}
+                loading={i === 0 ? 'eager' : 'lazy'}
+              />
+              {/* Weighted to the left, and clear of the subject on the right. */}
+              <div className="absolute inset-0 bg-gradient-to-r from-brand-900/92 via-brand-900/55 to-transparent" />
             </div>
+          ))}
+
+          <div className="relative mx-auto flex h-full max-w-6xl items-center px-5 pb-16 sm:px-8">
+            <div className="max-w-xl" key={slide}>
+              <p
+                className="reveal is-in text-[12px] font-extrabold uppercase tracking-[0.18em] text-accent-amber"
+                style={{ animationDelay: '80ms' }}
+              >
+                {HERO_SLIDES[slide].kicker}
+              </p>
+
+              {/* Three parts: a quiet line, the word, a quiet line. */}
+              <p
+                className="reveal is-in mt-6 text-[20px] font-medium leading-snug text-white/90 sm:text-[24px]"
+                style={{ animationDelay: '180ms' }}
+              >
+                {HERO_SLIDES[slide].lead}
+              </p>
+              <h1
+                className="reveal is-in mt-1 text-[40px] font-extrabold leading-[1.05] tracking-[0.12em] text-white sm:text-[58px] lg:text-[66px]"
+                style={{ animationDelay: '260ms' }}
+              >
+                {HERO_SLIDES[slide].word}
+              </h1>
+              <p
+                className="reveal is-in mt-2 max-w-md text-[16px] font-medium leading-snug text-white/85 sm:text-[19px]"
+                style={{ animationDelay: '340ms' }}
+              >
+                {HERO_SLIDES[slide].tail}
+              </p>
+
+              <div
+                className="reveal is-in mt-9 flex flex-wrap items-center gap-3"
+                style={{ animationDelay: '440ms' }}
+              >
+                <Link
+                  to="/login"
+                  className="btn-sheen group inline-flex items-center gap-2 rounded-lg bg-brand-700 px-7 py-3.5 text-[14px] font-extrabold uppercase tracking-[0.06em] text-white shadow-lg transition-all hover:-translate-y-0.5 hover:bg-brand-600"
+                >
+                  Access the Portal
+                  <ArrowRight
+                    className="h-4 w-4 transition-transform group-hover:translate-x-1"
+                    aria-hidden
+                  />
+                </Link>
+                <Link
+                  to="/about"
+                  className="inline-flex items-center gap-2 rounded-lg bg-white/10 px-7 py-3.5 text-[14px] font-bold text-white ring-1 ring-white/25 backdrop-blur-sm transition-colors hover:bg-white/20"
+                >
+                  About the Programme
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* The single control sits on the edge, as the reference's does. */}
+          <button
+            type="button"
+            onClick={() => go(slide + 1)}
+            aria-label="Next slide"
+            className="absolute right-4 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white text-brand-700 shadow-lg transition-transform hover:scale-110 sm:flex lg:right-8"
+          >
+            <ChevronRight className="h-5 w-5" />
+          </button>
+
+          <DoubleWave
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-14 w-full sm:h-20"
+            fill="#e8f2fb"
+            behind="#ffffff"
+          />
+        </div>
+
+        {/* The pale strip the wave lands on, carrying the two first steps. */}
+        <div className="bg-accent-sky-soft">
+          <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-center gap-x-12 gap-y-3 px-5 py-5 sm:px-8">
+            {[
+              { to: '/about', label: 'New to the Programme' },
+              { to: '/login', label: 'Sign in to the Portal' },
+            ].map((l) => (
+              <Link
+                key={l.to}
+                to={l.to}
+                className="group inline-flex items-center gap-2 text-[15px] font-bold text-brand-700 transition-colors hover:text-accent-sky-deep"
+              >
+                {l.label}
+                <ChevronRight
+                  className="h-4 w-4 transition-transform group-hover:translate-x-1"
+                  aria-hidden
+                />
+              </Link>
+            ))}
           </div>
         </div>
 
-        {/* The curve the hero photograph ends on. */}
-        <DoubleWave
-          className="pointer-events-none absolute inset-x-0 bottom-0 h-16 w-full sm:h-24"
-          fill="#f7fafd"
-          behind="#e8f2fb"
-        />
-
-        {/* Controls */}
-        <div className="absolute bottom-24 left-0 right-0 sm:bottom-28">
-          <div className="mx-auto flex max-w-6xl items-center gap-3 px-5 sm:px-8">
-            <button
-              type="button"
-              onClick={() => go(slide - 1)}
-              aria-label="Previous slide"
-              className="rounded-full bg-white/15 p-2 text-white ring-1 ring-white/20 backdrop-blur-sm transition-colors hover:bg-white/25"
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </button>
-            <button
-              type="button"
-              onClick={() => go(slide + 1)}
-              aria-label="Next slide"
-              className="rounded-full bg-white/15 p-2 text-white ring-1 ring-white/20 backdrop-blur-sm transition-colors hover:bg-white/25"
-            >
-              <ChevronRight className="h-4 w-4" />
-            </button>
-            <div className="ml-2 flex gap-2">
-              {HERO_SLIDES.map((s, i) => (
-                <button
-                  key={s.src}
-                  type="button"
-                  onClick={() => go(i)}
-                  aria-label={`Go to slide ${i + 1}`}
-                  aria-current={i === slide}
-                  className={clsx(
-                    'h-1.5 rounded-full transition-all',
-                    i === slide ? 'w-8 bg-accent-amber' : 'w-4 bg-white/40 hover:bg-white/70',
-                  )}
-                />
-              ))}
-            </div>
+        {/* The dots stay, so all three frames are still reachable. */}
+        <div className="bg-accent-sky-soft pb-4">
+          <div className="mx-auto flex max-w-6xl justify-center gap-2 px-5 sm:px-8">
+            {HERO_SLIDES.map((sl, i) => (
+              <button
+                key={sl.src}
+                type="button"
+                onClick={() => go(i)}
+                aria-label={`Go to slide ${i + 1}`}
+                aria-current={i === slide}
+                className={clsx(
+                  'h-1.5 rounded-full transition-all',
+                  i === slide ? 'w-8 bg-brand-700' : 'w-4 bg-brand-200 hover:bg-brand-400',
+                )}
+              />
+            ))}
           </div>
         </div>
       </section>
 
       {/* ══ QUICK LINKS ════════════════════════════════════════════════ */}
-      <section className="relative z-10 mx-auto -mt-14 max-w-6xl px-5 sm:px-8">
+      <section className="mx-auto mt-14 max-w-6xl px-5 sm:px-8">
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {QUICK_LINKS.map((q, i) => (
             <Reveal key={q.title} delay={i * 80}>

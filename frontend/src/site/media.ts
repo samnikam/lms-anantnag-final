@@ -141,27 +141,41 @@ export const LANDMARKS: Array<Photo & { name: string; note: string }> = [
 
 /* ── Classrooms and learners: stock, pending the division's own ────────── */
 
-/** The rotating hero. Three frames, changed on a timer. */
-export const HERO_SLIDES: Array<Photo & { kicker: string; heading: string; sub: string }> = [
+/**
+ * The rotating hero. Three frames, changed on a timer.
+ *
+ * The heading is held in three parts so the middle can be set large and
+ * letter-spaced across the photograph, the way a prospectus cover is. And
+ * `focus` moves the crop, so the subject stays clear of the type on the left.
+ */
+export const HERO_SLIDES: Array<
+  Photo & { kicker: string; lead: string; word: string; tail: string; focus?: string }
+> = [
   {
-    src: unsplash('photo-1509062522246-3755977927d7', 2000),
-    alt: 'A classroom of desks facing a teaching board',
+    src: unsplash('photo-1524178232363-1fb2b075b655', 2000),
+    alt: 'A teacher working with students at a classroom table',
+    focus: 'object-[72%_center]',
     kicker: 'Anantnag Smart Classrooms',
-    heading: 'Every classroom in the district, taught together',
-    sub: 'Lessons broadcast from two studios to interactive panels in schools across Anantnag.',
+    lead: 'We carry every lesson',
+    word: 'FURTHER',
+    tail: 'so no classroom in the district goes without.',
   },
   {
     ...DISTRICT.pahalgamValley,
+    focus: 'object-[65%_center]',
     kicker: 'Anantnag District, Jammu & Kashmir',
-    heading: 'Distance is no longer the limit',
-    sub: 'From Pahalgam to the furthest school on the Lidder, the timetable stands and the register is taken.',
+    lead: 'We close the distance',
+    word: 'TOGETHER',
+    tail: 'from Pahalgam to the furthest school on the Lidder.',
   },
   {
     src: unsplash('photo-1522202176988-66273c2fd55f', 2000),
     alt: 'Students working together around a table',
+    focus: 'object-[70%_center]',
     kicker: 'Government of Jammu & Kashmir',
-    heading: 'A specialist teacher for every subject',
-    sub: 'One lesson, taught once, received live in classrooms that could not staff it alone.',
+    lead: 'We give every subject',
+    word: 'A TEACHER',
+    tail: 'even where a school could not staff one alone.',
   },
 ];
 

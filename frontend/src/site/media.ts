@@ -207,52 +207,6 @@ export const ABOUT: Record<string, Photo> = {
   },
 };
 
-/** The equipment installed across the district, one photograph each. */
-export const FACILITIES: Array<
-  Photo & { title: string; body: string; /** Omitted where a count is meaningless. */ count?: string }
-> = [
-  {
-    src: unsplash('photo-1571260899304-425eee4c7efc', 1200),
-    alt: 'A classroom with a large display at the front',
-    title: 'Interactive panels',
-    count: '42',
-    body: 'A wall-mounted touch panel with its own OPS PC in each participating classroom — the screen the broadcast arrives on and the board the teacher writes on.',
-  },
-  {
-    src: unsplash('photo-1523240795612-9a054b0db644', 1200),
-    alt: 'A person presenting to a camera setup',
-    title: 'Broadcast studios',
-    count: '02',
-    body: 'Two production studios with PTZ cameras, green screen, softbox lighting and acoustic treatment — where the lessons the whole district receives are taught from.',
-  },
-  {
-    src: unsplash('photo-1516321318423-f06f85e504b3', 1200),
-    alt: 'Students working at computers',
-    title: 'OPS computing',
-    count: '42',
-    body: 'An OPS PC behind every panel, able to cache a scheduled lesson in advance so a weak link on the day does not cost the class its period.',
-  },
-  {
-    src: unsplash('photo-1517048676732-d65bc937f952', 1200),
-    alt: 'Network and connectivity equipment',
-    title: 'Connectivity',
-    count: '21',
-    body: 'A dedicated internet connection at each site, with adaptive streaming so a classroom on a weaker rural link degrades gracefully instead of dropping out.',
-  },
-  {
-    src: unsplash('photo-1517245386807-bb43f82c33c4', 1200),
-    alt: 'Power and backup equipment in a rack',
-    title: 'Power backup',
-    count: '21',
-    body: 'An online UPS with batteries at every site, so a power cut in the middle of a broadcast does not end the lesson for that school.',
-  },
-  {
-    ...SCHOOL.library,
-    title: 'Digital library',
-    body: 'Video, PDF, presentation and document resources prepared and reviewed once, then drawn on by every school rather than rebuilt at each of them.',
-  },
-];
-
 /**
  * Classrooms and school interiors first, then the district around them.
  *

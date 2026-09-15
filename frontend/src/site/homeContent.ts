@@ -1,10 +1,8 @@
 import {
   Accessibility,
-  BookOpen,
   Coins,
   Compass,
   Cpu,
-  Drama,
   FlaskConical,
   GraduationCap,
   HandHeart,
@@ -13,7 +11,6 @@ import {
   Leaf,
   LibraryBig,
   MonitorPlay,
-  Palette,
   ShieldCheck,
   Sparkles,
   Trophy,
@@ -115,17 +112,6 @@ export const FACILITY_CARDS = [
   { icon: FlaskConical, tone: 'mint', title: 'Science Laboratory', body: 'Practical work supporting the science curriculum.' },
   { icon: Volleyball, tone: 'amber', title: 'Playground & Sports', body: 'Space for games, athletics and physical education.' },
   { icon: Leaf, tone: 'mint', title: 'Safe & Green Campus', body: 'A secure, well-kept environment for learning.' },
-] as const;
-
-/* ── Student life ──────────────────────────────────────────────────────── */
-
-export const STUDENT_LIFE = [
-  { icon: Volleyball, tone: 'coral', title: 'Sports & Fitness', body: 'Games, athletics and inter-school sport.' },
-  { icon: Drama, tone: 'violet', title: 'Cultural Activities', body: 'Music, drama and celebration of local heritage.' },
-  { icon: FlaskConical, tone: 'sky', title: 'Science & Innovation', body: 'Exhibitions, projects and practical enquiry.' },
-  { icon: Palette, tone: 'amber', title: 'Art & Creativity', body: 'Drawing, craft and creative expression.' },
-  { icon: BookOpen, tone: 'mint', title: 'Educational Activities', body: 'Quizzes, debates, reading and field learning.' },
-  { icon: HandHeart, tone: 'coral', title: 'Community Programmes', body: 'Service, awareness drives and local initiatives.' },
 ] as const;
 
 /* ── Government initiatives ────────────────────────────────────────────── */

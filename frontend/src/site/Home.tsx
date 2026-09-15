@@ -16,14 +16,13 @@ import { Backdrop, DIVISION, FIGURES, Section, SectionHeading } from './PublicLa
 import { CountUp, Reveal } from './motion';
 import { TONE } from './tone';
 import { CirclePhoto, DECOR, DoubleWave, Shape, Wave } from './decor';
-import { ABOUT, FACILITIES, GALLERY, HERO_SLIDES, ROLE_PHOTOS } from './media';
+import { ABOUT, GALLERY, HERO_SLIDES, ROLE_PHOTOS } from './media';
 import {
   FACILITY_CARDS,
   HEAD_MESSAGE,
   HEAD_OF_INSTITUTION,
   INITIATIVES,
   QUICK_INFO,
-  STUDENT_LIFE,
   WHY_US,
 } from './homeContent';
 
@@ -500,67 +499,39 @@ export function HomePage() {
         <Wave className="relative block h-12 w-full sm:h-16" fill="#f7fafd" />
       </section>
 
-      {/* ══ FACILITIES ═════════════════════════════════════════════════ */}
-      <Section>
+      {/* ══ FACILITIES — colour-blocked tiles, deliberately unequal ════ */}
+      <Section className="relative overflow-hidden">
+        <Backdrop variant="warm" />
         <SectionHeading
           kicker="Infrastructure"
           title="What has been installed"
           description="Equipment funded under the programme and deployed across the district's classrooms."
         />
 
-        {/* A ruled list, so this does not repeat the photo cards below it. */}
-        <div className="mt-14 grid gap-x-12 sm:grid-cols-2">
+        {/* The first tile is tall, the fourth wide; the rest fill around them. */}
+        <div className="mt-14 grid auto-rows-[188px] grid-cols-2 gap-4 lg:grid-cols-4">
           {FACILITY_CARDS.map((f, i) => {
             const t = TONE[f.tone];
+            const shape =
+              i === 0 ? 'row-span-2' : i === 3 ? 'lg:col-span-2' : i === 5 ? 'col-span-2 lg:col-span-1' : '';
             return (
-              <Reveal key={f.title} variant={i % 2 === 0 ? 'left' : 'right'} delay={(i % 2) * 80}>
-                <div className="group flex items-start gap-5 border-b border-rule py-6">
+              <Reveal key={f.title} variant="zoom" delay={(i % 4) * 90} className={shape}>
+                <article
+                  className={`group flex h-full flex-col justify-end overflow-hidden rounded-2xl ${t.soft} p-6 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl`}
+                >
                   <span
-                    className={`icon-pop inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-xl ${t.soft} ${t.text} transition-colors`}
+                    className={`icon-pop mb-auto inline-flex h-12 w-12 items-center justify-center rounded-xl ${t.solid} ${t.on} shadow-sm`}
                   >
                     <f.icon className="h-5 w-5" aria-hidden />
                   </span>
-                  <div className="min-w-0 flex-1">
-                    <h3 className="text-[16px] font-extrabold text-ink">{f.title}</h3>
-                    <p className="mt-1.5 text-[13px] leading-relaxed text-muted">{f.body}</p>
-                  </div>
-                  <span
-                    className={`mt-5 hidden h-px flex-1 max-w-[2rem] ${t.solid} origin-right scale-x-0 transition-transform duration-500 group-hover:scale-x-100 sm:block`}
-                    aria-hidden
-                  />
-                </div>
+                  <h3 className="mt-5 text-[17px] font-extrabold tracking-[-0.02em] text-ink">
+                    {f.title}
+                  </h3>
+                  <p className="mt-1.5 text-[13px] leading-relaxed text-ink-soft">{f.body}</p>
+                </article>
               </Reveal>
             );
           })}
-        </div>
-
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {FACILITIES.slice(0, 3).map((f, i) => (
-            <Reveal key={f.title} variant="zoom" delay={i * 110}>
-              <article className="group h-full overflow-hidden rounded-2xl bg-surface shadow ring-1 ring-rule transition-all hover:-translate-y-1 hover:shadow-lg">
-                <div className="relative aspect-[16/10] overflow-hidden">
-                  <img
-                    src={f.src}
-                    alt={f.alt}
-                    loading="lazy"
-                    className="photo-zoom h-full w-full object-cover"
-                  />
-                  <span className="absolute inset-0 bg-gradient-to-t from-brand-900/45 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-                  {f.count && (
-                    <span className="num absolute left-4 top-4 rounded-lg bg-accent-amber px-3 py-1.5 text-[15px] font-extrabold text-ink shadow">
-                      {f.count}
-                    </span>
-                  )}
-                </div>
-                <div className="p-6">
-                  <h3 className="text-[18px] font-extrabold tracking-[-0.02em] text-ink">
-                    {f.title}
-                  </h3>
-                  <p className="mt-2.5 text-[13.5px] leading-relaxed text-muted">{f.body}</p>
-                </div>
-              </article>
-            </Reveal>
-          ))}
         </div>
 
         <div className="mt-10 text-center">
@@ -571,42 +542,6 @@ export function HomePage() {
             See all facilities
             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden />
           </Link>
-        </div>
-      </Section>
-
-      {/* ══ STUDENT LIFE ═══════════════════════════════════════════════ */}
-      <Section className="relative overflow-hidden">
-        <Backdrop variant="warm" />
-        <SectionHeading
-          kicker="Student life"
-          title="Learning, exploring and growing together"
-          description="School is more than lessons. These are the things students take part in alongside them."
-        />
-
-        {/* Deliberately unequal: the first tile is tall, the fourth wide. */}
-        <div className="mt-14 grid auto-rows-[188px] grid-cols-2 gap-4 lg:grid-cols-4">
-          {STUDENT_LIFE.map((a, i) => {
-            const t = TONE[a.tone];
-            const shape =
-              i === 0 ? 'row-span-2' : i === 3 ? 'lg:col-span-2' : i === 5 ? 'col-span-2 lg:col-span-1' : '';
-            return (
-              <Reveal key={a.title} variant="zoom" delay={(i % 4) * 90} className={shape}>
-                <article
-                  className={`group flex h-full flex-col justify-end overflow-hidden rounded-2xl ${t.soft} p-6 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl`}
-                >
-                  <span
-                    className={`icon-pop mb-auto inline-flex h-12 w-12 items-center justify-center rounded-xl ${t.solid} ${t.on} shadow-sm`}
-                  >
-                    <a.icon className="h-5 w-5" aria-hidden />
-                  </span>
-                  <h3 className="mt-5 text-[17px] font-extrabold tracking-[-0.02em] text-ink">
-                    {a.title}
-                  </h3>
-                  <p className="mt-1.5 text-[13px] leading-relaxed text-ink-soft">{a.body}</p>
-                </article>
-              </Reveal>
-            );
-          })}
         </div>
       </Section>
 

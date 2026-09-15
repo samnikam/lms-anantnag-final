@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom';
-import { BookOpen, FileCheck2, Info, LogIn } from 'lucide-react';
+import { useState } from 'react';
+import { BookOpen, ChevronDown, Info, LogIn } from 'lucide-react';
+import clsx from 'clsx';
 import { Reveal } from './motion';
 import { DECOR, Shape, Wave } from './decor';
 import { TONE } from './tone';
@@ -17,6 +19,8 @@ import {
 import { Backdrop, PageBanner, Section, SectionHeading } from './PublicLayout';
 
 export function AcademicsPage() {
+  // Which assessment is open in the accordion; -1 closes them all.
+  const [check, setCheck] = useState(0);
   return (
     <>
       <PageBanner
@@ -131,7 +135,7 @@ export function AcademicsPage() {
         <Wave className="block h-12 w-full sm:h-16" fill="#ffffff" />
       </section>
 
-      {/* ══ TEACHING & LEARNING — a bento of unequal tiles ═════════════ */}
+      {/* ══ TEACHING & LEARNING — ruled columns, a coloured rule over each ═ */}
       <Section className="relative overflow-hidden bg-surface">
         <Backdrop variant="mint" />
         <SectionHeading
@@ -140,25 +144,20 @@ export function AcademicsPage() {
           description="Seven approaches used side by side, rather than one method applied to everything."
         />
 
-        <div className="mt-14 grid auto-rows-[176px] grid-cols-2 gap-4 lg:grid-cols-4">
+        {/* Nothing filled: a thick rule in the approach's colour, then the text.
+            The rule lengthens on hover and the icon takes the same colour. */}
+        <div className="mt-12 grid gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
           {TEACHING.map((a, i) => {
             const t = TONE[a.tone];
-            const shape =
-              i === 0 ? 'row-span-2' : i === 3 ? 'lg:col-span-2' : i === 6 ? 'col-span-2 lg:col-span-1' : '';
             return (
-              <Reveal key={a.title} variant="zoom" delay={(i % 4) * 90} className={shape}>
-                <article
-                  className={`group flex h-full flex-col justify-end overflow-hidden rounded-2xl ${t.soft} p-6 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl`}
-                >
-                  <span
-                    className={`icon-pop mb-auto inline-flex h-12 w-12 items-center justify-center rounded-xl ${t.solid} ${t.on} shadow-sm`}
-                  >
-                    <a.icon className="h-5 w-5" aria-hidden />
-                  </span>
-                  <h3 className="mt-5 text-[16.5px] font-extrabold tracking-[-0.02em] text-ink">
+              <Reveal key={a.title} delay={(i % 4) * 80}>
+                <article className="group">
+                  <span className={`block h-1 w-10 rounded-full ${t.solid} transition-all duration-500 group-hover:w-full`} />
+                  <a.icon className={`mt-6 h-7 w-7 ${t.text}`} strokeWidth={1.75} aria-hidden />
+                  <h3 className="mt-4 text-[17px] font-extrabold tracking-[-0.02em] text-ink">
                     {a.title}
                   </h3>
-                  <p className="mt-1.5 text-[13px] leading-relaxed text-ink-soft">{a.body}</p>
+                  <p className="mt-2 text-[14px] leading-relaxed text-muted">{a.body}</p>
                 </article>
               </Reveal>
             );
@@ -211,10 +210,10 @@ export function AcademicsPage() {
         </div>
       </Section>
 
-      {/* ══ ASSESSMENT — a numbered rail ═══════════════════════════════ */}
+      {/* ══ ASSESSMENT — a large figure beside an accordion ════════════ */}
       <Section className="relative overflow-hidden bg-surface">
         <Backdrop variant="warm" grid />
-        <div className="grid gap-14 lg:grid-cols-[0.8fr_1fr]">
+        <div className="grid gap-12 lg:grid-cols-[0.8fr_1fr] lg:gap-20">
           <div className="lg:sticky lg:top-28 lg:self-start">
             <Reveal variant="left">
               <SectionHeading kicker="Assessment" title="How progress is measured" align="left" />
@@ -222,47 +221,69 @@ export function AcademicsPage() {
                 Five kinds of check, running through the year rather than gathering at the end of
                 it.
               </p>
-              <div className="mt-8 rounded-2xl bg-accent-amber-soft p-6">
-                <div className="flex items-center gap-3">
-                  <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent-amber text-ink">
-                    <FileCheck2 className="h-5 w-5" aria-hidden />
-                  </span>
-                  <h3 className="text-[16px] font-extrabold text-ink">Attendance requirement</h3>
+              {/* The one number a family needs to know, set large. */}
+              <div className="mt-10 flex items-end gap-5 border-l-4 border-accent-amber pl-6">
+                <span className="num text-[64px] font-extrabold leading-none tracking-[-0.04em] text-brand-800 sm:text-[80px]">
+                  75%
+                </span>
+                <div className="pb-2">
+                  <p className="text-[15px] font-extrabold text-ink">Attendance required</p>
+                  <p className="mt-1 max-w-[16rem] text-[13px] leading-relaxed text-muted">
+                    Calculated continuously by the portal, which alerts guardians when a learner
+                    falls below it.
+                  </p>
                 </div>
-                <p className="mt-3.5 text-[13.5px] leading-relaxed text-ink-soft">
-                  Learners are expected to maintain <strong>75% attendance</strong>. The portal
-                  calculates it continuously and alerts guardians automatically when a learner
-                  falls below it.
-                </p>
               </div>
             </Reveal>
           </div>
 
-          <ol className="relative space-y-1 border-l-2 border-rule pl-8">
-            {ASSESSMENT.map((a, i) => (
-              <Reveal key={a.title} variant="right" delay={i * 70} as="li">
-                <li className="group relative py-5">
-                  <span
-                    className="num absolute -left-[45px] flex h-8 w-8 items-center justify-center rounded-full bg-paper text-[11px] font-extrabold text-brand-400 ring-2 ring-rule transition-all duration-300 group-hover:bg-brand-700 group-hover:text-white group-hover:ring-brand-700"
-                    aria-hidden
-                  >
-                    {String(i + 1).padStart(2, '0')}
-                  </span>
-                  <div className="flex items-start gap-4">
-                    <span className="icon-pop mt-0.5 inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-tint-brand text-brand-600 transition-colors group-hover:bg-brand-700 group-hover:text-white">
-                      <a.icon className="h-5 w-5" aria-hidden />
-                    </span>
-                    <div className="min-w-0">
-                      <h3 className="text-[17px] font-extrabold tracking-[-0.02em] text-ink">
+          {/* One check open at a time; the rest sit as single ruled lines. */}
+          <div className="divide-y divide-rule border-y border-rule">
+            {ASSESSMENT.map((a, i) => {
+              const open = i === check;
+              return (
+                <Reveal key={a.title} variant="right" delay={i * 60}>
+                  <div>
+                    <button
+                      type="button"
+                      aria-expanded={open}
+                      onClick={() => setCheck(open ? -1 : i)}
+                      className="flex w-full items-center gap-4 py-5 text-left"
+                    >
+                      <span
+                        className={clsx(
+                          'inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg transition-colors',
+                          open ? 'bg-brand-700 text-white' : 'bg-tint-brand text-brand-600',
+                        )}
+                      >
+                        <a.icon className="h-5 w-5" aria-hidden />
+                      </span>
+                      <span className="flex-1 text-[17px] font-extrabold tracking-[-0.02em] text-ink">
                         {a.title}
-                      </h3>
-                      <p className="mt-1.5 text-[14px] leading-relaxed text-muted">{a.body}</p>
+                      </span>
+                      <ChevronDown
+                        className={clsx(
+                          'h-5 w-5 shrink-0 text-faint transition-transform duration-300',
+                          open && 'rotate-180 text-brand-700',
+                        )}
+                        aria-hidden
+                      />
+                    </button>
+                    <div
+                      className={clsx(
+                        'grid transition-[grid-template-rows] duration-300 ease-out',
+                        open ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]',
+                      )}
+                    >
+                      <p className="overflow-hidden pl-14 text-[14.5px] leading-relaxed text-muted">
+                        <span className="block pb-5">{a.body}</span>
+                      </p>
                     </div>
                   </div>
-                </li>
-              </Reveal>
-            ))}
-          </ol>
+                </Reveal>
+              );
+            })}
+          </div>
         </div>
       </Section>
 

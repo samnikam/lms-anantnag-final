@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import { Reveal } from './motion';
 import { DECOR, Shape, Wave } from './decor';
 import { TONE } from './tone';
-import { ABOUT, GALLERY } from './media';
+import { ABOUT } from './media';
 import {
   ASSESSMENT,
   CURRICULUM_STATEMENT,
@@ -26,8 +26,8 @@ export function AcademicsPage() {
       <PageBanner
         title="Academics"
         subtitle="The curriculum, how it is taught, how learning is assessed, and the year it runs across."
-        image={GALLERY[5].src}
-        imageAlt={GALLERY[5].alt}
+        image="/images/students-laptops.jpg"
+        imageAlt="Students working on laptops in a computer class"
       />
 
       {/* ══ ACADEMIC STRUCTURE — a progression, not four boxes ═════════ */}

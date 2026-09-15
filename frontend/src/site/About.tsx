@@ -1,5 +1,5 @@
 import { CheckCircle2, Eye } from 'lucide-react';
-import { Reveal } from './motion';
+import { Reveal, Tilt } from './motion';
 import { DECOR, Shape, Wave } from './decor';
 import { TONE } from './tone';
 import { ABOUT, DISTRICT, HERO_SLIDES } from './media';
@@ -131,36 +131,81 @@ export function AboutPage() {
         </div>
       </Section>
 
-      {/* ══ TEACHERS & STAFF ═══════════════════════════════════════════ */}
-      <Section className="relative overflow-hidden bg-surface">
-        <Backdrop variant="cool" />
-        <div className="grid items-center gap-14 lg:grid-cols-2">
-          <Reveal variant="left">
-            <SectionHeading kicker="Teachers & Staff" title="Teaching staff" align="left" />
-            <p className="mt-6 text-[15.5px] leading-relaxed text-muted">{STAFF_NOTE}</p>
-            <p className="mt-5 rounded-xl bg-accent-amber-soft p-5 text-[13.5px] leading-relaxed text-ink-soft">
+      {/* ══ TEACHERS & STAFF — four tall panels on pale blue ═══════════ */}
+      <section className="relative overflow-hidden bg-accent-sky-soft">
+        <Wave className="block h-12 w-full rotate-180 sm:h-16" fill="#ffffff" />
+        <Shape
+          kind="triangle"
+          className="absolute left-[4%] top-[18%] hidden h-11 w-11 opacity-50 lg:block"
+          color={DECOR.green}
+        />
+        <Shape
+          kind="dots"
+          className="absolute right-[4%] top-[14%] hidden h-16 w-16 opacity-40 lg:block"
+          color={DECOR.blue}
+        />
+        <Shape
+          kind="waves"
+          className="absolute bottom-[10%] right-[7%] hidden h-14 w-14 opacity-40 lg:block"
+          color={DECOR.blue}
+        />
+
+        <div className="relative mx-auto max-w-6xl px-5 pb-16 pt-6 sm:px-8">
+          <SectionHeading
+            kicker="Teachers & Staff"
+            title="The people behind every lesson"
+            description={STAFF_NOTE}
+          />
+
+          {/* Four roles as tall panels, each in its own tint, with the
+              numeral faded into the top corner and a bar that grows on hover. */}
+          <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {STAFF_POINTS.map((p, i) => {
+              const tones = ['coral', 'mint', 'sky', 'amber'] as const;
+              const t = TONE[tones[i]];
+              return (
+                <Reveal key={p.title} variant="zoom" delay={i * 100}>
+                  <Tilt className="h-full" max={5}>
+                    <article
+                      className={`group relative flex h-full min-h-[300px] flex-col overflow-hidden rounded-[24px] ${t.soft} p-7 shadow-sm transition-shadow duration-300 hover:shadow-xl`}
+                    >
+                      <span
+                        className={`num absolute -right-1 -top-4 text-[96px] font-extrabold leading-none opacity-[0.08] ${t.text}`}
+                        aria-hidden
+                      >
+                        {String(i + 1).padStart(2, '0')}
+                      </span>
+                      <span
+                        className={`icon-pop relative inline-flex h-16 w-16 items-center justify-center rounded-full ${t.solid} ${t.on} shadow-md`}
+                      >
+                        <p.icon className="h-7 w-7" aria-hidden />
+                      </span>
+                      <h3 className="relative mt-7 text-[20px] font-extrabold tracking-[-0.02em] text-ink">
+                        {p.title}
+                      </h3>
+                      <p className="relative mt-3 flex-1 text-[14px] leading-relaxed text-ink-soft">
+                        {p.body}
+                      </p>
+                      <span
+                        className={`relative mt-6 block h-1.5 w-12 origin-left rounded-full ${t.solid} transition-all duration-500 group-hover:w-full`}
+                        aria-hidden
+                      />
+                    </article>
+                  </Tilt>
+                </Reveal>
+              );
+            })}
+          </div>
+
+          <Reveal delay={200}>
+            <p className="mx-auto mt-10 max-w-2xl text-center text-[13.5px] leading-relaxed text-muted">
               Individual names, photographs and contact details are not published on this site.
               Each school provides them to its own families directly.
             </p>
           </Reveal>
-
-          <div className="grid gap-4 sm:grid-cols-2">
-            {STAFF_POINTS.map((p, i) => (
-              <Reveal key={p.title} variant="zoom" delay={(i % 2) * 100}>
-                <article className="lift-card group h-full rounded-2xl bg-paper p-6 ring-1 ring-rule hover:shadow-xl">
-                  <span className="icon-pop inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-brand-600 to-brand-800 text-white shadow-pill">
-                    <p.icon className="h-5 w-5" aria-hidden />
-                  </span>
-                  <h3 className="mt-5 text-[16px] font-extrabold tracking-[-0.02em] text-ink">
-                    {p.title}
-                  </h3>
-                  <p className="mt-2 text-[13px] leading-relaxed text-muted">{p.body}</p>
-                </article>
-              </Reveal>
-            ))}
-          </div>
         </div>
-      </Section>
+        <Wave className="block h-12 w-full sm:h-16" fill="#102657" />
+      </section>
 
       {/* ══ OBJECTIVES ═════════════════════════════════════════════════ */}
       <section className="relative overflow-hidden bg-brand-800">

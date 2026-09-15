@@ -403,11 +403,14 @@ export function PageBanner({
   subtitle,
   image,
   imageAlt,
+  focus = 'object-center',
 }: {
   title: string;
   subtitle?: string;
   image: string;
   imageAlt?: string;
+  /** Which part of the photograph to keep when the banner crops it. */
+  focus?: string;
 }) {
   return (
     <section className="relative h-[260px] overflow-hidden bg-brand-900 sm:h-[320px]">
@@ -415,7 +418,7 @@ export function PageBanner({
         src={image}
         alt={imageAlt ?? ''}
         aria-hidden={!imageAlt}
-        className="absolute inset-0 h-full w-full object-cover"
+        className={clsx('absolute inset-0 h-full w-full object-cover', focus)}
       />
       <div className="absolute inset-0 bg-gradient-to-r from-brand-900/75 via-brand-900/42 via-45% to-brand-900/10" />
       <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-brand-900/30 to-transparent" />

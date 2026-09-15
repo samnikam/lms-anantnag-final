@@ -92,13 +92,6 @@ const ROUTES: Array<{
   },
 ];
 
-/** The escalation path the programme follows for an unresolved issue. */
-const ESCALATION = [
-  { step: 'First', who: 'Your school office', body: 'Accounts, enrolment, day-to-day questions.' },
-  { step: 'Then', who: 'Academic Admin', body: 'Timetable, classes, subjects, teacher assignment.' },
-  { step: 'Finally', who: 'Division office', body: 'Platform faults, hardware, programme matters.' },
-];
-
 export function ContactPage() {
   // One answer open at a time, so the list stays scannable.
   const [openFaq, setOpenFaq] = useState<number | null>(0);
@@ -191,34 +184,6 @@ export function ContactPage() {
             );
           })}
         </div>
-      </Section>
-
-      {/* ══ ESCALATION ═════════════════════════════════════════════════ */}
-      <Section className="bg-surface">
-        <SectionHeading
-          kicker="Escalation"
-          title="If an issue is not resolved"
-          description="Requests follow a defined path, so nothing gets stuck without an owner."
-        />
-
-        <ol className="mt-14 grid gap-6 md:grid-cols-3">
-          {ESCALATION.map((e, i) => (
-            <Reveal key={e.who} variant="zoom" delay={i * 110}>
-              <li className="relative h-full rounded-2xl bg-paper p-7">
-                <span className="text-[11.5px] font-extrabold uppercase tracking-[0.14em] text-accent-coral-deep">
-                  {e.step}
-                </span>
-                <h3 className="mt-3 text-[19px] font-extrabold tracking-[-0.02em] text-ink">
-                  {e.who}
-                </h3>
-                <p className="mt-2.5 text-[14px] leading-relaxed text-muted">{e.body}</p>
-                <span className="num absolute bottom-5 right-6 text-[34px] font-extrabold leading-none text-brand-100">
-                  {i + 1}
-                </span>
-              </li>
-            </Reveal>
-          ))}
-        </ol>
       </Section>
 
       {/* ══ THE OFFICE ═════════════════════════════════════════════════ */}

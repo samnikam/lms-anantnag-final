@@ -55,7 +55,11 @@ export const VALUES = [
  * are not published here; a school supplies them to its own families.
  */
 export const STAFF_NOTE =
-  'Our schools are staffed by dedicated educators supporting academic and personal development. Specialist teaching is shared across the district, so a class can study a subject its own school could not staff alone.';
+  'Our schools are staffed by dedicated educators supporting academic and personal development.';
+
+/** Sits over the photograph beside the staff list. */
+export const STAFF_CAPTION =
+  'Specialist teaching is shared across the district, so a class can study a subject its own school could not staff alone.';
 
 export const STAFF_POINTS = [
   {

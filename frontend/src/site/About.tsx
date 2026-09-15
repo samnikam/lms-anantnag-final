@@ -1,10 +1,11 @@
 import { CheckCircle2, Eye } from 'lucide-react';
-import { Reveal, Tilt } from './motion';
+import { Reveal } from './motion';
 import { DECOR, Shape, Wave } from './decor';
 import { TONE } from './tone';
 import { ABOUT, DISTRICT, HERO_SLIDES } from './media';
 import {
   MISSION,
+  STAFF_CAPTION,
   STAFF_NOTE,
   STAFF_POINTS,
   VALUES,
@@ -131,81 +132,57 @@ export function AboutPage() {
         </div>
       </Section>
 
-      {/* ══ TEACHERS & STAFF — four tall panels on pale blue ═══════════ */}
-      <section className="relative overflow-hidden bg-accent-sky-soft">
-        <Wave className="block h-12 w-full rotate-180 sm:h-16" fill="#ffffff" />
-        <Shape
-          kind="triangle"
-          className="absolute left-[4%] top-[18%] hidden h-11 w-11 opacity-50 lg:block"
-          color={DECOR.green}
-        />
-        <Shape
-          kind="dots"
-          className="absolute right-[4%] top-[14%] hidden h-16 w-16 opacity-40 lg:block"
-          color={DECOR.blue}
-        />
-        <Shape
-          kind="waves"
-          className="absolute bottom-[10%] right-[7%] hidden h-14 w-14 opacity-40 lg:block"
-          color={DECOR.blue}
-        />
-
-        <div className="relative mx-auto max-w-6xl px-5 pb-16 pt-6 sm:px-8">
-          <SectionHeading
-            kicker="Teachers & Staff"
-            title="The people behind every lesson"
-            description={STAFF_NOTE}
-          />
-
-          {/* Four roles as tall panels, each in its own tint, with the
-              numeral faded into the top corner and a bar that grows on hover. */}
-          <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {STAFF_POINTS.map((p, i) => {
-              const tones = ['coral', 'mint', 'sky', 'amber'] as const;
-              const t = TONE[tones[i]];
-              return (
-                <Reveal key={p.title} variant="zoom" delay={i * 100}>
-                  <Tilt className="h-full" max={5}>
-                    <article
-                      className={`group relative flex h-full min-h-[300px] flex-col overflow-hidden rounded-[24px] ${t.soft} p-7 shadow-sm transition-shadow duration-300 hover:shadow-xl`}
-                    >
-                      <span
-                        className={`num absolute -right-1 -top-4 text-[96px] font-extrabold leading-none opacity-[0.08] ${t.text}`}
-                        aria-hidden
-                      >
-                        {String(i + 1).padStart(2, '0')}
-                      </span>
-                      <span
-                        className={`icon-pop relative inline-flex h-16 w-16 items-center justify-center rounded-full ${t.solid} ${t.on} shadow-md`}
-                      >
-                        <p.icon className="h-7 w-7" aria-hidden />
-                      </span>
-                      <h3 className="relative mt-7 text-[20px] font-extrabold tracking-[-0.02em] text-ink">
-                        {p.title}
-                      </h3>
-                      <p className="relative mt-3 flex-1 text-[14px] leading-relaxed text-ink-soft">
-                        {p.body}
-                      </p>
-                      <span
-                        className={`relative mt-6 block h-1.5 w-12 origin-left rounded-full ${t.solid} transition-all duration-500 group-hover:w-full`}
-                        aria-hidden
-                      />
-                    </article>
-                  </Tilt>
-                </Reveal>
-              );
-            })}
-          </div>
-
-          <Reveal delay={200}>
-            <p className="mx-auto mt-10 max-w-2xl text-center text-[13.5px] leading-relaxed text-muted">
-              Individual names, photographs and contact details are not published on this site.
-              Each school provides them to its own families directly.
-            </p>
+      {/* ══ TEACHERS & STAFF — a photograph and a plain ruled list ═════ */}
+      <Section className="bg-surface !py-16 lg:!py-20">
+        <div className="grid items-stretch gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:gap-16">
+          <Reveal variant="left">
+            <figure className="relative h-full min-h-[320px] overflow-hidden rounded-2xl">
+              <img
+                src="/images/school-courtyard.jpg"
+                alt="Students crossing a school courtyard, seen from above"
+                loading="lazy"
+                className="h-full w-full object-cover"
+              />
+              <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-brand-900/80 to-transparent px-6 pb-5 pt-14 text-[13px] text-white/85">
+                {STAFF_CAPTION}
+              </figcaption>
+            </figure>
           </Reveal>
+
+          <div className="flex flex-col justify-center">
+            <Reveal variant="right">
+              <SectionHeading kicker="Teachers & Staff" title="Teaching staff" align="left" />
+              <p className="mt-5 text-[15px] leading-relaxed text-muted">{STAFF_NOTE}</p>
+            </Reveal>
+
+            {/* One rule between each role. Nothing filled, nothing numbered. */}
+            <dl className="mt-8 divide-y divide-rule border-y border-rule">
+              {STAFF_POINTS.map((p, i) => (
+                <Reveal key={p.title} variant="right" delay={80 + i * 60}>
+                  <div className="group flex gap-5 py-5">
+                    <span className="mt-0.5 inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-brand-200 text-brand-700 transition-colors group-hover:border-brand-700 group-hover:bg-brand-700 group-hover:text-white">
+                      <p.icon className="h-5 w-5" aria-hidden />
+                    </span>
+                    <div className="min-w-0">
+                      <dt className="text-[16.5px] font-extrabold tracking-[-0.01em] text-ink">
+                        {p.title}
+                      </dt>
+                      <dd className="mt-1 text-[14px] leading-relaxed text-muted">{p.body}</dd>
+                    </div>
+                  </div>
+                </Reveal>
+              ))}
+            </dl>
+
+            <Reveal delay={360}>
+              <p className="mt-6 text-[12.5px] leading-relaxed text-faint">
+                Individual names, photographs and contact details are not published on this site.
+                Each school provides them to its own families directly.
+              </p>
+            </Reveal>
+          </div>
         </div>
-        <Wave className="block h-12 w-full sm:h-16" fill="#102657" />
-      </section>
+      </Section>
 
       {/* ══ OBJECTIVES ═════════════════════════════════════════════════ */}
       <section className="relative overflow-hidden bg-brand-800">

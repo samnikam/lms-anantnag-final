@@ -38,7 +38,7 @@ export function LoginPage() {
         aria-hidden
         className="absolute inset-0 h-full w-full object-cover object-[center_30%]"
       />
-      <div className="absolute inset-0 bg-gradient-to-r from-brand-900/85 via-brand-900/55 to-brand-900/25" />
+      <div className="absolute inset-0 bg-brand-900/60" />
 
       <div className="relative mx-auto flex min-h-screen max-w-7xl flex-col px-5 py-6 sm:px-8 lg:flex-row lg:items-stretch lg:gap-12">
         {/* ── The programme, over the photograph ─────────────────────── */}

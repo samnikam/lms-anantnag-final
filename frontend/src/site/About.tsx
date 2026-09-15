@@ -14,7 +14,7 @@ import {
 import { CountUp, Reveal } from './motion';
 import { DECOR, Shape, Wave } from './decor';
 import { TONE } from './tone';
-import { ABOUT, DISTRICT, HERO_SLIDES } from './media';
+import { ABOUT, DISTRICT, HERO_SLIDES, ROLE_PHOTOS } from './media';
 import {
   AT_A_GLANCE,
   HEAD_MESSAGE,
@@ -200,10 +200,10 @@ export function AboutPage() {
           <Reveal variant="left">
             <div className="relative mx-auto w-52 lg:w-64">
               <img
-                src={DISTRICT.pahalgamMeadow.src}
-                alt={DISTRICT.pahalgamMeadow.alt}
+                src={ROLE_PHOTOS.teacher.src}
+                alt={ROLE_PHOTOS.teacher.alt}
                 loading="lazy"
-                className="aspect-square w-full rounded-2xl object-cover shadow-xl ring-1 ring-rule"
+                className="aspect-square w-full rounded-2xl object-cover object-[center_28%] shadow-xl ring-1 ring-rule"
               />
               <span
                 className="absolute -bottom-4 -right-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-accent-amber text-ink shadow-lg"

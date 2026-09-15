@@ -314,16 +314,23 @@ export const GALLERY: Photo[] = [
   DISTRICT.chandanwari,
   { src: unsplash('photo-1524995997946-a1c2e315a42f', 900), alt: 'A learner studying with a laptop' },
   DISTRICT.lidderRiver,
+  DISTRICT.pahalgamMeadow,
   DISTRICT.kokernag,
   DISTRICT.polytechnic,
   DISTRICT.amarnathApproach,
 ];
 
-/** The portrait beside the head of institution's message. */
+/**
+ * The portrait beside the head of institution's message. Supplied by the
+ * division: a pupil painting on the floor of a school courtyard — the
+ * "whole person" the message speaks of, doing something other than sitting
+ * an exam. Portrait, and the boy sits in the upper half, so it is cropped
+ * from the top rather than the middle.
+ */
 export const ROLE_PHOTOS: Record<string, Photo> = {
   teacher: {
-    src: unsplash('photo-1577896851231-70ef18881754', 1000),
-    alt: 'A teacher working with a class',
+    src: '/images/student-painting.jpg',
+    alt: 'A pupil in uniform painting on paper spread across a courtyard floor',
   },
 };
 

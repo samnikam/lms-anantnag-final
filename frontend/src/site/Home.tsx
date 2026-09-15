@@ -382,7 +382,7 @@ export function HomePage() {
               src={ROLE_PHOTOS.teacher.src}
               alt={ROLE_PHOTOS.teacher.alt}
               loading="lazy"
-              className="mx-auto aspect-square w-48 rounded-2xl object-cover shadow-lg lg:w-60"
+              className="mx-auto aspect-square w-48 rounded-2xl object-cover object-[center_28%] shadow-lg lg:w-60"
             />
           </Reveal>
 

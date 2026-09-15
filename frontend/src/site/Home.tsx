@@ -124,8 +124,8 @@ export function HomePage() {
                 loading={i === 0 ? 'eager' : 'lazy'}
               />
               {/* Weighted to the left, and clear of the subject on the right. */}
-              <div className="absolute inset-0 bg-gradient-to-r from-brand-900/95 via-brand-900/80 via-40% to-brand-900/15" />
-              <div className="absolute inset-0 bg-gradient-to-t from-brand-900/60 via-transparent to-brand-900/30" />
+              <div className="absolute inset-0 bg-gradient-to-r from-brand-900/72 via-brand-900/38 via-42% to-transparent" />
+              <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-brand-900/35 to-transparent" />
             </div>
           ))}
 

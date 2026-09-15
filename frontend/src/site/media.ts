@@ -212,6 +212,11 @@ export const ABOUT: Record<string, Photo> = {
     src: '/images/computer-lab.jpg',
     alt: 'Pupils in green uniform working at rows of computers in a school lab',
   },
+  // Supplied by the division: a row of students at desktop computers.
+  computerClass: {
+    src: '/images/computer-class.jpg',
+    alt: 'Students in a row at desktop computers during a computer class',
+  },
   schemes: {
     src: '/images/schemes-collage.jpg',
     alt: 'Five scenes: a school meal, a lesson at an interactive panel, a student with a scholarship letter, a teacher helping a pupil in a wheelchair, and students building a model car',

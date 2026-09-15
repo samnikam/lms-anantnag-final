@@ -11,7 +11,7 @@ import {
   Trees,
   Volleyball,
 } from 'lucide-react';
-import { DISTRICT, SCHOOL, type Photo } from './media';
+import { ABOUT, DISTRICT, SCHOOL, type Photo } from './media';
 
 const unsplash = (id: string, w = 1200) =>
   `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&q=80`;
@@ -60,7 +60,7 @@ export const FACILITY_BLOCKS: Facility[] = [
     title: 'Computer & digital learning',
     count: '42',
     body: 'Access to computers and digital resources to develop technology skills and support academic learning. An OPS computer sits behind every classroom panel.',
-    ...SCHOOL.computerLab,
+    ...ABOUT.computerClass,
   },
   {
     icon: FlaskConical,

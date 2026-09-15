@@ -194,10 +194,10 @@ export function AboutPage() {
           <div>
             <figure className="relative h-64 overflow-hidden sm:h-80">
               <img
-                src="/images/village-school.jpg"
-                alt="Pupils gathered outside a village school"
+                src="/images/classroom-lesson.jpg"
+                alt="A teacher at the lectern in front of a full classroom"
                 loading="lazy"
-                className="h-full w-full object-cover"
+                className="h-full w-full object-cover object-top"
               />
               <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-brand-900/80 to-transparent px-8 pb-5 pt-16 text-[13px] text-white/85">
                 {STAFF_CAPTION}

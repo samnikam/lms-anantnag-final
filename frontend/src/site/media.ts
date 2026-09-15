@@ -208,9 +208,12 @@ export const HERO_SLIDES: Array<
     tail: 'from Pahalgam to the furthest school on the Lidder.',
   },
   {
-    src: unsplash('photo-1522202176988-66273c2fd55f', 2000),
-    alt: 'Students working together around a table',
-    focus: 'object-[70%_center]',
+    // Supplied by the division: school blocks around a lawn.
+    src: '/images/school-grounds.jpg',
+    alt: 'School buildings around a green lawn',
+    // The frame is nearly square and the lawn fills its lower half; hold the
+    // crop high so the buildings, not the grass, sit behind the heading.
+    focus: 'object-[60%_30%]',
     kicker: 'Government of Jammu & Kashmir',
     lead: 'We give every subject',
     word: 'A TEACHER',

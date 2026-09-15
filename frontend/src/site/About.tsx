@@ -1,4 +1,6 @@
+import { useEffect, useState } from 'react';
 import { CheckCircle2, Eye } from 'lucide-react';
+import clsx from 'clsx';
 import { Reveal } from './motion';
 import { DECOR, Shape, Wave } from './decor';
 import { TONE } from './tone';
@@ -22,7 +24,24 @@ const OBJECTIVES = [
   'Make every issued certificate publicly verifiable',
 ];
 
+/** One of the division's photographs for each role in the staff panel. */
+const STAFF_PHOTOS = [
+  { src: '/images/village-school.jpg', alt: 'Pupils gathered outside a village school' },
+  { src: '/images/computer-lab.jpg', alt: 'A computer lab in one of the schools' },
+  { src: '/images/smart-classroom.jpg', alt: 'A smart classroom with its display panel' },
+  { src: '/images/school-grounds.jpg', alt: 'School blocks around a lawn' },
+];
+
 export function AboutPage() {
+  // The staff panel walks through the roles until the visitor picks one.
+  const [staff, setStaff] = useState(0);
+  const [staffAuto, setStaffAuto] = useState(true);
+  useEffect(() => {
+    if (!staffAuto) return;
+    const t = setInterval(() => setStaff((n) => (n + 1) % STAFF_POINTS.length), 4500);
+    return () => clearInterval(t);
+  }, [staffAuto]);
+
   return (
     <>
       <PageBanner
@@ -132,56 +151,91 @@ export function AboutPage() {
         </div>
       </Section>
 
-      {/* ══ TEACHERS & STAFF — a photograph and a plain ruled list ═════ */}
-      <Section className="bg-surface !py-16 lg:!py-20">
-        <div className="grid items-stretch gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:gap-16">
-          <Reveal variant="left">
-            <figure className="relative h-full min-h-[320px] overflow-hidden rounded-2xl">
+      {/* ══ TEACHERS & STAFF — pick a role, the panel changes ═══════════ */}
+      <Section className="bg-paper !py-16 lg:!py-20">
+        <Reveal>
+          <SectionHeading kicker="Teachers & Staff" title="Who teaches here" description={STAFF_NOTE} />
+        </Reveal>
+
+        <div className="mt-12 overflow-hidden rounded-3xl bg-surface shadow-xl ring-1 ring-rule lg:grid lg:grid-cols-[300px_1fr]">
+          {/* The selector. Numbers on the left, a bar slides to the active one. */}
+          <div
+            role="tablist"
+            aria-label="Staff roles"
+            className="flex overflow-x-auto border-b border-rule lg:flex-col lg:overflow-visible lg:border-b-0 lg:border-r"
+            onMouseEnter={() => setStaffAuto(false)}
+          >
+            {STAFF_POINTS.map((p, i) => {
+              const active = i === staff;
+              return (
+                <button
+                  key={p.title}
+                  role="tab"
+                  aria-selected={active}
+                  onClick={() => {
+                    setStaffAuto(false);
+                    setStaff(i);
+                  }}
+                  className={clsx(
+                    'relative flex shrink-0 items-center gap-3 px-6 py-5 text-left transition-colors lg:py-7',
+                    active ? 'bg-brand-700 text-white' : 'text-ink hover:bg-brand-50',
+                  )}
+                >
+                  <span
+                    className={clsx(
+                      'font-mono text-[12px] font-bold tabular-nums',
+                      active ? 'text-white/60' : 'text-faint',
+                    )}
+                  >
+                    0{i + 1}
+                  </span>
+                  <span className="text-[15px] font-extrabold tracking-[-0.01em]">{p.title}</span>
+                  {active && (
+                    <span className="absolute inset-y-0 left-0 w-1 bg-accent-amber lg:inset-y-auto lg:bottom-0 lg:h-1 lg:w-full" />
+                  )}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* The panel. Photograph on top, the role beneath it; both fade on change. */}
+          <div key={staff} className="reveal is-in">
+            <figure className="relative h-64 sm:h-80">
               <img
-                src="/images/school-courtyard.jpg"
-                alt="Students crossing a school courtyard, seen from above"
+                src={STAFF_PHOTOS[staff].src}
+                alt={STAFF_PHOTOS[staff].alt}
                 loading="lazy"
-                className="h-full w-full object-cover"
+                className="ken-burns h-full w-full object-cover"
               />
-              <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-brand-900/80 to-transparent px-6 pb-5 pt-14 text-[13px] text-white/85">
+              <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-brand-900/80 to-transparent px-8 pb-5 pt-16 text-[13px] text-white/85">
                 {STAFF_CAPTION}
               </figcaption>
             </figure>
-          </Reveal>
-
-          <div className="flex flex-col justify-center">
-            <Reveal variant="right">
-              <SectionHeading kicker="Teachers & Staff" title="Teaching staff" align="left" />
-              <p className="mt-5 text-[15px] leading-relaxed text-muted">{STAFF_NOTE}</p>
-            </Reveal>
-
-            {/* One rule between each role. Nothing filled, nothing numbered. */}
-            <dl className="mt-8 divide-y divide-rule border-y border-rule">
-              {STAFF_POINTS.map((p, i) => (
-                <Reveal key={p.title} variant="right" delay={80 + i * 60}>
-                  <div className="group flex gap-5 py-5">
-                    <span className="mt-0.5 inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-brand-200 text-brand-700 transition-colors group-hover:border-brand-700 group-hover:bg-brand-700 group-hover:text-white">
-                      <p.icon className="h-5 w-5" aria-hidden />
+            <div className="flex items-start gap-5 p-8 sm:p-10">
+              {(() => {
+                const P = STAFF_POINTS[staff];
+                return (
+                  <>
+                    <span className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand-50 text-brand-700">
+                      <P.icon className="h-6 w-6" aria-hidden />
                     </span>
-                    <div className="min-w-0">
-                      <dt className="text-[16.5px] font-extrabold tracking-[-0.01em] text-ink">
-                        {p.title}
-                      </dt>
-                      <dd className="mt-1 text-[14px] leading-relaxed text-muted">{p.body}</dd>
+                    <div>
+                      <h3 className="text-[22px] font-extrabold tracking-[-0.01em] text-ink">{P.title}</h3>
+                      <p className="mt-2 max-w-xl text-[15px] leading-relaxed text-muted">{P.body}</p>
                     </div>
-                  </div>
-                </Reveal>
-              ))}
-            </dl>
-
-            <Reveal delay={360}>
-              <p className="mt-6 text-[12.5px] leading-relaxed text-faint">
-                Individual names, photographs and contact details are not published on this site.
-                Each school provides them to its own families directly.
-              </p>
-            </Reveal>
+                  </>
+                );
+              })()}
+            </div>
           </div>
         </div>
+
+        <Reveal delay={200}>
+          <p className="mt-6 text-center text-[12.5px] leading-relaxed text-faint">
+            Individual names, photographs and contact details are not published on this site. Each
+            school provides them to its own families directly.
+          </p>
+        </Reveal>
       </Section>
 
       {/* ══ OBJECTIVES ═════════════════════════════════════════════════ */}

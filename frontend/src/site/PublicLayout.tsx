@@ -414,7 +414,8 @@ export function PageBanner({
         aria-hidden={!imageAlt}
         className="absolute inset-0 h-full w-full object-cover"
       />
-      <div className="absolute inset-0 bg-gradient-to-r from-brand-900/90 via-brand-900/62 to-brand-900/25" />
+      <div className="absolute inset-0 bg-gradient-to-r from-brand-900/95 via-brand-900/78 via-45% to-brand-900/30" />
+      <div className="absolute inset-0 bg-gradient-to-t from-brand-900/55 to-transparent" />
       <div className="relative mx-auto flex h-full max-w-6xl flex-col justify-center px-5 sm:px-8">
         <nav aria-label="Breadcrumb" className="mb-4 text-[12.5px] font-semibold text-white/55">
           <Link to="/" className="transition-colors hover:text-accent-amber">
@@ -423,11 +424,11 @@ export function PageBanner({
           <span className="px-2 text-white/30">/</span>
           <span className="text-accent-amber">{title}</span>
         </nav>
-        <h1 className="text-[30px] font-extrabold leading-[1.1] tracking-[-0.03em] text-white sm:text-[42px]">
+        <h1 className="over-photo text-[30px] font-extrabold leading-[1.1] tracking-[-0.03em] text-white sm:text-[42px]">
           {title}
         </h1>
         {subtitle && (
-          <p className="mt-4 max-w-2xl text-[15.5px] leading-relaxed text-white/70">{subtitle}</p>
+          <p className="over-photo mt-4 max-w-2xl text-[15.5px] leading-relaxed text-white/90">{subtitle}</p>
         )}
         <span className="mt-5 block h-1 w-16 rounded-full bg-accent-amber" />
       </div>

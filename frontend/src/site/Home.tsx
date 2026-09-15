@@ -124,14 +124,15 @@ export function HomePage() {
                 loading={i === 0 ? 'eager' : 'lazy'}
               />
               {/* Weighted to the left, and clear of the subject on the right. */}
-              <div className="absolute inset-0 bg-gradient-to-r from-brand-900/92 via-brand-900/55 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-r from-brand-900/95 via-brand-900/80 via-40% to-brand-900/15" />
+              <div className="absolute inset-0 bg-gradient-to-t from-brand-900/60 via-transparent to-brand-900/30" />
             </div>
           ))}
 
           <div className="relative mx-auto flex h-full max-w-6xl items-center px-5 pb-16 sm:px-8">
             <div className="max-w-xl" key={slide}>
               <p
-                className="reveal is-in text-[12px] font-extrabold uppercase tracking-[0.18em] text-accent-amber"
+                className="over-photo reveal is-in text-[12px] font-extrabold uppercase tracking-[0.18em] text-accent-amber"
                 style={{ animationDelay: '80ms' }}
               >
                 {HERO_SLIDES[slide].kicker}
@@ -139,19 +140,19 @@ export function HomePage() {
 
               {/* Three parts: a quiet line, the word, a quiet line. */}
               <p
-                className="reveal is-in mt-6 text-[20px] font-medium leading-snug text-white/90 sm:text-[24px]"
+                className="over-photo reveal is-in mt-6 text-[20px] font-medium leading-snug text-white sm:text-[24px]"
                 style={{ animationDelay: '180ms' }}
               >
                 {HERO_SLIDES[slide].lead}
               </p>
               <h1
-                className="reveal is-in mt-1 text-[40px] font-extrabold leading-[1.05] tracking-[0.12em] text-white sm:text-[58px] lg:text-[66px]"
+                className="over-photo reveal is-in mt-1 text-[40px] font-extrabold leading-[1.05] tracking-[0.12em] text-white sm:text-[58px] lg:text-[66px]"
                 style={{ animationDelay: '260ms' }}
               >
                 {HERO_SLIDES[slide].word}
               </h1>
               <p
-                className="reveal is-in mt-2 max-w-md text-[16px] font-medium leading-snug text-white/85 sm:text-[19px]"
+                className="over-photo reveal is-in mt-2 max-w-md text-[16px] font-medium leading-snug text-white sm:text-[19px]"
                 style={{ animationDelay: '340ms' }}
               >
                 {HERO_SLIDES[slide].tail}
@@ -173,7 +174,7 @@ export function HomePage() {
                 </Link>
                 <Link
                   to="/about"
-                  className="inline-flex items-center gap-2 rounded-lg bg-white/10 px-7 py-3.5 text-[14px] font-bold text-white ring-1 ring-white/25 backdrop-blur-sm transition-colors hover:bg-white/20"
+                  className="inline-flex items-center gap-2 rounded-lg bg-brand-900/70 px-7 py-3.5 text-[14px] font-bold text-white ring-1 ring-white/30 backdrop-blur-md transition-colors hover:bg-brand-900/85"
                 >
                   About the Programme
                 </Link>

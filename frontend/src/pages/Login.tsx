@@ -5,7 +5,6 @@ import { errorMessage } from '../lib/api';
 import { useAuth } from '../lib/auth';
 import { Field } from '../components/ui';
 import { DIVISION, FIGURES } from '../site/PublicLayout';
-import { HERO_SLIDES } from '../site/media';
 
 export function LoginPage() {
   const { signIn } = useAuth();
@@ -34,10 +33,10 @@ export function LoginPage() {
     // white sheet at the right, the way the public site's banners are built.
     <div className="relative min-h-screen bg-brand-900">
       <img
-        src={HERO_SLIDES[0].src}
+        src="/images/school-entrance.jpg"
         alt=""
         aria-hidden
-        className="absolute inset-0 h-full w-full object-cover object-[60%_center]"
+        className="absolute inset-0 h-full w-full object-cover object-[55%_center]"
       />
       <div className="absolute inset-0 bg-gradient-to-r from-brand-900/85 via-brand-900/55 to-brand-900/25" />
 

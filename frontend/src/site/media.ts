@@ -207,6 +207,11 @@ export const ABOUT: Record<string, Photo> = {
   },
   // Supplied by the division; an AI render, as the file it came from records.
   // A five-panel collage of the schemes, each panel labelled in the picture.
+  // Supplied by the division: pupils at rows of computers.
+  computerLab: {
+    src: '/images/computer-lab.jpg',
+    alt: 'Pupils in green uniform working at rows of computers in a school lab',
+  },
   schemes: {
     src: '/images/schemes-collage.jpg',
     alt: 'Five scenes: a school meal, a lesson at an interactive panel, a student with a scholarship letter, a teacher helping a pupil in a wheelchair, and students building a model car',

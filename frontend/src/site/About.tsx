@@ -72,8 +72,8 @@ export function AboutPage() {
                 Seven commitments that shape how the schools in this programme are run.
               </p>
               <img
-                src={ABOUT.welcome.src}
-                alt={ABOUT.welcome.alt}
+                src={ABOUT.computerLab.src}
+                alt={ABOUT.computerLab.alt}
                 loading="lazy"
                 className="mt-9 hidden aspect-[4/3] w-full rounded-2xl object-cover shadow-xl ring-1 ring-rule lg:block"
               />

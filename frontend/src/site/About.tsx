@@ -24,14 +24,6 @@ const OBJECTIVES = [
   'Make every issued certificate publicly verifiable',
 ];
 
-/** One of the division's photographs for each role in the staff panel. */
-const STAFF_PHOTOS = [
-  { src: '/images/village-school.jpg', alt: 'Pupils gathered outside a village school' },
-  { src: '/images/computer-lab.jpg', alt: 'A computer lab in one of the schools' },
-  { src: '/images/smart-classroom.jpg', alt: 'A smart classroom with its display panel' },
-  { src: '/images/school-grounds.jpg', alt: 'School blocks around a lawn' },
-];
-
 export function AboutPage() {
   // The staff panel walks through the roles until the visitor picks one.
   const [staff, setStaff] = useState(0);
@@ -198,20 +190,20 @@ export function AboutPage() {
             })}
           </div>
 
-          {/* The panel. Photograph on top, the role beneath it; both fade on change. */}
-          <div key={staff} className="reveal is-in">
-            <figure className="relative h-64 sm:h-80">
+          {/* The panel. One photograph on top; the role beneath it fades on change. */}
+          <div>
+            <figure className="relative h-64 overflow-hidden sm:h-80">
               <img
-                src={STAFF_PHOTOS[staff].src}
-                alt={STAFF_PHOTOS[staff].alt}
+                src="/images/village-school.jpg"
+                alt="Pupils gathered outside a village school"
                 loading="lazy"
-                className="ken-burns h-full w-full object-cover"
+                className="h-full w-full object-cover"
               />
               <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-brand-900/80 to-transparent px-8 pb-5 pt-16 text-[13px] text-white/85">
                 {STAFF_CAPTION}
               </figcaption>
             </figure>
-            <div className="flex items-start gap-5 p-8 sm:p-10">
+            <div key={staff} className="reveal is-in flex items-start gap-5 p-8 sm:p-10">
               {(() => {
                 const P = STAFF_POINTS[staff];
                 return (

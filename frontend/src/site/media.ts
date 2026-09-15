@@ -196,8 +196,12 @@ export const HERO_SLIDES: Array<
     tail: 'so no classroom in the district goes without.',
   },
   {
-    ...DISTRICT.pahalgamValley,
-    focus: 'object-[65%_center]',
+    // Supplied by the division: the courtyard as a school day begins.
+    src: '/images/school-courtyard.jpg',
+    alt: 'Students crossing a school courtyard, seen from above',
+    // The crowd fills the frame; keep the crop right of centre so the
+    // heading sits over the quieter left edge.
+    focus: 'object-[60%_center]',
     kicker: 'Anantnag District, Jammu & Kashmir',
     lead: 'We close the distance',
     word: 'TOGETHER',

@@ -16,7 +16,7 @@ import { Backdrop, DIVISION, FIGURES, Section, SectionHeading } from './PublicLa
 import { CountUp, Reveal } from './motion';
 import { TONE } from './tone';
 import { CirclePhoto, DECOR, DoubleWave, Shape, Wave } from './decor';
-import { ABOUT, FACILITIES, GALLERY, HERO_SLIDES, LANDMARKS, ROLE_PHOTOS } from './media';
+import { ABOUT, FACILITIES, GALLERY, HERO_SLIDES, ROLE_PHOTOS } from './media';
 import {
   FACILITY_CARDS,
   HEAD_MESSAGE,
@@ -35,23 +35,6 @@ const QUICK_LINKS = [
   { icon: Award, title: 'Certificates', body: 'Download & verify', to: '/verify' },
 ];
 
-const SUBJECTS = [
-  'Mathematics',
-  'Science',
-  'Social Science',
-  'English',
-  'Urdu',
-  'Kashmiri',
-  'Hindi',
-  'Computer Science',
-  'Arabic',
-  'Persian',
-  'Art Education',
-  'Health & Physical Education',
-];
-
-
-
 /** The strip that reads across under the hero. */
 const TICKER = [
   `Admissions for session ${DIVISION.session} are handled by your school office`,
@@ -59,25 +42,6 @@ const TICKER = [
   'Guardians are alerted automatically below 75% attendance',
   'Certificates can be verified by anyone, without an account',
   'The portal is available in English, Hindi, Urdu and Kashmiri',
-];
-
-/** Standing notices. Live announcements sit inside the portal once signed in. */
-const NOTICES = [
-  {
-    tag: 'Admissions',
-    date: 'Session ' + DIVISION.session,
-    text: 'Enrolment for the current session is handled by your school office. Accounts for the portal are issued once a learner is enrolled.',
-  },
-  {
-    tag: 'Attendance',
-    date: 'Standing rule',
-    text: 'Guardians are alerted automatically when a learner’s attendance falls below the 75% requirement.',
-  },
-  {
-    tag: 'Certificates',
-    date: 'Always open',
-    text: 'Certificates issued by the portal carry a verification code and can be checked by anyone, without an account.',
-  },
 ];
 
 export function HomePage() {
@@ -610,34 +574,6 @@ export function HomePage() {
         </div>
       </Section>
 
-      {/* ══ SUBJECTS ═══════════════════════════════════════════════════ */}
-      <Section className="relative overflow-hidden bg-surface">
-        <Backdrop variant="mint" />
-        <SectionHeading
-          kicker="Academics"
-          title="Twelve subjects across the curriculum"
-          description="Every subject a class studies is taught, timetabled and recorded the same way."
-        />
-        <div className="mt-12 flex flex-wrap justify-center gap-3">
-          {SUBJECTS.map((s, i) => (
-            <Reveal key={s} delay={Math.min(i * 45, 400)}>
-              <span className="inline-block rounded-lg bg-paper px-5 py-3 text-[14px] font-bold text-ink-soft ring-1 ring-rule transition-all duration-300 hover:-translate-y-1 hover:bg-gradient-to-br hover:from-brand-600 hover:to-brand-800 hover:text-white hover:shadow-pill hover:ring-transparent">
-                {s}
-              </span>
-            </Reveal>
-          ))}
-        </div>
-        <div className="mt-10 text-center">
-          <Link
-            to="/academics"
-            className="group inline-flex items-center gap-2 text-[14px] font-extrabold text-brand-700 transition-colors hover:text-accent-coral-deep"
-          >
-            Explore academics
-            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden />
-          </Link>
-        </div>
-      </Section>
-
       {/* ══ STUDENT LIFE ═══════════════════════════════════════════════ */}
       <Section className="relative overflow-hidden">
         <Backdrop variant="warm" />
@@ -724,86 +660,6 @@ export function HomePage() {
           </div>
         </div>
       </section>
-
-      {/* ══ NOTICES ════════════════════════════════════════════════════ */}
-      <Section className="bg-surface">
-        <div className="grid gap-12 lg:grid-cols-[1fr_1.1fr]">
-          <div>
-            <SectionHeading kicker="Notice board" title="Information for families" align="left" />
-            <p className="mt-6 text-[14.5px] leading-relaxed text-muted">
-              Live announcements from your school and the division office appear inside the portal
-              once you sign in. The notices here stand all year.
-            </p>
-            <Link
-              to="/login"
-              className="btn-sheen group mt-7 inline-flex items-center gap-2 rounded-lg bg-brand-700 px-6 py-3 text-[14px] font-bold text-white shadow-pill transition-all hover:-translate-y-0.5 hover:bg-brand-600"
-            >
-              Sign in for announcements
-              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden />
-            </Link>
-          </div>
-
-          {/* A dated timeline rather than three stacked cards. */}
-          <ol className="relative border-l-2 border-rule pl-8">
-            {NOTICES.map((n, i) => (
-              <Reveal key={n.tag} variant="right" delay={i * 100} as="li">
-                <li className="group relative pb-9 last:pb-0">
-                  <span
-                    className="absolute -left-[41px] top-1 flex h-6 w-6 items-center justify-center rounded-full bg-accent-amber ring-4 ring-surface transition-transform duration-300 group-hover:scale-125"
-                    aria-hidden
-                  />
-                  <span className="inline-block rounded-full bg-tint-brand px-3 py-1 text-[10.5px] font-extrabold uppercase tracking-[0.1em] text-brand-600">
-                    {n.tag}
-                  </span>
-                  <p className="mt-2.5 text-[11.5px] font-bold uppercase tracking-[0.08em] text-faint">
-                    {n.date}
-                  </p>
-                  <p className="mt-1.5 text-[14.5px] leading-relaxed text-ink-soft">{n.text}</p>
-                </li>
-              </Reveal>
-            ))}
-          </ol>
-        </div>
-      </Section>
-
-      {/* ══ THE DISTRICT ═══════════════════════════════════════════════ */}
-      <Section className="bg-surface">
-        <SectionHeading
-          kicker="Anantnag District"
-          title="The valley these schools sit in"
-          description="From the Lidder at Pahalgam up to Amarnath, the district covers ground that makes reaching every classroom in person impossible. That is the problem this programme was built to answer."
-        />
-
-        <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {LANDMARKS.map((l, i) => (
-            <Reveal key={l.name} variant="zoom" delay={(i % 3) * 100}>
-              <figure className="group relative h-72 overflow-hidden rounded-2xl shadow ring-1 ring-rule">
-                <img
-                  src={l.src}
-                  alt={l.alt}
-                  loading="lazy"
-                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-brand-900/92 via-brand-900/35 to-transparent" />
-                <figcaption className="absolute inset-x-0 bottom-0 p-6">
-                  <h3 className="text-[21px] font-extrabold tracking-[-0.02em] text-white">
-                    {l.name}
-                  </h3>
-                  <span className="mt-2 block h-0.5 w-10 rounded-full bg-accent-amber" />
-                  <p className="hover-caption mt-3 text-[13px] leading-relaxed text-white/75">
-                    {l.note}
-                  </p>
-                  {l.credit && (
-                    <p className="mt-2.5 text-[10.5px] text-white/45">
-                      Photo: {l.credit.author} · {l.credit.license}
-                    </p>
-                  )}
-                </figcaption>
-              </figure>
-            </Reveal>
-          ))}
-        </div>
-      </Section>
 
     </>
   );

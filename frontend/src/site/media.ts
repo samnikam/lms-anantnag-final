@@ -105,40 +105,6 @@ export const DISTRICT: Record<string, Photo> = {
   },
 };
 
-/** The landmark strip — the district the programme serves, named. */
-export const LANDMARKS: Array<Photo & { name: string; note: string }> = [
-  {
-    ...DISTRICT.amarnathCave,
-    name: 'Amarnath',
-    note: 'The cave shrine at the head of the valley, reached from Pahalgam each summer.',
-  },
-  {
-    ...DISTRICT.pahalgamValley,
-    name: 'Pahalgam',
-    note: 'Seat of the R&B Division that delivers this programme, and the base for the yatra.',
-  },
-  {
-    ...DISTRICT.betaab,
-    name: 'Betaab Valley',
-    note: 'Between Pahalgam and Chandanwari, on the road up the Lidder.',
-  },
-  {
-    ...DISTRICT.aru,
-    name: 'Aru',
-    note: 'A high village above Pahalgam, and among the furthest schools have to reach.',
-  },
-  {
-    ...DISTRICT.chandanwari,
-    name: 'Chandanwari',
-    note: 'Under snow for much of the year — the conditions the programme is built around.',
-  },
-  {
-    ...DISTRICT.kokernag,
-    name: 'Kokernag',
-    note: 'Chinar and spring gardens in the south of the district.',
-  },
-];
-
 /* ── Real school interiors, verified on Commons ────────────────────────── */
 
 /**

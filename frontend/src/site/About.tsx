@@ -62,7 +62,7 @@ export function AboutPage() {
       </section>
 
       {/* ══ OUR MISSION — a numbered rail, not a grid ══════════════════ */}
-      <Section className="relative overflow-hidden">
+      <Section className="relative overflow-hidden !pb-10 !pt-4 lg:!pb-12 lg:!pt-6">
         <Backdrop variant="warm" grid />
         <div className="grid gap-14 lg:grid-cols-[0.8fr_1fr]">
           <div className="lg:sticky lg:top-28 lg:self-start">
@@ -102,7 +102,7 @@ export function AboutPage() {
       </Section>
 
       {/* ══ OUR VALUES — badges rather than cards ══════════════════════ */}
-      <Section className="relative overflow-hidden bg-surface">
+      <Section className="relative overflow-hidden bg-surface !py-12 lg:!py-14">
         <Backdrop variant="mint" />
         <SectionHeading
           kicker="Our Values"

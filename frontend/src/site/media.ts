@@ -222,9 +222,12 @@ export const HERO_SLIDES: Array<
 ];
 
 export const ABOUT: Record<string, Photo> = {
+  // Supplied by the division: pupils outside a village school in the valley.
+  // Portrait, so it crops from the middle — the building and the boys both
+  // stay in frame whether it is shown as a circle or a 4:3.
   welcome: {
-    src: unsplash('photo-1580582932707-520aed937b7b'),
-    alt: 'School children seated at their desks during a lesson',
+    src: '/images/village-school.jpg',
+    alt: 'Schoolboys in uniform outside a red-roofed village school',
   },
   valley: DISTRICT.lidder,
   campus: DISTRICT.polytechnic,

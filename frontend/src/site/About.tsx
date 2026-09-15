@@ -89,7 +89,7 @@ export function AboutPage() {
     <>
       <PageBanner
         title="About Us"
-        subtitle={`A government school programme of the ${DIVISION.department}, run across ${DIVISION.district} by the ${DIVISION.division}.`}
+        subtitle="Government schools across Anantnag, committed to inclusive, quality education — and to every student who walks through the gate."
         image={DISTRICT.amarnathApproach.src}
         imageAlt={DISTRICT.amarnathApproach.alt}
       />

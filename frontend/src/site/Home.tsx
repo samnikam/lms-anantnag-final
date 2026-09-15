@@ -242,7 +242,7 @@ export function HomePage() {
       </section>
 
       {/* ══ QUICK LINKS ════════════════════════════════════════════════ */}
-      <section className="mx-auto mt-14 max-w-6xl px-5 sm:px-8">
+      <section className="mx-auto mt-6 max-w-6xl px-5 sm:px-8">
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {QUICK_LINKS.map((q, i) => (
             <Reveal key={q.title} delay={i * 80}>
@@ -264,7 +264,7 @@ export function HomePage() {
       </section>
 
       {/* ══ NOTICE TICKER ══════════════════════════════════════════════ */}
-      <div className="mt-14 border-y border-brand-800 bg-brand-700">
+      <div className="mt-6 border-y border-brand-800 bg-brand-700">
         <div className="mx-auto flex max-w-6xl items-stretch">
           <span className="flex shrink-0 items-center gap-2 bg-accent-amber px-5 py-3 text-[12px] font-extrabold uppercase tracking-[0.1em] text-ink">
             <span className="pulse-ring h-2 w-2 rounded-full bg-accent-coral-deep" aria-hidden />
@@ -288,7 +288,7 @@ export function HomePage() {
       </div>
 
       {/* ══ QUICK INFORMATION ══════════════════════════════════════════ */}
-      <section className="mx-auto max-w-6xl px-5 pt-14 sm:px-8">
+      <section className="mx-auto max-w-6xl px-5 pt-8 sm:px-8">
         <Reveal>
           <div className="grid overflow-hidden rounded-2xl bg-surface shadow-md ring-1 ring-rule sm:grid-cols-2 lg:grid-cols-4">
             {QUICK_INFO.map((q, i) => {

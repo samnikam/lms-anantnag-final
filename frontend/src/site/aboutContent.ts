@@ -3,16 +3,13 @@ import {
   Award,
   BookOpen,
   Brain,
-  CalendarDays,
   Gavel,
   HandHeart,
   Handshake,
   Heart,
   Laptop,
   LifeBuoy,
-  MapPin,
   MonitorPlay,
-  School,
   ScrollText,
   Sparkles,
   Users,
@@ -22,9 +19,6 @@ import {
 /**
  * The written content of the About page, kept out of the markup so it can be
  * edited without touching layout.
- *
- * TO FILL IN: three rows of AT_A_GLANCE are marked `pending` because the
- * division has not supplied them. Nothing here invents a date or a headcount.
  */
 
 export const VISION =
@@ -53,17 +47,6 @@ export const VALUES = [
   { icon: Sparkles, name: 'Excellence', tone: 'coral' },
   { icon: Heart, name: 'Compassion', tone: 'violet' },
 ] as const;
-
-/* ── Head of institution ───────────────────────────────────────────────── */
-
-export const HEAD_MESSAGE =
-  'Education is not only about academic achievement; it is about developing responsible, confident and capable individuals. We strive to provide every student with opportunities to learn, participate and grow.';
-
-/** Replace with the actual office holder before publishing. */
-export const HEAD_OF_INSTITUTION = {
-  name: 'To be confirmed',
-  role: 'Head of Institution',
-};
 
 /* ── Teaching staff ────────────────────────────────────────────────────── */
 
@@ -97,26 +80,3 @@ export const STAFF_POINTS = [
   },
 ] as const;
 
-/* ── School at a glance ────────────────────────────────────────────────── */
-
-export interface GlanceRow {
-  icon: typeof School;
-  label: string;
-  value: string;
-  /** True where the division has yet to supply the figure. */
-  pending?: boolean;
-}
-
-export const AT_A_GLANCE: GlanceRow[] = [
-  { icon: CalendarDays, label: 'Established', value: 'To be confirmed', pending: true },
-  { icon: MapPin, label: 'Location', value: 'Anantnag District, Jammu & Kashmir' },
-  { icon: BookOpen, label: 'Classes', value: 'As offered at each participating school' },
-  { icon: Users, label: 'Students', value: 'To be confirmed', pending: true },
-  { icon: School, label: 'Teachers', value: 'To be confirmed', pending: true },
-  { icon: MapPin, label: 'Campus', value: '21 school sites across the district' },
-  {
-    icon: MonitorPlay,
-    label: 'Facilities',
-    value: '42 smart classrooms, 2 broadcast studios',
-  },
-];

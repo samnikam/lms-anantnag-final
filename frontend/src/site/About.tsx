@@ -4,53 +4,22 @@ import {
   Building2,
   CheckCircle2,
   Eye,
-  Quote,
   Radio,
   ShieldCheck,
-  Snowflake,
   Target,
-  Wifi,
 } from 'lucide-react';
 import { CountUp, Reveal } from './motion';
 import { DECOR, Shape, Wave } from './decor';
 import { TONE } from './tone';
-import { ABOUT, DISTRICT, HERO_SLIDES, ROLE_PHOTOS } from './media';
+import { ABOUT, DISTRICT, HERO_SLIDES } from './media';
 import {
-  AT_A_GLANCE,
-  HEAD_MESSAGE,
-  HEAD_OF_INSTITUTION,
   MISSION,
   STAFF_NOTE,
   STAFF_POINTS,
   VALUES,
   VISION,
 } from './aboutContent';
-import {
-  Backdrop,
-  DIVISION,
-  FIGURES,
-  PageBanner,
-  Section,
-  SectionHeading,
-} from './PublicLayout';
-
-const CHALLENGES = [
-  {
-    icon: Building2,
-    title: 'A specialist cannot be everywhere',
-    body: 'Subject teachers are scarce and spread thin across a division. A class without one simply went without that subject.',
-  },
-  {
-    icon: Snowflake,
-    title: 'Terrain and winter',
-    body: 'Schools sit far apart across mountainous ground, and the hardest months to travel are also the months of the academic year that matter most.',
-  },
-  {
-    icon: Wifi,
-    title: 'Records in separate books',
-    body: 'Attendance in one register, marks in another, the timetable on a noticeboard — no way to see a learner whole, or a school at a glance.',
-  },
-];
+import { Backdrop, DIVISION, PageBanner, Section, SectionHeading } from './PublicLayout';
 
 const OBJECTIVES = [
   'Bring a full subject curriculum within reach of every participating school',
@@ -194,45 +163,6 @@ export function AboutPage() {
         </div>
       </Section>
 
-      {/* ══ HEAD OF INSTITUTION'S MESSAGE ══════════════════════════════ */}
-      <Section>
-        <div className="grid items-center gap-12 lg:grid-cols-[auto_1fr]">
-          <Reveal variant="left">
-            <div className="relative mx-auto w-52 lg:w-64">
-              <img
-                src={ROLE_PHOTOS.teacher.src}
-                alt={ROLE_PHOTOS.teacher.alt}
-                loading="lazy"
-                className="aspect-square w-full rounded-2xl object-cover object-[center_28%] shadow-xl ring-1 ring-rule"
-              />
-              <span
-                className="absolute -bottom-4 -right-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-accent-amber text-ink shadow-lg"
-                aria-hidden
-              >
-                <Quote className="h-6 w-6" />
-              </span>
-            </div>
-          </Reveal>
-
-          <Reveal variant="right" delay={120}>
-            <SectionHeading
-              kicker="Message from the Head of Institution"
-              title="Learning that builds the whole person"
-              align="left"
-            />
-            <blockquote className="mt-7 text-[18px] font-medium italic leading-relaxed text-ink-soft sm:text-[20px]">
-              {HEAD_MESSAGE}
-            </blockquote>
-            <div className="mt-8 border-l-4 border-accent-coral pl-5">
-              <p className="text-[15px] font-extrabold text-ink">{HEAD_OF_INSTITUTION.name}</p>
-              <p className="text-[12.5px] font-semibold uppercase tracking-[0.08em] text-muted">
-                {HEAD_OF_INSTITUTION.role}
-              </p>
-            </div>
-          </Reveal>
-        </div>
-      </Section>
-
       {/* ══ TEACHERS & STAFF ═══════════════════════════════════════════ */}
       <Section className="relative overflow-hidden bg-surface">
         <Backdrop variant="cool" />
@@ -261,63 +191,6 @@ export function AboutPage() {
               </Reveal>
             ))}
           </div>
-        </div>
-      </Section>
-
-      {/* ══ SCHOOL AT A GLANCE — a ruled record, not boxes ═════════════ */}
-      <Section>
-        <SectionHeading
-          kicker="School at a glance"
-          title="The programme in summary"
-          description="The essential facts about the schools this programme serves."
-        />
-
-        <div className="mt-14 grid gap-10 lg:grid-cols-[1.15fr_0.85fr]">
-          <Reveal variant="left">
-            <dl className="divide-y divide-rule border-y border-rule">
-              {AT_A_GLANCE.map((r) => (
-                <div key={r.label} className="group flex items-center gap-5 py-5">
-                  <span className="icon-pop inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-tint-brand text-brand-600">
-                    <r.icon className="h-5 w-5" aria-hidden />
-                  </span>
-                  <dt className="w-32 shrink-0 text-[12px] font-bold uppercase tracking-[0.1em] text-faint">
-                    {r.label}
-                  </dt>
-                  <dd
-                    className={
-                      r.pending
-                        ? 'text-[14.5px] font-medium italic text-faint'
-                        : 'text-[15px] font-bold text-ink'
-                    }
-                  >
-                    {r.value}
-                  </dd>
-                </div>
-              ))}
-            </dl>
-          </Reveal>
-
-          <Reveal variant="right" delay={120}>
-            <div className="grid grid-cols-2 gap-4">
-              {FIGURES.map((f, i) => {
-                const tones = ['coral', 'violet', 'mint', 'amber'] as const;
-                const t = TONE[tones[i]];
-                return (
-                  <div
-                    key={f.label}
-                    className={`flex flex-col justify-center rounded-2xl ${t.soft} p-6 text-center transition-transform duration-300 hover:-translate-y-1.5`}
-                  >
-                    <span className={`num text-[34px] font-extrabold leading-none ${t.text}`}>
-                      <CountUp value={f.value} />
-                    </span>
-                    <span className="mt-2.5 text-[11.5px] font-bold uppercase tracking-[0.1em] text-ink-soft">
-                      {f.label}
-                    </span>
-                  </div>
-                );
-              })}
-            </div>
-          </Reveal>
         </div>
       </Section>
 
@@ -385,31 +258,6 @@ export function AboutPage() {
               </div>
             </div>
           </Reveal>
-        </div>
-      </Section>
-
-      {/* ══ THE NEED ═══════════════════════════════════════════════════ */}
-      <Section>
-        <SectionHeading
-          kicker="The need"
-          title="What the division set out to solve"
-          description="Three conditions shaped the programme, and all three are particular to a rural mountain district."
-        />
-
-        <div className="mt-14 grid gap-6 md:grid-cols-3">
-          {CHALLENGES.map((c, i) => (
-            <Reveal key={c.title} variant="zoom" delay={i * 110}>
-              <article className="lift-card group h-full rounded-2xl bg-surface p-7 shadow-sm ring-1 ring-rule hover:shadow-xl">
-                <span className="icon-pop inline-flex h-14 w-14 items-center justify-center rounded-xl bg-accent-coral-soft text-accent-coral-deep">
-                  <c.icon className="h-6 w-6" aria-hidden />
-                </span>
-                <h3 className="mt-5 text-[18px] font-extrabold tracking-[-0.02em] text-ink">
-                  {c.title}
-                </h3>
-                <p className="mt-3 text-[14px] leading-relaxed text-muted">{c.body}</p>
-              </article>
-            </Reveal>
-          ))}
         </div>
       </Section>
 

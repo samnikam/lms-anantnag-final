@@ -205,6 +205,12 @@ export const ABOUT: Record<string, Photo> = {
     src: '/images/smart-classroom.jpg',
     alt: 'A classroom lesson at an interactive panel, mountains beyond the windows',
   },
+  // Supplied by the division; an AI render, as the file it came from records.
+  // A five-panel collage of the schemes, each panel labelled in the picture.
+  schemes: {
+    src: '/images/schemes-collage.jpg',
+    alt: 'Five scenes: a school meal, a lesson at an interactive panel, a student with a scholarship letter, a teacher helping a pupil in a wheelchair, and students building a model car',
+  },
 };
 
 /**

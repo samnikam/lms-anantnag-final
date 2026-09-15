@@ -545,73 +545,63 @@ export function HomePage() {
         </div>
       </Section>
 
-      {/* ══ GOVERNMENT INITIATIVES — tinted stripes, not boxes ═════════ */}
+      {/* ══ GOVERNMENT INITIATIVES — the collage, then tinted stripes ══ */}
       <Section className="relative overflow-hidden">
         <Backdrop variant="cool" grid />
-        <div className="grid gap-12 lg:grid-cols-[0.75fr_1.25fr] lg:gap-16">
-          {/* The heading holds still while the schemes scroll past it. */}
-          <div className="lg:sticky lg:top-28 lg:self-start">
-            <Reveal variant="left">
-              <SectionHeading
-                kicker="Government initiatives"
-                title="Schemes supporting our students"
-                align="left"
-              />
-              <p className="mt-5 text-[15px] leading-relaxed text-muted">
-                National and Union Territory programmes that government schools in the district
-                come under.
-              </p>
-              <img
-                src={ABOUT.welcome.src}
-                alt={ABOUT.welcome.alt}
-                loading="lazy"
-                className="mt-9 hidden aspect-[4/5] w-full max-w-sm rounded-2xl object-cover object-[center_35%] shadow-xl ring-1 ring-rule lg:block"
-              />
-            </Reveal>
-          </div>
+        <SectionHeading
+          kicker="Government initiatives"
+          title="Schemes supporting our students"
+          description="National and Union Territory programmes that government schools in the district come under."
+        />
 
-          {/* Each scheme is one wide stripe in its own tint. */}
-          <ol className="space-y-3">
-            {INITIATIVES.map((g, i) => {
-              const tones = ['coral', 'mint', 'sky', 'amber', 'violet', 'coral'] as const;
-              const t = TONE[tones[i]];
-              return (
-                <Reveal key={g.title} variant="right" delay={i * 70} as="li">
-                  <li
-                    className={`group flex flex-wrap items-center gap-x-6 gap-y-3 rounded-2xl ${t.soft} px-6 py-5 transition-all duration-300 hover:-translate-x-1.5 hover:shadow-lg sm:flex-nowrap`}
+        <Reveal variant="zoom" delay={80}>
+          <figure className="group mt-12 overflow-hidden rounded-[28px] shadow-xl ring-1 ring-rule">
+            <img
+              src={ABOUT.schemes.src}
+              alt={ABOUT.schemes.alt}
+              loading="lazy"
+              className="photo-zoom h-auto w-full object-cover"
+            />
+          </figure>
+        </Reveal>
+
+        {/* Each scheme is one wide stripe in its own tint. */}
+        <ol className="mt-8 grid gap-3 md:grid-cols-2">
+          {INITIATIVES.map((g, i) => {
+            const tones = ['coral', 'mint', 'sky', 'amber', 'violet', 'coral'] as const;
+            const t = TONE[tones[i]];
+            return (
+              <Reveal key={g.title} variant={i % 2 === 0 ? 'left' : 'right'} delay={(i % 2) * 70} as="li">
+                <li
+                  className={`group flex h-full items-center gap-5 rounded-2xl ${t.soft} px-6 py-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg`}
+                >
+                  <span
+                    className={`icon-pop inline-flex h-13 w-13 shrink-0 items-center justify-center rounded-full ${t.solid} ${t.on} p-3 shadow-sm`}
                   >
-                    <span
-                      className={`icon-pop inline-flex h-14 w-14 shrink-0 items-center justify-center rounded-full ${t.solid} ${t.on} shadow-sm`}
+                    <g.icon className="h-6 w-6" aria-hidden />
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <h3 className="text-[16.5px] font-extrabold tracking-[-0.02em] text-ink">
+                      {g.title}
+                    </h3>
+                    <p className="mt-1 text-[13px] leading-relaxed text-ink-soft">{g.body}</p>
+                  </div>
+                  {'href' in g && g.href ? (
+                    <a
+                      href={g.href}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      aria-label={`${g.title}: official site`}
+                      className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-surface ${t.text} shadow-sm ring-1 ring-rule transition-all hover:scale-110 hover:shadow`}
                     >
-                      <g.icon className="h-6 w-6" aria-hidden />
-                    </span>
-                    <div className="min-w-[14rem] flex-1">
-                      <h3 className="text-[17px] font-extrabold tracking-[-0.02em] text-ink">
-                        {g.title}
-                      </h3>
-                      <p className="mt-1 text-[13.5px] leading-relaxed text-ink-soft">{g.body}</p>
-                    </div>
-                    {'href' in g && g.href ? (
-                      <a
-                        href={g.href}
-                        target="_blank"
-                        rel="noreferrer noopener"
-                        className={`inline-flex shrink-0 items-center gap-2 rounded-full bg-surface px-4 py-2 text-[12.5px] font-bold ${t.text} shadow-sm ring-1 ring-rule transition-all hover:shadow`}
-                      >
-                        Official site
-                        <ExternalLink className="h-3.5 w-3.5" aria-hidden />
-                      </a>
-                    ) : (
-                      <span className="inline-flex shrink-0 items-center rounded-full bg-surface/70 px-4 py-2 text-[11.5px] font-bold uppercase tracking-[0.06em] text-muted ring-1 ring-rule">
-                        Via your school
-                      </span>
-                    )}
-                  </li>
-                </Reveal>
-              );
-            })}
-          </ol>
-        </div>
+                      <ExternalLink className="h-4 w-4" aria-hidden />
+                    </a>
+                  ) : null}
+                </li>
+              </Reveal>
+            );
+          })}
+        </ol>
       </Section>
 
     </>

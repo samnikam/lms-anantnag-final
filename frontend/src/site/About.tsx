@@ -1,14 +1,5 @@
-import { Link } from 'react-router-dom';
-import {
-  ArrowRight,
-  Building2,
-  CheckCircle2,
-  Eye,
-  Radio,
-  ShieldCheck,
-  Target,
-} from 'lucide-react';
-import { CountUp, Reveal } from './motion';
+import { CheckCircle2, Eye } from 'lucide-react';
+import { Reveal } from './motion';
 import { DECOR, Shape, Wave } from './decor';
 import { TONE } from './tone';
 import { ABOUT, DISTRICT, HERO_SLIDES } from './media';
@@ -19,7 +10,7 @@ import {
   VALUES,
   VISION,
 } from './aboutContent';
-import { Backdrop, DIVISION, PageBanner, Section, SectionHeading } from './PublicLayout';
+import { Backdrop, PageBanner, Section, SectionHeading } from './PublicLayout';
 
 const OBJECTIVES = [
   'Bring a full subject curriculum within reach of every participating school',
@@ -28,29 +19,6 @@ const OBJECTIVES = [
   'Give each school its own view, and the division office the whole picture',
   'Degrade gracefully on weak rural connections rather than failing outright',
   'Make every issued certificate publicly verifiable',
-];
-
-const APPROACH = [
-  {
-    icon: Radio,
-    title: 'Teach once, receive everywhere',
-    body: 'Two production studios — camera, lighting, green screen and acoustic treatment — broadcast to 42 interactive panels across the district, so a single lesson serves many classrooms at once.',
-  },
-  {
-    icon: Building2,
-    title: 'One record for the division',
-    body: 'Timetable, attendance, assignments, examinations, results and certificates are held in one system, scoped so each school sees its own and the office sees all of them.',
-  },
-  {
-    icon: ShieldCheck,
-    title: 'Access decided on the server',
-    body: 'Every request is checked against the signed-in role and the school it belongs to. A teacher cannot reach another teacher’s register; a parent sees only their own child.',
-  },
-  {
-    icon: Target,
-    title: 'Built for the connection available',
-    body: 'Sessions record for catch-up, lessons cache on the classroom PC ahead of time, and panels sign in as shared devices rather than needing an account per learner.',
-  },
 ];
 
 export function AboutPage() {
@@ -194,73 +162,6 @@ export function AboutPage() {
         </div>
       </Section>
 
-      {/* ══ ABOUT THE PROGRAMME ════════════════════════════════════════ */}
-      <Section className="relative overflow-hidden bg-surface">
-        <Backdrop variant="warm" />
-        <div className="grid items-center gap-12 lg:grid-cols-2">
-          <Reveal variant="left">
-            <SectionHeading
-              kicker="Our Programme"
-              title="A classroom that stretches across the district"
-              align="left"
-            />
-            <div className="mt-6 space-y-4 text-[15px] leading-relaxed text-muted">
-              <p>
-                {DIVISION.programme} is a programme of the {DIVISION.department}, run across{' '}
-                {DIVISION.district} by the {DIVISION.division}. It serves government schools in
-                the district — the classrooms furthest from a specialist teacher first.
-              </p>
-              <p>
-                It pairs classroom hardware with a purpose-built learning portal. Two broadcast
-                studios carry lessons to interactive panels installed in classrooms at schools
-                across the district, while the portal holds everything that follows from those
-                lessons — the timetable, the daily register, work set and graded, examinations,
-                results and certificates.
-              </p>
-              <p>
-                The structure of the programme follows directly from its hardware: two studios,
-                forty-two classroom panels, twenty-one sites. That is a hub-and-spoke
-                arrangement, not a set of independent virtual classrooms, and the portal is built
-                around it.
-              </p>
-            </div>
-          </Reveal>
-
-          <Reveal variant="right" delay={120}>
-            <div className="grid grid-cols-2 gap-4">
-              <img
-                src={ABOUT.welcome.src}
-                alt={ABOUT.welcome.alt}
-                loading="lazy"
-                className="col-span-2 aspect-[16/10] w-full rounded-2xl object-cover shadow-xl ring-1 ring-rule"
-              />
-              <figure className="group relative overflow-hidden rounded-2xl shadow ring-1 ring-rule">
-                <img
-                  src={DISTRICT.amarnathCave.src}
-                  alt={DISTRICT.amarnathCave.alt}
-                  loading="lazy"
-                  className="photo-zoom aspect-square w-full object-cover"
-                />
-                <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-brand-900/90 to-transparent px-4 pb-3 pt-8">
-                  <span className="text-[13px] font-extrabold text-white">Amarnath</span>
-                  <span className="block text-[10px] text-white/50">
-                    {DISTRICT.amarnathCave.credit!.author} · {DISTRICT.amarnathCave.credit!.license}
-                  </span>
-                </figcaption>
-              </figure>
-              <div className="flex flex-col justify-center rounded-2xl bg-accent-amber p-6">
-                <span className="num text-[38px] font-extrabold leading-none text-ink">
-                  <CountUp value="42" />
-                </span>
-                <span className="mt-2 text-[12px] font-bold uppercase tracking-[0.1em] text-ink/70">
-                  Smart classrooms
-                </span>
-              </div>
-            </div>
-          </Reveal>
-        </div>
-      </Section>
-
       {/* ══ OBJECTIVES ═════════════════════════════════════════════════ */}
       <section className="relative overflow-hidden bg-brand-800">
         <img
@@ -290,39 +191,6 @@ export function AboutPage() {
         </div>
       </section>
 
-      {/* ══ OUR APPROACH ═══════════════════════════════════════════════ */}
-      <Section className="relative overflow-hidden bg-surface">
-        <Backdrop variant="cool" grid />
-        <SectionHeading kicker="Our approach" title="How the portal answers it" />
-
-        <div className="mt-14 grid gap-6 md:grid-cols-2">
-          {APPROACH.map((a, i) => (
-            <Reveal key={a.title} variant={i % 2 === 0 ? 'left' : 'right'} delay={(i % 2) * 110}>
-              <article className="lift-card group flex h-full gap-5 rounded-2xl bg-paper p-7 ring-1 ring-rule hover:shadow-xl">
-                <span className="icon-pop inline-flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-brand-600 to-brand-800 text-white shadow-pill">
-                  <a.icon className="h-6 w-6" aria-hidden />
-                </span>
-                <div className="min-w-0">
-                  <h3 className="text-[18px] font-extrabold tracking-[-0.02em] text-ink">
-                    {a.title}
-                  </h3>
-                  <p className="mt-2.5 text-[14px] leading-relaxed text-muted">{a.body}</p>
-                </div>
-              </article>
-            </Reveal>
-          ))}
-        </div>
-
-        <div className="mt-12 text-center">
-          <Link
-            to="/contact"
-            className="btn-sheen group inline-flex items-center gap-2 rounded-lg bg-brand-700 px-7 py-3.5 text-[14.5px] font-bold text-white shadow-pill transition-all hover:-translate-y-0.5 hover:bg-brand-600"
-          >
-            Contact the division office
-            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden />
-          </Link>
-        </div>
-      </Section>
     </>
   );
 }

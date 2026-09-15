@@ -55,13 +55,16 @@ export function Section({
   children,
   className,
   width = 'default',
+  id,
 }: {
   children: React.ReactNode;
   className?: string;
   width?: 'default' | 'narrow';
+  /** An anchor, so a link can land on the section. */
+  id?: string;
 }) {
   return (
-    <section className={clsx('px-5 py-16 sm:px-8 lg:py-20', className)}>
+    <section id={id} className={clsx('px-5 py-16 sm:px-8 lg:py-20', className)}>
       <div className={clsx('mx-auto', width === 'narrow' ? 'max-w-3xl' : 'max-w-6xl')}>
         {children}
       </div>

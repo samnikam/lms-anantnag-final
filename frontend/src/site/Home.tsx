@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import {
   ArrowRight,
   Award,
+  ChevronDown,
   CalendarDays,
   ChevronRight,
   ExternalLink,
@@ -13,10 +14,10 @@ import {
 } from 'lucide-react';
 import clsx from 'clsx';
 import { Backdrop, DIVISION, FIGURES, Section, SectionHeading } from './PublicLayout';
-import { CountUp, Reveal } from './motion';
+import { CountUp, Reveal, Tilt, useParallax } from './motion';
 import { TONE } from './tone';
 import { CirclePhoto, DECOR, DoubleWave, Shape, Wave } from './decor';
-import { ABOUT, GALLERY, HERO_SLIDES, ROLE_PHOTOS } from './media';
+import { ABOUT, DISTRICT, GALLERY, HERO_SLIDES, ROLE_PHOTOS, SCHOOL } from './media';
 import {
   FACILITY_CARDS,
   HEAD_MESSAGE,
@@ -60,6 +61,22 @@ export function HomePage() {
     setAuto(false);
     setSlide((n + HERO_SLIDES.length) % HERO_SLIDES.length);
   };
+
+  // The digital band's photograph drifts more slowly than the page.
+  const parallax = useParallax(0.16);
+
+  /* The real photographs the division has supplied, for the strip. */
+  const STRIP = [
+    { src: '/images/school-campus.jpg', alt: 'A school building under snow' },
+    { src: '/images/village-school.jpg', alt: 'Pupils outside a village school' },
+    { src: '/images/school-courtyard.jpg', alt: 'The courtyard from above' },
+    { src: '/images/student-painting.jpg', alt: 'A pupil painting' },
+    { src: '/images/school-grounds.jpg', alt: 'School blocks around a lawn' },
+    SCHOOL.scienceLab,
+    DISTRICT.pahalgamValley,
+    SCHOOL.library,
+    DISTRICT.betaab,
+  ];
 
   return (
     <>
@@ -155,6 +172,15 @@ export function HomePage() {
             <ChevronRight className="h-5 w-5" />
           </button>
 
+          {/* A quiet cue that there is more below. */}
+          <a
+            href="#welcome"
+            aria-label="Scroll to the next section"
+            className="cue-bounce absolute bottom-24 left-1/2 z-20 hidden -translate-x-1/2 items-center justify-center rounded-full bg-white/15 p-2 text-white ring-1 ring-white/30 backdrop-blur-sm transition-colors hover:bg-white/25 sm:bottom-28 sm:flex"
+          >
+            <ChevronDown className="h-5 w-5" aria-hidden />
+          </a>
+
           <DoubleWave
             className="pointer-events-none absolute inset-x-0 bottom-0 h-14 w-full sm:h-20"
             fill="#e8f2fb"
@@ -195,10 +221,16 @@ export function HomePage() {
                 aria-label={`Go to slide ${i + 1}`}
                 aria-current={i === slide}
                 className={clsx(
-                  'h-1.5 rounded-full transition-all',
-                  i === slide ? 'w-8 bg-brand-700' : 'w-4 bg-brand-200 hover:bg-brand-400',
+                  'relative h-1.5 overflow-hidden rounded-full transition-all',
+                  i === slide ? 'w-10 bg-brand-200' : 'w-4 bg-brand-200 hover:bg-brand-400',
                 )}
-              />
+              >
+                {/* Fills across in the time the slide stays up. */}
+                {i === slide && auto && (
+                  <span key={slide} className="slide-timer absolute inset-0 rounded-full bg-brand-700" />
+                )}
+                {i === slide && !auto && <span className="absolute inset-0 rounded-full bg-brand-700" />}
+              </button>
             ))}
           </div>
         </div>
@@ -209,6 +241,7 @@ export function HomePage() {
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {QUICK_LINKS.map((q, i) => (
             <Reveal key={q.title} delay={i * 80}>
+              <Tilt className="h-full">
               <Link
                 to={q.to}
                 className="lift-card group flex h-full items-center gap-4 rounded-xl bg-surface p-5 shadow-md ring-1 ring-rule hover:shadow-xl"
@@ -221,6 +254,7 @@ export function HomePage() {
                   <span className="block text-[12.5px] text-muted">{q.body}</span>
                 </span>
               </Link>
+              </Tilt>
             </Reveal>
           ))}
         </div>
@@ -281,11 +315,16 @@ export function HomePage() {
       </section>
 
       {/* ══ WELCOME ════════════════════════════════════════════════════ */}
-      <Section className="relative overflow-hidden">
+      <Section className="relative overflow-hidden" id="welcome">
         <Backdrop variant="warm" />
         <div className="grid items-center gap-12 lg:grid-cols-2">
           <Reveal variant="left">
             <div className="group relative">
+              {/* A dashed ring turning slowly behind the portrait. */}
+              <span
+                aria-hidden
+                className="spin-slow pointer-events-none absolute right-[-1%] top-[1%] aspect-square w-[98%] rounded-full border-2 border-dashed border-accent-mint/50"
+              />
               <CirclePhoto src={ABOUT.welcome.src} alt={ABOUT.welcome.alt} />
               <div className="absolute bottom-2 right-0 rounded-xl bg-accent-amber px-5 py-3 shadow-lg">
                 <span className="num block text-[26px] font-extrabold leading-none text-ink">
@@ -402,6 +441,37 @@ export function HomePage() {
         <Wave className="block h-12 w-full sm:h-16" fill="#f7fafd" />
       </section>
 
+      {/* ══ PHOTO STRIP — the division's own pictures, drifting past ═══ */}
+      <section className="overflow-hidden bg-surface py-12" aria-label="Photographs from our schools">
+        <div className="mx-auto mb-8 max-w-6xl px-5 sm:px-8">
+          <Reveal>
+            <p className="text-center text-[12px] font-extrabold uppercase tracking-[0.18em] text-accent-sky-deep">
+              Life at our schools
+            </p>
+          </Reveal>
+        </div>
+        {/* Duplicated so the loop meets itself; hovering pauses it. */}
+        <div className="strip-track gap-4 px-2">
+          {[...STRIP, ...STRIP].map((ph, i) => (
+            <figure
+              key={`${ph.src}-${i}`}
+              className={clsx(
+                'group relative shrink-0 overflow-hidden rounded-2xl shadow-md ring-1 ring-rule',
+                i % 3 === 1 ? 'h-56 w-44 sm:h-64 sm:w-52' : 'h-56 w-72 sm:h-64 sm:w-96',
+              )}
+            >
+              <img
+                src={ph.src}
+                alt={ph.alt}
+                loading="lazy"
+                className="photo-zoom h-full w-full object-cover"
+              />
+              <span className="absolute inset-0 bg-gradient-to-t from-brand-900/50 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+            </figure>
+          ))}
+        </div>
+      </section>
+
       {/* ══ WHY CHOOSE US ══════════════════════════════════════════════ */}
       <Section className="relative overflow-hidden">
         <Backdrop variant="cool" grid />
@@ -455,12 +525,16 @@ export function HomePage() {
       </Section>
 
       {/* ══ DIGITAL & HYBRID LEARNING ══════════════════════════════════ */}
-      <section className="relative overflow-hidden bg-accent-mint-deep">
+      <section
+        ref={parallax.ref as React.RefObject<HTMLElement>}
+        className="relative overflow-hidden bg-accent-mint-deep"
+      >
         <img
           src={GALLERY[5].src}
           alt=""
           aria-hidden
           loading="lazy"
+          style={parallax.style}
           className="absolute inset-0 h-full w-full object-cover opacity-[0.13]"
         />
         <Wave
@@ -516,8 +590,9 @@ export function HomePage() {
               i === 0 ? 'row-span-2' : i === 3 ? 'lg:col-span-2' : i === 5 ? 'col-span-2 lg:col-span-1' : '';
             return (
               <Reveal key={f.title} variant="zoom" delay={(i % 4) * 90} className={shape}>
+                <Tilt className="h-full" max={5}>
                 <article
-                  className={`group flex h-full flex-col justify-end overflow-hidden rounded-2xl ${t.soft} p-6 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl`}
+                  className={`group flex h-full flex-col justify-end overflow-hidden rounded-2xl ${t.soft} p-6 transition-all duration-300 hover:shadow-xl`}
                 >
                   <span
                     className={`icon-pop mb-auto inline-flex h-12 w-12 items-center justify-center rounded-xl ${t.solid} ${t.on} shadow-sm`}
@@ -529,6 +604,7 @@ export function HomePage() {
                   </h3>
                   <p className="mt-1.5 text-[13px] leading-relaxed text-ink-soft">{f.body}</p>
                 </article>
+                </Tilt>
               </Reveal>
             );
           })}

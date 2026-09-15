@@ -171,3 +171,67 @@ export function BackToTop() {
     </button>
   );
 }
+
+/**
+ * Leans a card toward the cursor as it moves across it — a few degrees, no
+ * more — and settles back when the cursor leaves. Does nothing for anyone
+ * who has asked for reduced motion, and nothing on a touch screen, where
+ * there is no cursor to follow.
+ */
+export function Tilt({
+  children,
+  className,
+  max = 6,
+}: {
+  children: React.ReactNode;
+  className?: string;
+  max?: number;
+}) {
+  const ref = useRef<HTMLDivElement | null>(null);
+
+  const onMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const el = ref.current;
+    if (!el) return;
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
+    const r = el.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width - 0.5;
+    const y = (e.clientY - r.top) / r.height - 0.5;
+    el.style.transform = `perspective(900px) rotateX(${(-y * max).toFixed(2)}deg) rotateY(${(x * max).toFixed(2)}deg) translateY(-4px)`;
+  };
+  const onLeave = () => {
+    const el = ref.current;
+    if (el) el.style.transform = '';
+  };
+
+  return (
+    <div ref={ref} className={clsx('tilt', className)} onMouseMove={onMove} onMouseLeave={onLeave}>
+      {children}
+    </div>
+  );
+}
+
+/**
+ * Moves a background a fraction of the scroll, so a section's photograph
+ * drifts more slowly than the page over it. Returns a style to spread onto
+ * the element; empty when motion is reduced.
+ */
+export function useParallax(strength = 0.18) {
+  const ref = useRef<HTMLElement | null>(null);
+  const [offset, setOffset] = useState(0);
+
+  useEffect(() => {
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
+    const onScroll = () => {
+      const el = ref.current;
+      if (!el) return;
+      const r = el.getBoundingClientRect();
+      const centre = r.top + r.height / 2 - window.innerHeight / 2;
+      setOffset(-centre * strength);
+    };
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [strength]);
+
+  return { ref, style: { transform: `translate3d(0, ${offset.toFixed(1)}px, 0) scale(1.15)` } };
+}

@@ -435,6 +435,71 @@ svg.lucide {
   }
 }
 
+/* ── Front-page flourishes ───────────────────────────────────────────────
+   A slow ring, a scroll cue, the timing bar on the hero, and a strip of
+   photographs that drifts past. Decorative throughout. */
+@keyframes spin-slow {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes cue-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.9;
+  }
+  50% {
+    transform: translateY(8px);
+    opacity: 0.5;
+  }
+}
+@keyframes slide-timer {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+@keyframes strip-drift {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@layer components {
+  .spin-slow {
+    animation: spin-slow 40s linear infinite;
+  }
+  .cue-bounce {
+    animation: cue-bounce 1.8s ease-in-out infinite;
+  }
+  /* Fills across in the time the slide is on screen. */
+  .slide-timer {
+    transform-origin: left;
+    animation: slide-timer 6.5s linear both;
+  }
+  .strip-track {
+    display: flex;
+    width: max-content;
+    animation: strip-drift 60s linear infinite;
+  }
+  .strip-track:hover {
+    animation-play-state: paused;
+  }
+  /* A card that leans toward the cursor. The transform is set from JS;
+     this only gives it somewhere smooth to go. */
+  .tilt {
+    transform-style: preserve-3d;
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease;
+    will-change: transform;
+  }
+}
+
 /* Anyone who has asked their system for less movement gets none of it. */
 @media (prefers-reduced-motion: reduce) {
   .reveal,
@@ -445,12 +510,17 @@ svg.lucide {
   .ken-burns,
   .ticker-track,
   .pulse-ring,
+  .spin-slow,
+  .cue-bounce,
+  .slide-timer,
+  .strip-track,
   .orb,
   .float-y,
   .rule-grow {
     animation: none !important;
     transform: none !important;
   }
+  .tilt,
   .lift-card:hover,
   .group:hover .icon-pop,
   .group:hover .photo-zoom {

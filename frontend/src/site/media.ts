@@ -231,6 +231,14 @@ export const ABOUT: Record<string, Photo> = {
   },
   valley: DISTRICT.lidder,
   campus: DISTRICT.polytechnic,
+  // Supplied by the division. Note the file it came from was an AI render,
+  // not a photograph of a real classroom — it illustrates the smart
+  // classroom rather than documenting one, and should not be captioned as
+  // a particular school.
+  smartClassroom: {
+    src: '/images/smart-classroom.jpg',
+    alt: 'A classroom lesson at an interactive panel, mountains beyond the windows',
+  },
 };
 
 /** The equipment installed across the district, one photograph each. */

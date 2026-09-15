@@ -454,8 +454,8 @@ export function HomePage() {
                 Six things the district commits to for every learner it enrols.
               </p>
               <img
-                src={ABOUT.welcome.src}
-                alt={ABOUT.welcome.alt}
+                src={ABOUT.smartClassroom.src}
+                alt={ABOUT.smartClassroom.alt}
                 loading="lazy"
                 className="mt-9 hidden aspect-[4/3] w-full rounded-2xl object-cover shadow-xl ring-1 ring-rule lg:block"
               />

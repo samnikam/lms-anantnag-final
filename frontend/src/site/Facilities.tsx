@@ -2,7 +2,7 @@ import { Info } from 'lucide-react';
 import { CountUp, Reveal } from './motion';
 import { Wave } from './decor';
 import { TONE } from './tone';
-import { GALLERY, HERO_SLIDES } from './media';
+
 import { CAMPUS, CAMPUS_NOTE, CAMPUS_PHOTO, FACILITY_BLOCKS } from './facilitiesContent';
 import { Backdrop, PageBanner, Section, SectionHeading } from './PublicLayout';
 
@@ -12,8 +12,8 @@ export function FacilitiesPage() {
       <PageBanner
         title="Facilities"
         subtitle="The spaces and equipment supporting teaching across the district's schools."
-        image={GALLERY[3].src}
-        imageAlt={GALLERY[3].alt}
+        image="/images/school-corridor.jpg"
+        imageAlt="A long covered corridor along a row of classrooms"
       />
 
       {/* ══ THE FACILITIES — alternating photo and text ════════════════ */}

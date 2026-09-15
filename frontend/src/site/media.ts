@@ -217,6 +217,16 @@ export const ABOUT: Record<string, Photo> = {
     src: '/images/computer-class.jpg',
     alt: 'Students in a row at desktop computers during a computer class',
   },
+  // Supplied by the division: students reading at tables in a school library.
+  library: {
+    src: '/images/school-library.jpg',
+    alt: 'Students reading at tables between the shelves of a school library',
+  },
+  // Supplied by the division: a lesson taught from a projected slide.
+  projectorLesson: {
+    src: '/images/projector-lesson.jpg',
+    alt: 'A teacher presenting a projected lesson to a full classroom',
+  },
   schemes: {
     src: '/images/schemes-collage.jpg',
     alt: 'Five scenes: a school meal, a lesson at an interactive panel, a student with a scholarship letter, a teacher helping a pupil in a wheelchair, and students building a model car',

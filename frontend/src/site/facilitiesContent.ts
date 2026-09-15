@@ -13,9 +13,6 @@ import {
 } from 'lucide-react';
 import { ABOUT, DISTRICT, SCHOOL, type Photo } from './media';
 
-const unsplash = (id: string, w = 1200) =>
-  `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&q=80`;
-
 /**
  * The written content of the Facilities page.
  *
@@ -43,15 +40,14 @@ export const FACILITY_BLOCKS: Facility[] = [
     title: 'Smart & digital classrooms',
     count: '42',
     body: 'Interactive learning environments supporting multimedia lessons and digital educational resources. Each panel receives studio broadcasts and serves as the board the teacher writes on.',
-    src: unsplash('photo-1571260899304-425eee4c7efc'),
-    alt: 'A classroom with a large interactive display at the front',
+    ...ABOUT.projectorLesson,
   },
   {
     icon: LibraryBig,
     tone: 'violet',
     title: 'Library',
     body: 'A learning space where students can read, explore and develop independent learning habits, supported by the programme’s shared digital collection.',
-    ...SCHOOL.library,
+    ...ABOUT.library,
     varies: true,
   },
   {

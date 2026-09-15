@@ -545,53 +545,79 @@ export function HomePage() {
         </div>
       </Section>
 
-      {/* ══ GOVERNMENT INITIATIVES ═════════════════════════════════════ */}
-      <section className="relative overflow-hidden bg-brand-800">
-        <span aria-hidden className="orb -right-24 -top-28 h-96 w-96 bg-accent-sky/20" />
-        <span
-          aria-hidden
-          className="orb -bottom-24 -left-20 h-80 w-80 bg-accent-mint/20"
-          style={{ animationDelay: '-8s' }}
+      {/* ══ GOVERNMENT INITIATIVES — light, on pale blue ═══════════════ */}
+      <section className="relative overflow-hidden bg-accent-sky-soft">
+        <Wave className="block h-12 w-full rotate-180 sm:h-16" fill="#f7fafd" />
+        <Shape
+          kind="triangle"
+          className="absolute left-[5%] top-[24%] hidden h-11 w-11 opacity-50 lg:block"
+          color={DECOR.green}
         />
-        <div className="relative mx-auto max-w-5xl px-5 py-20 sm:px-8">
+        <Shape
+          kind="dots"
+          className="absolute right-[5%] top-[20%] hidden h-16 w-16 opacity-40 lg:block"
+          color={DECOR.blue}
+        />
+        <Shape
+          kind="waves"
+          className="absolute bottom-[14%] left-[8%] hidden h-14 w-14 opacity-40 lg:block"
+          color={DECOR.blue}
+        />
+
+        <div className="relative mx-auto max-w-6xl px-5 pb-20 pt-8 sm:px-8">
           <SectionHeading
             kicker="Government initiatives"
             title="Schemes supporting our students"
             description="National and Union Territory programmes that government schools in the district come under."
-            light
           />
 
-          {/* Full-width rows with a rule between, not a grid of boxes. */}
-          <div className="mt-14 divide-y divide-white/10 border-y border-white/10">
-            {INITIATIVES.map((g, i) => (
-              <Reveal key={g.title} variant="right" delay={Math.min(i * 70, 300)}>
-                <div className="group flex flex-wrap items-center gap-x-7 gap-y-3 px-2 py-6 transition-colors hover:bg-white/[0.05] sm:flex-nowrap">
-                  <span className="num w-9 shrink-0 text-[15px] font-extrabold text-accent-amber/60 transition-colors group-hover:text-accent-amber">
-                    {String(i + 1).padStart(2, '0')}
-                  </span>
-                  <span className="icon-pop inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white/10 text-white ring-1 ring-white/15">
-                    <g.icon className="h-5 w-5" aria-hidden />
-                  </span>
-                  <div className="min-w-[14rem] flex-1">
-                    <h3 className="text-[17px] font-extrabold tracking-[-0.02em] text-white">
+          <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {INITIATIVES.map((g, i) => {
+              const tones = ['coral', 'mint', 'sky', 'amber', 'violet', 'coral'] as const;
+              const t = TONE[tones[i]];
+              return (
+                <Reveal key={g.title} variant="zoom" delay={(i % 3) * 100}>
+                  <article className="group relative flex h-full flex-col overflow-hidden rounded-2xl bg-surface p-7 shadow-md ring-1 ring-rule transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
+                    {/* A band of the card's colour along the top, and a large
+                        numeral faded into the corner. */}
+                    <span className={`absolute inset-x-0 top-0 h-1.5 ${t.solid}`} aria-hidden />
+                    <span
+                      className={`num absolute -right-2 -top-3 text-[88px] font-extrabold leading-none opacity-[0.07] ${t.text}`}
+                      aria-hidden
+                    >
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
+
+                    <span
+                      className={`icon-pop relative inline-flex h-14 w-14 items-center justify-center rounded-2xl ${t.soft} ${t.text}`}
+                    >
+                      <g.icon className="h-6 w-6" aria-hidden />
+                    </span>
+                    <h3 className="relative mt-6 text-[19px] font-extrabold tracking-[-0.02em] text-ink">
                       {g.title}
                     </h3>
-                    <p className="mt-1 text-[13.5px] leading-relaxed text-white/60">{g.body}</p>
-                  </div>
-                  {'href' in g && g.href && (
-                    <a
-                      href={g.href}
-                      target="_blank"
-                      rel="noreferrer noopener"
-                      className="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-white/10 px-4 py-2 text-[12.5px] font-bold text-white ring-1 ring-white/15 transition-colors hover:bg-accent-amber hover:text-ink hover:ring-transparent"
-                    >
-                      Official information
-                      <ExternalLink className="h-3.5 w-3.5" aria-hidden />
-                    </a>
-                  )}
-                </div>
-              </Reveal>
-            ))}
+                    <span className={`relative mt-3 block h-1 w-10 rounded-full ${t.solid}`} aria-hidden />
+                    <p className="relative mt-4 flex-1 text-[14px] leading-relaxed text-muted">{g.body}</p>
+
+                    {'href' in g && g.href ? (
+                      <a
+                        href={g.href}
+                        target="_blank"
+                        rel="noreferrer noopener"
+                        className={`relative mt-6 inline-flex w-fit items-center gap-2 rounded-lg ${t.soft} px-4 py-2.5 text-[13px] font-bold ${t.text} transition-all group-hover:gap-3`}
+                      >
+                        Official information
+                        <ExternalLink className="h-3.5 w-3.5" aria-hidden />
+                      </a>
+                    ) : (
+                      <span className="relative mt-6 inline-flex w-fit items-center rounded-lg bg-slate-100 px-4 py-2.5 text-[12px] font-bold uppercase tracking-[0.08em] text-muted">
+                        Through your school
+                      </span>
+                    )}
+                  </article>
+                </Reveal>
+              );
+            })}
           </div>
         </div>
       </section>

@@ -17,7 +17,7 @@ import { Backdrop, DIVISION, FIGURES, Section, SectionHeading } from './PublicLa
 import { CountUp, Reveal, Tilt, useParallax } from './motion';
 import { TONE } from './tone';
 import { CirclePhoto, DECOR, DoubleWave, Shape, Wave } from './decor';
-import { ABOUT, DISTRICT, GALLERY, HERO_SLIDES, ROLE_PHOTOS, SCHOOL } from './media';
+import { ABOUT, DISTRICT, HERO_SLIDES, ROLE_PHOTOS, SCHOOL } from './media';
 import {
   FACILITY_CARDS,
   HEAD_MESSAGE,
@@ -530,7 +530,7 @@ export function HomePage() {
         className="relative overflow-hidden bg-accent-mint-deep"
       >
         <img
-          src={GALLERY[5].src}
+          src={ABOUT.computerClass.src}
           alt=""
           aria-hidden
           loading="lazy"

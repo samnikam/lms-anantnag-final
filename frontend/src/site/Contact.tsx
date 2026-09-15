@@ -13,7 +13,7 @@ import { ChevronDown } from 'lucide-react';
 import clsx from 'clsx';
 import { Reveal } from './motion';
 import { TONE, type Tone } from './tone';
-import { ABOUT, GALLERY } from './media';
+import { ABOUT } from './media';
 import { DIVISION, PageBanner, Section, SectionHeading } from './PublicLayout';
 
 /** What families ask most often, answered without sending them elsewhere. */
@@ -224,7 +224,7 @@ export function ContactPage() {
       {/* ══ THE OFFICE ═════════════════════════════════════════════════ */}
       <section className="relative overflow-hidden bg-brand-800">
         <img
-          src={GALLERY[4].src}
+          src="/images/school-corridor.jpg"
           alt=""
           aria-hidden
           loading="lazy"

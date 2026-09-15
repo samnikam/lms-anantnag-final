@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 import clsx from 'clsx';
 import { Reveal } from './motion';
-import { CREDITED, GALLERY } from './media';
-import { PageBanner, Section, SectionHeading } from './PublicLayout';
+import { GALLERY } from './media';
+import { Section, SectionHeading } from './PublicLayout';
 
 export function GalleryPage() {
   // The index of the photograph shown full-screen, or null for the grid.
@@ -28,18 +28,11 @@ export function GalleryPage() {
 
   return (
     <>
-      <PageBanner
-        title="Gallery"
-        subtitle="Classrooms, learners and the district the programme serves."
-        image={GALLERY[1].src}
-        imageAlt={GALLERY[1].alt}
-      />
-
-      <Section>
+      <Section className="!pt-14 lg:!pt-20">
         <SectionHeading
           kicker="Photo gallery"
-          title="Scenes from the programme"
-          description="Select any photograph to view it larger."
+          title="Our schools in pictures"
+          description="Photographs from the schools in the programme. Select any one to view it larger."
         />
 
         {/* A mosaic rather than a plain grid — every fourth frame is taller. */}
@@ -66,38 +59,6 @@ export function GalleryPage() {
               </button>
             </Reveal>
           ))}
-        </div>
-
-        <p className="mt-12 rounded-xl bg-accent-amber-soft p-5 text-center text-[13.5px] leading-relaxed text-ink-soft">
-          The photographs of Anantnag — Amarnath, Pahalgam, the Lidder, Betaab, Aru,
-          Chandanwari and Kokernag — are real pictures of those places. The classroom
-          photographs are stand-ins until the division supplies its own.
-        </p>
-
-        {/* Creative Commons requires the photographer to be named. */}
-        <div className="mt-10 rounded-2xl bg-surface p-7 ring-1 ring-rule">
-          <h2 className="text-[15px] font-extrabold uppercase tracking-[0.1em] text-ink">
-            Photograph credits
-          </h2>
-          <p className="mt-2 text-[13px] text-muted">
-            District photographs are used under Creative Commons licences, with thanks to their
-            photographers.
-          </p>
-          <ul className="mt-5 grid gap-x-8 gap-y-2 sm:grid-cols-2">
-            {CREDITED.map((c) => (
-              <li key={c.src} className="text-[12.5px] text-muted">
-                <a
-                  href={c.credit!.page}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  className="font-semibold text-brand-700 underline-offset-2 hover:underline"
-                >
-                  {c.alt}
-                </a>{' '}
-                — {c.credit!.author}, {c.credit!.license}
-              </li>
-            ))}
-          </ul>
         </div>
       </Section>
 

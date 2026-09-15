@@ -28,8 +28,6 @@ export interface Photo {
   credit?: Credit;
 }
 
-const unsplash = (id: string, w = 1600) =>
-  `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&q=80`;
 
 /** Commons serves its renditions from this host; the width is fixed at 1920. */
 const commons = (path: string) => `https://thumb.wikimedia.org/wikipedia/commons/thumb/${path}`;
@@ -234,39 +232,6 @@ export const ABOUT: Record<string, Photo> = {
 };
 
 /**
- * Classrooms and school interiors first, then the district around them.
- *
- * The entries written as objects are stock and their subject is not
- * verified; those spread from DISTRICT and SCHOOL are real photographs
- * whose subject is confirmed by their source record.
- */
-export const GALLERY: Photo[] = [
-  { src: unsplash('photo-1509062522246-3755977927d7', 900), alt: 'A classroom set up for a lesson' },
-  { src: unsplash('photo-1522202176988-66273c2fd55f', 900), alt: 'Students working together around a table' },
-  SCHOOL.scienceLab,
-  DISTRICT.pahalgamValley,
-  { src: unsplash('photo-1580582932707-520aed937b7b', 900), alt: 'School children seated at their desks during a lesson' },
-  SCHOOL.computerLab,
-  DISTRICT.amarnathCave,
-  { src: unsplash('photo-1427504494785-3a9ca7044f45', 900), alt: 'A hall set for a large class' },
-  SCHOOL.library,
-  DISTRICT.lidder,
-  SCHOOL.playground,
-  DISTRICT.betaab,
-  { src: unsplash('photo-1571260899304-425eee4c7efc', 900), alt: 'A classroom with a large display at the front' },
-  DISTRICT.anantnagTown,
-  DISTRICT.aru,
-  { src: unsplash('photo-1546410531-bb4caa6b424d', 900), alt: 'A classroom seen from the back' },
-  DISTRICT.chandanwari,
-  { src: unsplash('photo-1524995997946-a1c2e315a42f', 900), alt: 'A learner studying with a laptop' },
-  DISTRICT.lidderRiver,
-  DISTRICT.pahalgamMeadow,
-  DISTRICT.kokernag,
-  DISTRICT.polytechnic,
-  DISTRICT.amarnathApproach,
-];
-
-/**
  * The portrait beside the head of institution's message. Supplied by the
  * division: a pupil painting on the floor of a school courtyard — the
  * "whole person" the message speaks of, doing something other than sitting
@@ -280,8 +245,22 @@ export const ROLE_PHOTOS: Record<string, Photo> = {
   },
 };
 
-/** Every Creative Commons photograph used, for the credits list. */
-export const CREDITED: Photo[] = [
-  ...Object.values(DISTRICT),
-  ...Object.values(SCHOOL),
-].filter((p) => p.credit);
+/**
+ * The photographs the division has supplied, in the order they hang best:
+ * buildings first, then classrooms, then the pupils.
+ */
+export const GALLERY: Photo[] = [
+  HERO_SLIDES[0],
+  { src: '/images/school-building.jpg', alt: 'A school building with a green roof behind tall trees and a lawn' },
+  HERO_SLIDES[1],
+  { src: '/images/school-corridor.jpg', alt: 'A long covered corridor along a row of classrooms' },
+  HERO_SLIDES[2],
+  ABOUT.welcome,
+  ABOUT.projectorLesson,
+  ABOUT.computerLab,
+  ABOUT.library,
+  { src: '/images/classroom-lesson.jpg', alt: 'A teacher at the lectern in front of a full classroom' },
+  ABOUT.computerClass,
+  { src: '/images/students-laptops.jpg', alt: 'Students working on laptops in a computer class' },
+  ROLE_PHOTOS.teacher,
+];

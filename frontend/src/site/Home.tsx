@@ -545,82 +545,74 @@ export function HomePage() {
         </div>
       </Section>
 
-      {/* ══ GOVERNMENT INITIATIVES — light, on pale blue ═══════════════ */}
-      <section className="relative overflow-hidden bg-accent-sky-soft">
-        <Wave className="block h-12 w-full rotate-180 sm:h-16" fill="#f7fafd" />
-        <Shape
-          kind="triangle"
-          className="absolute left-[5%] top-[24%] hidden h-11 w-11 opacity-50 lg:block"
-          color={DECOR.green}
-        />
-        <Shape
-          kind="dots"
-          className="absolute right-[5%] top-[20%] hidden h-16 w-16 opacity-40 lg:block"
-          color={DECOR.blue}
-        />
-        <Shape
-          kind="waves"
-          className="absolute bottom-[14%] left-[8%] hidden h-14 w-14 opacity-40 lg:block"
-          color={DECOR.blue}
-        />
+      {/* ══ GOVERNMENT INITIATIVES — tinted stripes, not boxes ═════════ */}
+      <Section className="relative overflow-hidden">
+        <Backdrop variant="cool" grid />
+        <div className="grid gap-12 lg:grid-cols-[0.75fr_1.25fr] lg:gap-16">
+          {/* The heading holds still while the schemes scroll past it. */}
+          <div className="lg:sticky lg:top-28 lg:self-start">
+            <Reveal variant="left">
+              <SectionHeading
+                kicker="Government initiatives"
+                title="Schemes supporting our students"
+                align="left"
+              />
+              <p className="mt-5 text-[15px] leading-relaxed text-muted">
+                National and Union Territory programmes that government schools in the district
+                come under.
+              </p>
+              <img
+                src={ABOUT.welcome.src}
+                alt={ABOUT.welcome.alt}
+                loading="lazy"
+                className="mt-9 hidden aspect-[4/5] w-full max-w-sm rounded-2xl object-cover object-[center_35%] shadow-xl ring-1 ring-rule lg:block"
+              />
+            </Reveal>
+          </div>
 
-        <div className="relative mx-auto max-w-6xl px-5 pb-20 pt-8 sm:px-8">
-          <SectionHeading
-            kicker="Government initiatives"
-            title="Schemes supporting our students"
-            description="National and Union Territory programmes that government schools in the district come under."
-          />
-
-          <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {/* Each scheme is one wide stripe in its own tint. */}
+          <ol className="space-y-3">
             {INITIATIVES.map((g, i) => {
               const tones = ['coral', 'mint', 'sky', 'amber', 'violet', 'coral'] as const;
               const t = TONE[tones[i]];
               return (
-                <Reveal key={g.title} variant="zoom" delay={(i % 3) * 100}>
-                  <article className="group relative flex h-full flex-col overflow-hidden rounded-2xl bg-surface p-7 shadow-md ring-1 ring-rule transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
-                    {/* A band of the card's colour along the top, and a large
-                        numeral faded into the corner. */}
-                    <span className={`absolute inset-x-0 top-0 h-1.5 ${t.solid}`} aria-hidden />
+                <Reveal key={g.title} variant="right" delay={i * 70} as="li">
+                  <li
+                    className={`group flex flex-wrap items-center gap-x-6 gap-y-3 rounded-2xl ${t.soft} px-6 py-5 transition-all duration-300 hover:-translate-x-1.5 hover:shadow-lg sm:flex-nowrap`}
+                  >
                     <span
-                      className={`num absolute -right-2 -top-3 text-[88px] font-extrabold leading-none opacity-[0.07] ${t.text}`}
-                      aria-hidden
-                    >
-                      {String(i + 1).padStart(2, '0')}
-                    </span>
-
-                    <span
-                      className={`icon-pop relative inline-flex h-14 w-14 items-center justify-center rounded-2xl ${t.soft} ${t.text}`}
+                      className={`icon-pop inline-flex h-14 w-14 shrink-0 items-center justify-center rounded-full ${t.solid} ${t.on} shadow-sm`}
                     >
                       <g.icon className="h-6 w-6" aria-hidden />
                     </span>
-                    <h3 className="relative mt-6 text-[19px] font-extrabold tracking-[-0.02em] text-ink">
-                      {g.title}
-                    </h3>
-                    <span className={`relative mt-3 block h-1 w-10 rounded-full ${t.solid}`} aria-hidden />
-                    <p className="relative mt-4 flex-1 text-[14px] leading-relaxed text-muted">{g.body}</p>
-
+                    <div className="min-w-[14rem] flex-1">
+                      <h3 className="text-[17px] font-extrabold tracking-[-0.02em] text-ink">
+                        {g.title}
+                      </h3>
+                      <p className="mt-1 text-[13.5px] leading-relaxed text-ink-soft">{g.body}</p>
+                    </div>
                     {'href' in g && g.href ? (
                       <a
                         href={g.href}
                         target="_blank"
                         rel="noreferrer noopener"
-                        className={`relative mt-6 inline-flex w-fit items-center gap-2 rounded-lg ${t.soft} px-4 py-2.5 text-[13px] font-bold ${t.text} transition-all group-hover:gap-3`}
+                        className={`inline-flex shrink-0 items-center gap-2 rounded-full bg-surface px-4 py-2 text-[12.5px] font-bold ${t.text} shadow-sm ring-1 ring-rule transition-all hover:shadow`}
                       >
-                        Official information
+                        Official site
                         <ExternalLink className="h-3.5 w-3.5" aria-hidden />
                       </a>
                     ) : (
-                      <span className="relative mt-6 inline-flex w-fit items-center rounded-lg bg-slate-100 px-4 py-2.5 text-[12px] font-bold uppercase tracking-[0.08em] text-muted">
-                        Through your school
+                      <span className="inline-flex shrink-0 items-center rounded-full bg-surface/70 px-4 py-2 text-[11.5px] font-bold uppercase tracking-[0.06em] text-muted ring-1 ring-rule">
+                        Via your school
                       </span>
                     )}
-                  </article>
+                  </li>
                 </Reveal>
               );
             })}
-          </div>
+          </ol>
         </div>
-      </section>
+      </Section>
 
     </>
   );

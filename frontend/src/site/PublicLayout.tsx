@@ -64,7 +64,7 @@ export function Section({
   id?: string;
 }) {
   return (
-    <section id={id} className={clsx('px-5 py-16 sm:px-8 lg:py-20', className)}>
+    <section id={id} className={clsx('px-5 py-10 sm:px-8 lg:py-14', className)}>
       <div className={clsx('mx-auto', width === 'narrow' ? 'max-w-3xl' : 'max-w-6xl')}>
         {children}
       </div>

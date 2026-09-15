@@ -1,12 +1,11 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight, BookOpen, FileCheck2, Info, Languages, LogIn } from 'lucide-react';
+import { BookOpen, FileCheck2, Info, LogIn } from 'lucide-react';
 import { Reveal } from './motion';
 import { DECOR, Shape, Wave } from './decor';
 import { TONE } from './tone';
 import { ABOUT, GALLERY } from './media';
 import {
   ASSESSMENT,
-  CALENDAR,
   CURRICULUM_STATEMENT,
   DIGITAL_ITEMS,
   DIGITAL_STATEMENT,
@@ -16,8 +15,6 @@ import {
   TEACHING,
 } from './academicsContent';
 import { Backdrop, PageBanner, Section, SectionHeading } from './PublicLayout';
-
-const LANGUAGES = ['English', 'हिन्दी (Hindi)', 'اردو (Urdu)', 'کٲشُر (Kashmiri)'];
 
 export function AcademicsPage() {
   return (
@@ -269,95 +266,6 @@ export function AcademicsPage() {
         </div>
       </Section>
 
-      {/* ══ ACADEMIC CALENDAR — a ruled document list ══════════════════ */}
-      <Section>
-        <SectionHeading
-          kicker="Academic calendar"
-          title="Dates for the year"
-          description="Published by the school office each session, and available in the portal once signed in."
-        />
-
-        <div className="mx-auto mt-14 max-w-3xl divide-y divide-rule border-y border-rule">
-          {CALENDAR.map((c, i) => (
-            <Reveal key={c.title} variant="right" delay={i * 90}>
-              <div className="group flex flex-wrap items-center gap-x-6 gap-y-3 py-6">
-                <span className="icon-pop inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-tint-brand text-brand-600">
-                  <c.icon className="h-5 w-5" aria-hidden />
-                </span>
-                <div className="min-w-[14rem] flex-1">
-                  <h3 className="text-[17px] font-extrabold tracking-[-0.02em] text-ink">
-                    {c.title}
-                  </h3>
-                  <p className="mt-1 text-[13.5px] leading-relaxed text-muted">{c.body}</p>
-                </div>
-                {/* No download is offered until there is a document behind it. */}
-                {c.pending && (
-                  <span className="shrink-0 rounded-full bg-slate-100 px-3.5 py-1.5 text-[11.5px] font-bold uppercase tracking-[0.08em] text-muted">
-                    To be published
-                  </span>
-                )}
-              </div>
-            </Reveal>
-          ))}
-        </div>
-
-        <Reveal delay={160}>
-          <p className="mx-auto mt-10 max-w-2xl text-center text-[13.5px] leading-relaxed text-muted">
-            Until these are published here, your school office holds the current dates, and the
-            timetable inside the portal shows each class its own periods and deadlines.
-          </p>
-        </Reveal>
-      </Section>
-
-      {/* ══ LANGUAGES ══════════════════════════════════════════════════ */}
-      <Section className="bg-surface" width="narrow">
-        <Reveal>
-          <div className="relative overflow-hidden rounded-2xl bg-brand-800 p-9 text-center sm:p-12">
-            <span aria-hidden className="orb -right-16 -top-20 h-64 w-64 bg-accent-sky/20" />
-            <div className="relative">
-              <span className="inline-flex h-14 w-14 items-center justify-center rounded-xl bg-white/15 text-white">
-                <Languages className="h-6 w-6" aria-hidden />
-              </span>
-              <h2 className="mt-6 text-[24px] font-extrabold tracking-[-0.025em] text-white sm:text-[30px]">
-                Available in the languages of the valley
-              </h2>
-              <p className="mx-auto mt-4 max-w-xl text-[15px] leading-relaxed text-white/65">
-                The portal interface is planned in four languages, so a parent or learner is never
-                held back by the language a screen happens to be written in.
-              </p>
-              <div className="mt-8 flex flex-wrap justify-center gap-3">
-                {LANGUAGES.map((l) => (
-                  <span
-                    key={l}
-                    className="rounded-lg bg-white/10 px-5 py-2.5 text-[14px] font-bold text-white ring-1 ring-white/15 transition-colors hover:bg-white/20"
-                  >
-                    {l}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </div>
-        </Reveal>
-      </Section>
-
-      {/* ══ CTA ════════════════════════════════════════════════════════ */}
-      <Section width="narrow" className="text-center">
-        <Reveal>
-          <h2 className="text-[26px] font-extrabold tracking-[-0.03em] text-ink sm:text-[32px]">
-            See your own timetable and results
-          </h2>
-          <p className="mx-auto mt-4 max-w-lg text-[15px] leading-relaxed text-muted">
-            Students, teachers and parents each get their own view of the academic record.
-          </p>
-          <Link
-            to="/login"
-            className="btn-sheen group mt-8 inline-flex items-center gap-2 rounded-lg bg-brand-700 px-7 py-3.5 text-[14.5px] font-bold text-white shadow-pill transition-all hover:-translate-y-0.5 hover:bg-brand-600"
-          >
-            Login to the portal
-            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden />
-          </Link>
-        </Reveal>
-      </Section>
     </>
   );
 }

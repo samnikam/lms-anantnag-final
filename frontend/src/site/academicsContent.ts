@@ -172,34 +172,3 @@ export const ASSESSMENT = [
     body: 'Attendance, completion and results followed together, and visible to guardians.',
   },
 ] as const;
-
-/* ── Academic calendar ─────────────────────────────────────────────────── */
-
-export interface CalendarDoc {
-  icon: typeof CalendarDays;
-  title: string;
-  body: string;
-  /** True until the division supplies the document. */
-  pending?: boolean;
-}
-
-export const CALENDAR: CalendarDoc[] = [
-  {
-    icon: CalendarDays,
-    title: 'Academic calendar',
-    body: 'Term dates, holidays and the shape of the school year.',
-    pending: true,
-  },
-  {
-    icon: ScrollText,
-    title: 'Examination schedule',
-    body: 'Dates and timings for periodic and terminal examinations.',
-    pending: true,
-  },
-  {
-    icon: ClipboardCheck,
-    title: 'Important academic dates',
-    body: 'Submission deadlines, result declarations and parent meetings.',
-    pending: true,
-  },
-];

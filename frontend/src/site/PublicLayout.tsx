@@ -7,7 +7,6 @@ import {
   MapPin,
   Menu,
   Phone,
-  ShieldCheck,
   X,
 } from 'lucide-react';
 import clsx from 'clsx';
@@ -203,7 +202,7 @@ export function PublicLayout() {
 
       {/* ── Utility strip ───────────────────────────────────────────── */}
       <div className="hidden bg-brand-800 text-white lg:block">
-        <div className="mx-auto flex h-10 max-w-6xl items-center justify-between gap-6 px-8 text-[12px]">
+        <div className="mx-auto flex h-10 max-w-6xl items-center gap-6 px-8 text-[12px]">
           <div className="flex items-center gap-6">
             <span className="flex items-center gap-1.5 text-white/70">
               <MapPin className="h-3.5 w-3.5" aria-hidden />
@@ -213,16 +212,6 @@ export function PublicLayout() {
               <Phone className="h-3.5 w-3.5" aria-hidden />
               Through your school office
             </span>
-          </div>
-          <div className="flex items-center gap-5">
-            <Link
-              to="/verify"
-              className="flex items-center gap-1.5 font-semibold text-white/80 transition-colors hover:text-accent-amber"
-            >
-              <ShieldCheck className="h-3.5 w-3.5" aria-hidden />
-              Verify a certificate
-            </Link>
-            <span className="text-white/40">Session {DIVISION.session}</span>
           </div>
         </div>
       </div>

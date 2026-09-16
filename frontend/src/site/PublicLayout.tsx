@@ -138,10 +138,10 @@ function Crest({
   compact?: boolean;
 }) {
   return (
-    <Link to="/" onClick={onClick} className="group flex shrink-0 items-center gap-3">
+    <Link to="/" onClick={onClick} className="group flex min-w-0 items-center gap-3">
       <span
         className={clsx(
-          'flex items-center justify-center rounded-full bg-gradient-to-br from-brand-500 to-brand-800 text-white shadow-pill ring-2 ring-accent-amber/60 transition-all duration-300 group-hover:rotate-[-6deg] group-hover:scale-110',
+          'flex shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-brand-500 to-brand-800 text-white shadow-pill ring-2 ring-accent-amber/60 transition-all duration-300 group-hover:rotate-[-6deg] group-hover:scale-110',
           compact ? 'h-10 w-10' : 'h-12 w-12',
         )}
       >
@@ -150,7 +150,7 @@ function Crest({
       <span className="min-w-0 leading-tight">
         <span
           className={clsx(
-            'block truncate text-[16px] font-extrabold tracking-[-0.02em]',
+            'block text-[14px] font-extrabold leading-tight tracking-[-0.02em] sm:truncate sm:text-[16px]',
             light ? 'text-white' : 'text-ink',
           )}
         >
@@ -158,7 +158,7 @@ function Crest({
         </span>
         <span
           className={clsx(
-            'block truncate text-[11px] font-semibold',
+            'hidden truncate text-[11px] font-semibold sm:block',
             light ? 'text-white/60' : 'text-muted',
           )}
         >
@@ -242,10 +242,11 @@ export function PublicLayout() {
           {/* The way in, held top-right on every page. */}
           <Link
             to="/login"
-            className="ml-auto inline-flex items-center gap-2 rounded-lg bg-brand-700 px-5 py-2.5 text-[13.5px] font-bold text-white shadow-pill transition-all hover:-translate-y-0.5 hover:bg-brand-600 lg:ml-4"
+            aria-label="Login"
+            className="ml-auto inline-flex shrink-0 items-center gap-2 rounded-lg bg-brand-700 px-3 py-2.5 text-[13.5px] font-bold text-white shadow-pill transition-all hover:-translate-y-0.5 hover:bg-brand-600 sm:px-5 lg:ml-4"
           >
             <LogIn className="h-4 w-4" aria-hidden />
-            Login
+            <span className="hidden sm:inline">Login</span>
           </Link>
 
           <button
@@ -253,7 +254,7 @@ export function PublicLayout() {
             onClick={() => setOpen((v) => !v)}
             aria-label={open ? 'Close menu' : 'Open menu'}
             aria-expanded={open}
-            className="rounded-lg bg-paper p-2.5 text-ink-soft ring-1 ring-rule transition-colors hover:text-brand-700 lg:hidden"
+            className="shrink-0 rounded-lg bg-paper p-2.5 text-ink-soft ring-1 ring-rule transition-colors hover:text-brand-700 lg:hidden"
           >
             {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>

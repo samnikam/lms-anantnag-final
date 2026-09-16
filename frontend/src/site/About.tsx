@@ -154,7 +154,7 @@ export function AboutPage() {
           <div
             role="tablist"
             aria-label="Staff roles"
-            className="flex overflow-x-auto border-b border-rule lg:flex-col lg:overflow-visible lg:border-b-0 lg:border-r"
+            className="grid grid-cols-2 border-b border-rule lg:flex lg:flex-col lg:border-b-0 lg:border-r"
             onMouseEnter={() => setStaffAuto(false)}
           >
             {STAFF_POINTS.map((p, i) => {
@@ -169,7 +169,7 @@ export function AboutPage() {
                     setStaff(i);
                   }}
                   className={clsx(
-                    'relative flex shrink-0 items-center gap-3 px-6 py-5 text-left transition-colors lg:py-7',
+                    'relative flex items-center gap-3 px-4 py-4 text-left transition-colors sm:px-6 sm:py-5 lg:py-7',
                     active ? 'bg-brand-700 text-white' : 'text-ink hover:bg-brand-50',
                   )}
                 >

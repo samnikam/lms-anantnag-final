@@ -410,7 +410,7 @@ export function HomePage() {
 
       {/* ══ FIGURES ════════════════════════════════════════════════════ */}
       <section className="relative overflow-hidden bg-accent-sky-soft">
-        <Wave className="block h-12 w-full rotate-180 sm:h-16" fill="#ffffff" />
+        <Wave className="block h-8 w-full rotate-180 sm:h-16" fill="#ffffff" />
         <Shape
           kind="triangle"
           className="absolute left-[6%] top-[28%] hidden h-10 w-10 opacity-70 lg:block"
@@ -421,16 +421,16 @@ export function HomePage() {
           className="absolute right-[5%] top-[30%] hidden h-14 w-14 opacity-60 lg:block"
           color={DECOR.blue}
         />
-        <div className="relative mx-auto max-w-6xl px-5 py-16 sm:px-8">
-          <dl className="grid grid-cols-2 gap-8 lg:grid-cols-4">
+        <div className="relative mx-auto max-w-6xl px-5 py-6 sm:px-8 sm:py-16">
+          <dl className="grid grid-cols-2 gap-2 sm:gap-8 lg:grid-cols-4">
             {FIGURES.map((f, i) => (
               <Reveal key={f.label} delay={i * 90}>
-                <div className="group rounded-2xl px-4 py-6 text-center transition-colors hover:bg-white/60">
-                  <dd className="num text-[46px] font-extrabold leading-none text-brand-700 sm:text-[56px]">
+                <div className="group rounded-2xl px-2 py-3 text-center transition-colors hover:bg-white/60 sm:px-4 sm:py-6">
+                  <dd className="num text-[38px] font-extrabold leading-none text-brand-700 sm:text-[56px]">
                     <CountUp value={f.value} />
                   </dd>
-                  <span className="mx-auto mt-3 block h-0.5 w-8 rounded-full bg-brand-200 transition-all duration-300 group-hover:w-14 group-hover:bg-accent-mint" />
-                  <dt className="mt-3 text-[12.5px] font-bold uppercase tracking-[0.12em] text-brand-600">
+                  <span className="mx-auto mt-2 block h-0.5 w-8 rounded-full bg-brand-200 transition-all duration-300 group-hover:w-14 group-hover:bg-accent-mint sm:mt-3" />
+                  <dt className="mt-2 text-[11px] font-bold uppercase tracking-[0.1em] text-brand-600 sm:mt-3 sm:text-[12.5px] sm:tracking-[0.12em]">
                     {f.label}
                   </dt>
                 </div>
@@ -438,7 +438,7 @@ export function HomePage() {
             ))}
           </dl>
         </div>
-        <Wave className="block h-12 w-full sm:h-16" fill="#f7fafd" />
+        <Wave className="block h-8 w-full sm:h-16" fill="#f7fafd" />
       </section>
 
       {/* ══ PHOTO STRIP — the division's own pictures, drifting past ═══ */}

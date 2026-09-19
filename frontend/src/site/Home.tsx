@@ -109,7 +109,7 @@ export function HomePage() {
             </div>
           ))}
 
-          <div className="relative mx-auto flex h-full max-w-6xl items-center px-5 pb-16 sm:px-8">
+          <div className="relative mx-auto flex h-full max-w-6xl items-center px-5 pb-8 sm:pb-16 sm:px-8">
             <div className="max-w-xl" key={slide}>
               <p
                 className="over-photo reveal is-in text-[12px] font-extrabold uppercase tracking-[0.18em] text-accent-amber"
@@ -442,7 +442,7 @@ export function HomePage() {
       </section>
 
       {/* ══ PHOTO STRIP — the division's own pictures, drifting past ═══ */}
-      <section className="overflow-hidden bg-surface py-12" aria-label="Photographs from our schools">
+      <section className="overflow-hidden bg-surface py-6 sm:py-12" aria-label="Photographs from our schools">
         <div className="mx-auto mb-8 max-w-6xl px-5 sm:px-8">
           <Reveal>
             <p className="text-center text-[12px] font-extrabold uppercase tracking-[0.18em] text-accent-sky-deep">
@@ -538,7 +538,7 @@ export function HomePage() {
           className="absolute inset-0 h-full w-full object-cover opacity-[0.13]"
         />
         <Wave
-          className="relative block h-12 w-full rotate-180 sm:h-16"
+          className="relative block h-7 w-full rotate-180 sm:h-16"
           fill="#ffffff"
         />
         <Shape
@@ -570,7 +570,7 @@ export function HomePage() {
             </Link>
           </Reveal>
         </div>
-        <Wave className="relative block h-12 w-full sm:h-16" fill="#f7fafd" />
+        <Wave className="relative block h-7 w-full sm:h-16" fill="#f7fafd" />
       </section>
 
       {/* ══ FACILITIES — colour-blocked tiles, deliberately unequal ════ */}
@@ -583,7 +583,7 @@ export function HomePage() {
         />
 
         {/* The first tile is tall, the fourth wide; the rest fill around them. */}
-        <div className="mt-14 grid auto-rows-[188px] grid-cols-2 gap-4 lg:grid-cols-4">
+        <div className="mt-8 sm:mt-14 grid auto-rows-[188px] grid-cols-2 gap-4 lg:grid-cols-4">
           {FACILITY_CARDS.map((f, i) => {
             const t = TONE[f.tone];
             const shape =
@@ -631,7 +631,7 @@ export function HomePage() {
         />
 
         <Reveal variant="zoom" delay={80}>
-          <figure className="group mt-12 overflow-hidden rounded-[28px] shadow-xl ring-1 ring-rule">
+          <figure className="group mt-7 sm:mt-12 overflow-hidden rounded-[28px] shadow-xl ring-1 ring-rule">
             <img
               src={ABOUT.schemes.src}
               alt={ABOUT.schemes.alt}

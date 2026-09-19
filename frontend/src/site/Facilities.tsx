@@ -25,7 +25,7 @@ export function FacilitiesPage() {
           description="What the programme provides, and what each school adds around it."
         />
 
-        <div className="mt-16 space-y-10">
+        <div className="mt-8 sm:mt-16 space-y-10">
           {FACILITY_BLOCKS.map((f, i) => {
             const t = TONE[f.tone];
             return (
@@ -85,7 +85,7 @@ export function FacilitiesPage() {
 
       {/* ══ CAMPUS — a checklist over a photograph ═════════════════════ */}
       <section className="relative overflow-hidden bg-accent-sky-soft">
-        <Wave className="block h-12 w-full rotate-180 sm:h-16" fill="#f7fafd" />
+        <Wave className="block h-7 w-full rotate-180 sm:h-16" fill="#f7fafd" />
         <img
           src={CAMPUS_PHOTO.src}
           alt=""
@@ -93,14 +93,14 @@ export function FacilitiesPage() {
           loading="lazy"
           className="absolute inset-0 h-full w-full object-cover opacity-[0.06]"
         />
-        <div className="relative mx-auto max-w-6xl px-5 pb-16 pt-6 sm:px-8">
+        <div className="relative mx-auto max-w-6xl px-5 pb-8 sm:pb-16 pt-3 sm:pt-6 sm:px-8">
           <SectionHeading
             kicker="Campus"
             title="Around the classroom"
             description="What a school site provides beyond the teaching rooms themselves."
           />
 
-          <ul className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <ul className="mt-8 sm:mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {CAMPUS.map((c, i) => (
               <Reveal key={c.label} variant="zoom" delay={(i % 3) * 90} as="li">
                 <li className="group flex h-full items-center gap-4 rounded-xl bg-surface p-5 shadow-sm ring-1 ring-rule transition-all hover:-translate-y-1 hover:shadow-md">
@@ -127,7 +127,7 @@ export function FacilitiesPage() {
             </p>
           </Reveal>
         </div>
-        <Wave className="block h-12 w-full sm:h-16" fill="#ffffff" />
+        <Wave className="block h-7 w-full sm:h-16" fill="#ffffff" />
       </section>
 
     </>

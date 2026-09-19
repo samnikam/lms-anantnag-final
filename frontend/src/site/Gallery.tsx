@@ -28,7 +28,7 @@ export function GalleryPage() {
 
   return (
     <>
-      <Section className="!pt-14 lg:!pt-20">
+      <Section className="!pt-8 sm:!pt-14 lg:!pt-20">
         <SectionHeading
           kicker="Photo gallery"
           title="Our schools in pictures"
@@ -36,7 +36,7 @@ export function GalleryPage() {
         />
 
         {/* A mosaic rather than a plain grid — every fourth frame is taller. */}
-        <div className="mt-14 grid auto-rows-[190px] grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+        <div className="mt-8 sm:mt-14 grid auto-rows-[190px] grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
           {GALLERY.map((g, i) => (
             <Reveal
               key={g.src + i}

@@ -49,7 +49,7 @@ export function LoginPage() {
                 src="/images/logo.png"
                 alt=""
                 aria-hidden
-                className="h-12 w-12 rounded-full bg-white object-contain p-1 shadow-md"
+                className="h-16 w-16 rounded-full bg-white object-contain p-1.5 shadow-md"
               />
               <div>
                 <div className="text-[18px] font-extrabold tracking-[-0.02em]">{DIVISION.programme}</div>

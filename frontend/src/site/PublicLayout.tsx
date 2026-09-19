@@ -145,7 +145,7 @@ function Crest({
         className={clsx(
           'shrink-0 object-contain transition-all duration-300 group-hover:scale-110',
           light && 'rounded-full bg-white p-1',
-          compact ? 'h-10 w-10' : 'h-12 w-12',
+          compact ? 'h-12 w-12' : 'h-16 w-16',
         )}
       />
       <span className="min-w-0 leading-tight">

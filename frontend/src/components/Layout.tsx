@@ -41,7 +41,7 @@ export function Layout() {
         )}
       >
         <div className="flex shrink-0 items-center gap-3 px-5 pb-2 pt-6">
-          <img src="/images/logo.png" alt="" aria-hidden className="h-10 w-10 shrink-0 object-contain" />
+          <img src="/images/logo.png" alt="" aria-hidden className="h-12 w-12 shrink-0 object-contain" />
           <div className="min-w-0">
             <p className="truncate text-[15px] font-extrabold tracking-[-0.02em] text-ink">
               Smart Classrooms

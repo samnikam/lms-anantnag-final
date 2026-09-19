@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { Bell, GraduationCap, LogOut, Menu, X } from 'lucide-react';
+import { Bell, LogOut, Menu, X } from 'lucide-react';
 import clsx from 'clsx';
 import { api } from '../lib/api';
 import { ROLE_LABELS, useAuth } from '../lib/auth';
@@ -41,9 +41,7 @@ export function Layout() {
         )}
       >
         <div className="flex shrink-0 items-center gap-3 px-5 pb-2 pt-6">
-          <span className="flex h-10 w-10 items-center justify-center rounded-[13px] bg-gradient-to-br from-brand-500 to-brand-800 text-white shadow-pill">
-            <GraduationCap className="h-5 w-5" aria-hidden />
-          </span>
+          <img src="/images/logo.png" alt="" aria-hidden className="h-10 w-10 shrink-0 object-contain" />
           <div className="min-w-0">
             <p className="truncate text-[15px] font-extrabold tracking-[-0.02em] text-ink">
               Smart Classrooms

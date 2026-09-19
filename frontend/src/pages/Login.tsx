@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowLeft, GraduationCap, Loader2, MonitorPlay } from 'lucide-react';
+import { ArrowLeft, Loader2, MonitorPlay } from 'lucide-react';
 import { errorMessage } from '../lib/api';
 import { useAuth } from '../lib/auth';
 import { Field } from '../components/ui';
@@ -45,9 +45,12 @@ export function LoginPage() {
         <section className="flex flex-1 flex-col justify-between py-4 text-white lg:py-8">
           <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-3">
-              <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-white text-brand-700 shadow-md">
-                <GraduationCap className="h-6 w-6" aria-hidden />
-              </span>
+              <img
+                src="/images/logo.png"
+                alt=""
+                aria-hidden
+                className="h-12 w-12 rounded-full bg-white object-contain p-1 shadow-md"
+              />
               <div>
                 <div className="text-[18px] font-extrabold tracking-[-0.02em]">{DIVISION.programme}</div>
                 <div className="text-[11.5px] font-medium text-white/65">{DIVISION.division}</div>

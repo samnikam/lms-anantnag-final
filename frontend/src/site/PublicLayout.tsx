@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
 import {
   ChevronUp,
-  GraduationCap,
   LogIn,
   MapPin,
   Menu,
@@ -139,14 +138,16 @@ function Crest({
 }) {
   return (
     <Link to="/" onClick={onClick} className="group flex min-w-0 items-center gap-3">
-      <span
+      <img
+        src="/images/logo.png"
+        alt=""
+        aria-hidden
         className={clsx(
-          'flex shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-brand-500 to-brand-800 text-white shadow-pill ring-2 ring-accent-amber/60 transition-all duration-300 group-hover:rotate-[-6deg] group-hover:scale-110',
+          'shrink-0 object-contain transition-all duration-300 group-hover:scale-110',
+          light && 'rounded-full bg-white p-1',
           compact ? 'h-10 w-10' : 'h-12 w-12',
         )}
-      >
-        <GraduationCap className={clsx('transition-all', compact ? 'h-5 w-5' : 'h-6 w-6')} aria-hidden />
-      </span>
+      />
       <span className="min-w-0 leading-tight">
         <span
           className={clsx(

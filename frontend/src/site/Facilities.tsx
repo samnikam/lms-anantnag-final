@@ -35,7 +35,7 @@ export function FacilitiesPage() {
                     i % 2 === 1 ? 'lg:[&>figure]:order-2' : ''
                   }`}
                 >
-                  <figure className="relative aspect-[16/10] overflow-hidden lg:aspect-auto lg:h-full lg:min-h-[320px]">
+                  <figure className="relative aspect-[4/3] w-full overflow-hidden">
                     <img
                       src={f.src}
                       alt={f.alt}
@@ -56,7 +56,7 @@ export function FacilitiesPage() {
                     )}
                   </figure>
 
-                  <div className="p-8 lg:p-12">
+                  <div className="p-8 lg:p-10">
                     <span
                       className={`icon-pop inline-flex h-14 w-14 items-center justify-center rounded-2xl ${t.solid} ${t.on} shadow-pill`}
                     >

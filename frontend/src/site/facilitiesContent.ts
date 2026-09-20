@@ -11,7 +11,7 @@ import {
   Trees,
   Volleyball,
 } from 'lucide-react';
-import { ABOUT, DISTRICT, SCHOOL, type Photo } from './media';
+import { ABOUT, DISTRICT, type Photo } from './media';
 
 /**
  * The written content of the Facilities page.
@@ -22,7 +22,7 @@ import { ABOUT, DISTRICT, SCHOOL, type Photo } from './media';
  * so beside it rather than stating it as fact.
  */
 
-export interface Facility extends Photo {
+export interface Facility extends Partial<Photo> {
   icon: typeof MonitorPlay;
   tone: 'coral' | 'mint' | 'sky' | 'amber' | 'violet';
   title: string;
@@ -31,6 +31,7 @@ export interface Facility extends Photo {
   count?: string;
   /** True where availability differs from school to school. */
   varies?: boolean;
+  /** A photograph is optional: a block without one shows its icon instead. */
 }
 
 export const FACILITY_BLOCKS: Facility[] = [
@@ -63,7 +64,6 @@ export const FACILITY_BLOCKS: Facility[] = [
     tone: 'mint',
     title: 'Science laboratory',
     body: 'Practical work supporting the science curriculum — experiments, demonstrations and the habits of careful observation.',
-    ...SCHOOL.scienceLab,
     varies: true,
   },
   {
@@ -71,7 +71,8 @@ export const FACILITY_BLOCKS: Facility[] = [
     tone: 'amber',
     title: 'Sports facilities',
     body: 'Encouraging physical fitness, teamwork, discipline and sportsmanship, through games, athletics and physical education.',
-    ...SCHOOL.playground,
+    src: '/images/school-grounds.jpg',
+    alt: 'School blocks around a lawn where pupils play',
     varies: true,
   },
 ];

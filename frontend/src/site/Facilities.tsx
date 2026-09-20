@@ -36,14 +36,23 @@ export function FacilitiesPage() {
                     i % 2 === 1 ? 'lg:[&>figure]:order-2' : ''
                   }`}
                 >
-                  <figure className="relative aspect-[4/3] w-full overflow-hidden">
-                    <img
-                      src={f.src}
-                      alt={f.alt}
-                      loading="lazy"
-                      className="photo-drift h-full w-full object-cover"
-                    />
-                    <span className="absolute inset-0 bg-gradient-to-t from-brand-900/40 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                  <figure className={`relative aspect-[4/3] w-full overflow-hidden ${f.src ? '' : t.soft}`}>
+                    {f.src ? (
+                      <>
+                        <img
+                          src={f.src}
+                          alt={f.alt}
+                          loading="lazy"
+                          className="photo-drift h-full w-full object-cover"
+                        />
+                        <span className="absolute inset-0 bg-gradient-to-t from-brand-900/40 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                      </>
+                    ) : (
+                      // No photograph of this facility yet: the icon stands in.
+                      <span className={`icon-pop absolute inset-0 flex items-center justify-center ${t.text}`}>
+                        <f.icon className="h-24 w-24" strokeWidth={1.25} aria-hidden />
+                      </span>
+                    )}
                     {f.count && (
                       <span className="num absolute left-5 top-5 rounded-xl bg-accent-amber px-4 py-2 text-[17px] font-extrabold text-ink shadow-lg">
                         <CountUp value={f.count} />
@@ -69,12 +78,6 @@ export function FacilitiesPage() {
                       >
                         Varies by school
                       </span>
-                    )}
-                    {/* Creative Commons requires the photographer to be named. */}
-                    {f.credit && (
-                      <p className="mt-6 text-[11px] text-faint">
-                        Photo: {f.credit.author} · {f.credit.license}
-                      </p>
                     )}
                   </div>
                 </article>

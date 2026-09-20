@@ -11,7 +11,7 @@ import {
   Trees,
   Volleyball,
 } from 'lucide-react';
-import { ABOUT, DISTRICT, type Photo } from './media';
+import { ABOUT, DISTRICT, SCHOOL, type Photo } from './media';
 
 /**
  * The written content of the Facilities page.
@@ -64,6 +64,7 @@ export const FACILITY_BLOCKS: Facility[] = [
     tone: 'mint',
     title: 'Science laboratory',
     body: 'Practical work supporting the science curriculum — experiments, demonstrations and the habits of careful observation.',
+    ...SCHOOL.scienceLab,
     varies: true,
   },
   {
@@ -71,8 +72,7 @@ export const FACILITY_BLOCKS: Facility[] = [
     tone: 'amber',
     title: 'Sports facilities',
     body: 'Encouraging physical fitness, teamwork, discipline and sportsmanship, through games, athletics and physical education.',
-    src: '/images/school-grounds.jpg',
-    alt: 'School blocks around a lawn where pupils play',
+    ...SCHOOL.playground,
     varies: true,
   },
 ];

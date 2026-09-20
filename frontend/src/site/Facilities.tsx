@@ -79,6 +79,12 @@ export function FacilitiesPage() {
                         Varies by school
                       </span>
                     )}
+                    {/* Creative Commons requires the photographer to be named. */}
+                    {f.credit && (
+                      <p className="mt-6 text-[11px] text-faint">
+                        Photo: {f.credit.author} · {f.credit.license}
+                      </p>
+                    )}
                   </div>
                 </article>
               </Reveal>

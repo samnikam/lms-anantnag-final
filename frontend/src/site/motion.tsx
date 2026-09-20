@@ -3,7 +3,7 @@ import { ArrowUp } from 'lucide-react';
 import clsx from 'clsx';
 
 /** True once the element has been scrolled into view. It does not go back. */
-function useInView<T extends HTMLElement>(threshold = 0.15) {
+export function useInView<T extends HTMLElement>(threshold = 0.15) {
   const ref = useRef<T | null>(null);
   const [seen, setSeen] = useState(false);
 

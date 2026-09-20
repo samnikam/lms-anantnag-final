@@ -41,7 +41,7 @@ export function FacilitiesPage() {
                       src={f.src}
                       alt={f.alt}
                       loading="lazy"
-                      className="photo-zoom h-full w-full object-cover"
+                      className="photo-drift h-full w-full object-cover"
                     />
                     <span className="absolute inset-0 bg-gradient-to-t from-brand-900/40 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
                     {f.count && (

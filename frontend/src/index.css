@@ -150,6 +150,28 @@ svg.lucide {
    the same with all of it switched off, which is what the reduced-motion
    block at the foot of this file guarantees. */
 
+@keyframes wobble {
+  0%,
+  100% {
+    transform: rotate(0);
+  }
+  25% {
+    transform: rotate(-4deg) scale(1.05);
+  }
+  75% {
+    transform: rotate(4deg) scale(1.05);
+  }
+}
+
+@keyframes rail-draw {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
 @keyframes reveal-up {
   from {
     opacity: 0;
@@ -360,6 +382,28 @@ svg.lucide {
     animation: float-y 6s ease-in-out infinite;
   }
 
+  /* A badge that shakes itself awake under the cursor. */
+  .wobble:hover {
+    animation: wobble 0.6s ease-in-out;
+  }
+
+  /* A vertical rail drawn from the top as its list arrives. */
+  .rail-draw {
+    transform-origin: top;
+    transform: scaleY(0);
+  }
+  .rail-draw.is-in {
+    animation: rail-draw 0.9s 0.2s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  /* A slow zoom on a photograph inside a hovered card. */
+  .group:hover .photo-drift {
+    transform: scale(1.06);
+  }
+  .photo-drift {
+    transition: transform 1.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
   /* A card that answers the cursor: it rises, its shadow deepens, and a
      coloured edge appears along the top. */
   .lift-card {
@@ -516,9 +560,14 @@ svg.lucide {
   .strip-track,
   .orb,
   .float-y,
-  .rule-grow {
+  .rule-grow,
+  .rail-draw,
+  .rail-draw.is-in {
     animation: none !important;
     transform: none !important;
+  }
+  .wobble:hover {
+    animation: none;
   }
   .tilt,
   .lift-card:hover,

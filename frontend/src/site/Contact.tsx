@@ -118,7 +118,7 @@ export function ContactPage() {
             const t = TONE[r.tone];
             return (
             <Reveal key={r.title} variant={i % 2 === 0 ? 'left' : 'right'} delay={(i % 2) * 110}>
-              <article className={`flex h-full flex-col rounded-2xl ${t.soft} p-8`}>
+              <article className={`group lift-card flex h-full flex-col rounded-2xl ${t.soft} p-8 hover:shadow-xl`}>
                 <span
                   className={`icon-pop inline-flex h-14 w-14 items-center justify-center rounded-xl ${t.solid} ${t.on} shadow-sm`}
                 >

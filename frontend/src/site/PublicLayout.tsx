@@ -9,7 +9,7 @@ import {
   X,
 } from 'lucide-react';
 import clsx from 'clsx';
-import { BackToTop, ScrollProgress } from './motion';
+import { BackToTop, ScrollProgress, useInView } from './motion';
 
 /**
  * The public face of the portal — what a parent, a visitor or the department
@@ -84,12 +84,20 @@ export function SectionHeading({
   align?: 'center' | 'left';
   light?: boolean;
 }) {
+  // Each part arrives a beat after the last, the first time it is seen.
+  const { ref, seen } = useInView<HTMLDivElement>();
+  const step = (n: number) => ({ animationDelay: `${n * 110}ms` });
   return (
-    <div className={clsx('max-w-3xl', align === 'center' && 'mx-auto text-center')}>
+    <div
+      ref={ref}
+      className={clsx('max-w-3xl', align === 'center' && 'mx-auto text-center', seen && 'is-in')}
+    >
       {kicker && (
         <span
+          style={step(0)}
           className={clsx(
-            'mb-4 inline-block rounded-full px-4 py-1.5 text-[11.5px] font-extrabold uppercase tracking-[0.16em]',
+            'reveal reveal-zoom mb-4 inline-block rounded-full px-4 py-1.5 text-[11.5px] font-extrabold uppercase tracking-[0.16em]',
+            seen && 'is-in',
             light
               ? 'bg-white/10 text-accent-amber ring-1 ring-white/15'
               : 'bg-accent-coral-soft text-accent-coral-deep',
@@ -99,9 +107,11 @@ export function SectionHeading({
         </span>
       )}
       <h2
+        style={step(1)}
         className={clsx(
-          'text-[27px] font-extrabold leading-[1.15] tracking-[-0.025em] sm:text-[36px]',
+          'reveal text-[27px] font-extrabold leading-[1.15] tracking-[-0.025em] sm:text-[36px]',
           light ? 'text-white' : 'text-ink',
+          seen && 'is-in',
         )}
       >
         {title}
@@ -109,15 +119,18 @@ export function SectionHeading({
       {/* The short rule under a heading, drawn in as the section arrives. */}
       <span
         className={clsx(
-          'rule-grow is-in mt-5 block h-1 w-16 rounded-full bg-gradient-to-r from-accent-amber to-accent-coral',
+          'rule-grow mt-5 block h-1 w-16 rounded-full bg-gradient-to-r from-accent-amber to-accent-coral',
           align === 'center' && 'mx-auto',
+          seen && 'is-in',
         )}
       />
       {description && (
         <p
+          style={step(2)}
           className={clsx(
-            'mt-5 text-[15.5px] leading-relaxed',
+            'reveal mt-5 text-[15.5px] leading-relaxed',
             light ? 'text-white/70' : 'text-muted',
+            seen && 'is-in',
           )}
         >
           {description}
@@ -409,25 +422,37 @@ export function PageBanner({
         src={image}
         alt={imageAlt ?? ''}
         aria-hidden={!imageAlt}
-        className={clsx('absolute inset-0 h-full w-full object-cover', focus)}
+        className={clsx('ken-burns absolute inset-0 h-full w-full object-cover', focus)}
       />
       <div className="absolute inset-0 bg-gradient-to-r from-brand-900/75 via-brand-900/42 via-45% to-brand-900/10" />
       <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-brand-900/30 to-transparent" />
       <div className="relative mx-auto flex h-full max-w-6xl flex-col justify-center px-5 sm:px-8">
-        <nav aria-label="Breadcrumb" className="mb-4 text-[12.5px] font-semibold text-white/55">
+        <nav
+          aria-label="Breadcrumb"
+          className="reveal is-in mb-4 text-[12.5px] font-semibold text-white/55"
+          style={{ animationDelay: '80ms' }}
+        >
           <Link to="/" className="transition-colors hover:text-accent-amber">
             Home
           </Link>
           <span className="px-2 text-white/30">/</span>
           <span className="text-accent-amber">{title}</span>
         </nav>
-        <h1 className="over-photo text-[30px] font-extrabold leading-[1.1] tracking-[-0.03em] text-white sm:text-[42px]">
+        <h1
+          className="over-photo reveal is-in text-[30px] font-extrabold leading-[1.1] tracking-[-0.03em] text-white sm:text-[42px]"
+          style={{ animationDelay: '180ms' }}
+        >
           {title}
         </h1>
         {subtitle && (
-          <p className="over-photo mt-4 max-w-2xl text-[15.5px] leading-relaxed text-white/90">{subtitle}</p>
+          <p
+            className="over-photo reveal is-in mt-4 max-w-2xl text-[15.5px] leading-relaxed text-white/90"
+            style={{ animationDelay: '300ms' }}
+          >
+            {subtitle}
+          </p>
         )}
-        <span className="mt-5 block h-1 w-16 rounded-full bg-accent-amber" />
+        <span className="rule-grow is-in mt-5 block h-1 w-16 rounded-full bg-accent-amber" />
       </div>
     </section>
   );

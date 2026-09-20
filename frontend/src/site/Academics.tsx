@@ -40,9 +40,9 @@ export function AcademicsPage() {
         />
 
         {/* A rail the stages sit along, so they read as a sequence. */}
-        <div className="relative mt-8 sm:mt-10">
+        <Reveal className="relative mt-8 sm:mt-10">
           <span
-            className="absolute inset-x-0 top-7 hidden h-0.5 bg-gradient-to-r from-accent-coral via-accent-violet via-accent-mint to-accent-amber lg:block"
+            className="rule-grow absolute inset-x-0 top-7 hidden h-0.5 bg-gradient-to-r from-accent-coral via-accent-violet via-accent-mint to-accent-amber lg:block"
             aria-hidden
           />
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
@@ -70,7 +70,7 @@ export function AcademicsPage() {
               );
             })}
           </div>
-        </div>
+        </Reveal>
 
         <Reveal delay={200}>
           <p className="mx-auto mt-8 sm:mt-10 flex max-w-2xl items-start gap-3 rounded-xl bg-accent-amber-soft p-5 text-[13.5px] leading-relaxed text-ink-soft">

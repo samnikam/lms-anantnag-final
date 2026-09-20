@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { CheckCircle2, Eye } from 'lucide-react';
 import clsx from 'clsx';
-import { Reveal } from './motion';
+import { Reveal, useInView } from './motion';
 import { DECOR, Shape, Wave } from './decor';
 import { TONE } from './tone';
 import { ABOUT, DISTRICT, HERO_SLIDES } from './media';
@@ -27,6 +27,8 @@ const OBJECTIVES = [
 export function AboutPage() {
   // The staff panel walks through the roles until the visitor picks one.
   const [staff, setStaff] = useState(0);
+  // The mission rail's line is drawn down as the list scrolls into view.
+  const rail = useInView<HTMLOListElement>();
   const [staffAuto, setStaffAuto] = useState(true);
   useEffect(() => {
     if (!staffAuto) return;
@@ -92,7 +94,11 @@ export function AboutPage() {
             </Reveal>
           </div>
 
-          <ol className="relative space-y-1 border-l-2 border-rule pl-8">
+          <ol ref={rail.ref} className="relative relative space-y-1  pl-8">
+            <span
+              aria-hidden
+              className={clsx('rail-draw absolute inset-y-0 left-0 w-0.5 bg-rule', rail.seen && 'is-in')}
+            />
             {MISSION.map((m, i) => (
               <Reveal key={m.text} variant="right" delay={i * 60} as="li">
                 <li className="group relative flex items-center gap-4 py-4">
@@ -128,7 +134,7 @@ export function AboutPage() {
             return (
               <Reveal key={v.name} variant="zoom" delay={Math.min(i * 70, 400)}>
                 <div
-                  className={`group flex items-center gap-3.5 rounded-full ${t.soft} py-3 pl-3 pr-7 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-lg`}
+                  className={`group wobble flex items-center gap-3.5 rounded-full ${t.soft} py-3 pl-3 pr-7 transition-shadow duration-300 hover:shadow-lg`}
                 >
                   <span
                     className={`icon-pop inline-flex h-11 w-11 items-center justify-center rounded-full ${t.solid} ${t.on} shadow-sm`}
@@ -192,12 +198,12 @@ export function AboutPage() {
 
           {/* The panel. One photograph on top; the role beneath it fades on change. */}
           <div>
-            <figure className="relative h-64 overflow-hidden sm:h-80">
+            <figure className="group relative h-64 overflow-hidden sm:h-80">
               <img
                 src="/images/classroom-lesson.jpg"
                 alt="A teacher at the lectern in front of a full classroom"
                 loading="lazy"
-                className="h-full w-full object-cover object-top"
+                className="photo-drift h-full w-full object-cover object-top"
               />
               <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-brand-900/80 to-transparent px-8 pb-5 pt-16 text-[13px] text-white/85">
                 {STAFF_CAPTION}
@@ -248,7 +254,7 @@ export function AboutPage() {
           <ul className="mt-7 sm:mt-8 grid gap-4 md:grid-cols-2">
             {OBJECTIVES.map((o, i) => (
               <Reveal key={o} variant={i % 2 === 0 ? 'left' : 'right'} delay={(i % 2) * 90}>
-                <li className="flex h-full items-start gap-3.5 rounded-xl bg-surface p-5 shadow-sm ring-1 ring-rule transition-shadow hover:shadow-md">
+                <li className="lift-card flex h-full items-start gap-3.5 rounded-xl bg-surface p-5 shadow-sm ring-1 ring-rule hover:shadow-lg">
                   <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-accent-mint-deep" aria-hidden />
                   <span className="text-[14.5px] leading-relaxed text-ink-soft">{o}</span>
                 </li>

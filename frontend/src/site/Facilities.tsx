@@ -49,12 +49,6 @@ export function FacilitiesPage() {
                         <CountUp value={f.count} />
                       </span>
                     )}
-                    {/* Creative Commons requires the photographer to be named. */}
-                    {f.credit && (
-                      <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-brand-900/85 to-transparent px-5 pb-3 pt-8 text-[10.5px] text-white/70">
-                        Photo: {f.credit.author} · {f.credit.license}
-                      </figcaption>
-                    )}
                   </figure>
 
                   <div className="p-8 lg:p-10">
@@ -75,6 +69,12 @@ export function FacilitiesPage() {
                       >
                         Varies by school
                       </span>
+                    )}
+                    {/* Creative Commons requires the photographer to be named. */}
+                    {f.credit && (
+                      <p className="mt-6 text-[11px] text-faint">
+                        Photo: {f.credit.author} · {f.credit.license}
+                      </p>
                     )}
                   </div>
                 </article>

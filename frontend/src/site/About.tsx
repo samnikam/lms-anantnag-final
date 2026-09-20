@@ -45,7 +45,7 @@ export function AboutPage() {
 
       {/* ══ OUR VISION — a single statement, given the whole width ═════ */}
       <section className="relative overflow-hidden bg-accent-sky-soft">
-        <Wave className="block h-7 w-full rotate-180 sm:h-16" fill="#ffffff" />
+        <Wave className="block h-7 w-full rotate-180 sm:h-10" fill="#ffffff" />
         <Shape
           kind="triangle"
           className="absolute left-[7%] top-[34%] hidden h-11 w-11 opacity-60 lg:block"
@@ -56,7 +56,7 @@ export function AboutPage() {
           className="absolute right-[6%] top-[30%] hidden h-16 w-16 opacity-50 lg:block"
           color={DECOR.blue}
         />
-        <div className="relative mx-auto max-w-4xl px-5 pb-8 sm:pb-16 pt-8 text-center sm:px-8">
+        <div className="relative mx-auto max-w-4xl px-5 pb-8 sm:pb-10 pt-8 text-center sm:px-8">
           <Reveal>
             <span className="float-y inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-accent-amber text-ink shadow-lg">
               <Eye className="h-7 w-7" aria-hidden />
@@ -70,11 +70,11 @@ export function AboutPage() {
             <span className="rule-grow is-in mx-auto mt-8 block h-1 w-20 rounded-full bg-gradient-to-r from-accent-amber to-accent-mint" />
           </Reveal>
         </div>
-        <Wave className="block h-7 w-full sm:h-16" fill="#f7fafd" />
+        <Wave className="block h-7 w-full sm:h-10" fill="#f7fafd" />
       </section>
 
       {/* ══ OUR MISSION — a numbered rail, not a grid ══════════════════ */}
-      <Section className="relative overflow-hidden !pb-6 sm:!pb-10 !pt-4 lg:!pb-12 lg:!pt-6">
+      <Section className="relative overflow-hidden !pb-6 sm:!pb-8 !pt-4">
         <Backdrop variant="warm" grid />
         <div className="grid gap-14 lg:grid-cols-[0.8fr_1fr]">
           <div className="lg:sticky lg:top-28 lg:self-start">
@@ -114,7 +114,7 @@ export function AboutPage() {
       </Section>
 
       {/* ══ OUR VALUES — badges rather than cards ══════════════════════ */}
-      <Section className="relative overflow-hidden bg-surface !py-6 sm:!py-12 lg:!py-14">
+      <Section className="relative overflow-hidden bg-surface !py-6 sm:!py-8">
         <Backdrop variant="mint" />
         <SectionHeading
           kicker="Our Values"
@@ -122,7 +122,7 @@ export function AboutPage() {
           description="Seven principles that sit behind every decision the programme takes."
         />
 
-        <div className="mt-8 sm:mt-14 flex flex-wrap justify-center gap-4">
+        <div className="mt-8 sm:mt-10 flex flex-wrap justify-center gap-4">
           {VALUES.map((v, i) => {
             const t = TONE[v.tone];
             return (
@@ -144,12 +144,12 @@ export function AboutPage() {
       </Section>
 
       {/* ══ TEACHERS & STAFF — pick a role, the panel changes ═══════════ */}
-      <Section className="bg-paper !py-8 sm:!py-16 lg:!py-20">
+      <Section className="bg-paper !py-8 sm:!py-10">
         <Reveal>
           <SectionHeading kicker="Teachers & Staff" title="Who teaches here" description={STAFF_NOTE} />
         </Reveal>
 
-        <div className="mt-7 sm:mt-12 overflow-hidden rounded-3xl bg-surface shadow-xl ring-1 ring-rule lg:grid lg:grid-cols-[300px_1fr]">
+        <div className="mt-7 sm:mt-8 overflow-hidden rounded-3xl bg-surface shadow-xl ring-1 ring-rule lg:grid lg:grid-cols-[300px_1fr]">
           {/* The selector. Numbers on the left, a bar slides to the active one. */}
           <div
             role="tablist"
@@ -246,7 +246,7 @@ export function AboutPage() {
             align="left"
             light
           />
-          <ul className="mt-7 sm:mt-12 grid gap-4 md:grid-cols-2">
+          <ul className="mt-7 sm:mt-8 grid gap-4 md:grid-cols-2">
             {OBJECTIVES.map((o, i) => (
               <Reveal key={o} variant={i % 2 === 0 ? 'left' : 'right'} delay={(i % 2) * 90}>
                 <li className="flex h-full items-start gap-3.5 rounded-xl bg-white/[0.07] p-5 ring-1 ring-white/10 transition-colors hover:bg-white/[0.12]">

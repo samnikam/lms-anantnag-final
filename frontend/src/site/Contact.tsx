@@ -113,7 +113,7 @@ export function ContactPage() {
           description="Find what you need below — each goes to the people who can actually resolve it."
         />
 
-        <div className="mt-8 sm:mt-14 grid gap-6 md:grid-cols-2">
+        <div className="mt-8 sm:mt-10 grid gap-6 md:grid-cols-2">
           {ROUTES.map((r, i) => {
             const t = TONE[r.tone];
             return (
@@ -151,7 +151,7 @@ export function ContactPage() {
           description="If your question is not here, your school office can answer it."
         />
 
-        <div className="mt-8 sm:mt-14 space-y-3">
+        <div className="mt-8 sm:mt-10 space-y-3">
           {FAQS.map(([q, a], i) => {
             const isOpen = openFaq === i;
             return (
@@ -203,7 +203,7 @@ export function ContactPage() {
             light
           />
 
-          <div className="mt-7 sm:mt-12 grid gap-6 md:grid-cols-2">
+          <div className="mt-7 sm:mt-8 grid gap-6 md:grid-cols-2">
             <Reveal>
               <div className="h-full rounded-2xl bg-white/[0.07] p-8 ring-1 ring-white/10">
                 <span className="inline-flex h-13 w-13 items-center justify-center rounded-xl bg-white/15 p-3 text-white">

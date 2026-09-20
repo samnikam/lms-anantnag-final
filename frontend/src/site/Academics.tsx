@@ -40,7 +40,7 @@ export function AcademicsPage() {
         />
 
         {/* A rail the stages sit along, so they read as a sequence. */}
-        <div className="relative mt-8 sm:mt-16">
+        <div className="relative mt-8 sm:mt-10">
           <span
             className="absolute inset-x-0 top-7 hidden h-0.5 bg-gradient-to-r from-accent-coral via-accent-violet via-accent-mint to-accent-amber lg:block"
             aria-hidden
@@ -73,7 +73,7 @@ export function AcademicsPage() {
         </div>
 
         <Reveal delay={200}>
-          <p className="mx-auto mt-8 sm:mt-14 flex max-w-2xl items-start gap-3 rounded-xl bg-accent-amber-soft p-5 text-[13.5px] leading-relaxed text-ink-soft">
+          <p className="mx-auto mt-8 sm:mt-10 flex max-w-2xl items-start gap-3 rounded-xl bg-accent-amber-soft p-5 text-[13.5px] leading-relaxed text-ink-soft">
             <Info className="mt-0.5 h-4.5 w-4.5 shrink-0 text-accent-amber-deep" aria-hidden />
             {STRUCTURE_NOTE}
           </p>
@@ -82,7 +82,7 @@ export function AcademicsPage() {
 
       {/* ══ CURRICULUM — one statement, then the subjects ══════════════ */}
       <section className="relative overflow-hidden bg-accent-mint-soft">
-        <Wave className="block h-7 w-full rotate-180 sm:h-16" fill="#ffffff" />
+        <Wave className="block h-7 w-full rotate-180 sm:h-10" fill="#ffffff" />
         <Shape
           kind="triangle"
           className="absolute left-[5%] top-[22%] hidden h-10 w-10 opacity-60 lg:block"
@@ -93,7 +93,7 @@ export function AcademicsPage() {
           className="absolute right-[4%] top-[14%] hidden h-24 w-24 opacity-50 lg:block"
           color={DECOR.blue}
         />
-        <div className="relative mx-auto max-w-6xl px-5 pb-8 sm:pb-16 pt-3 sm:pt-6 sm:px-8">
+        <div className="relative mx-auto max-w-6xl px-5 pb-8 sm:pb-10 pt-3 sm:pt-6 sm:px-8">
           <div className="mx-auto max-w-3xl text-center">
             <Reveal>
               <span className="float-y inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-accent-amber text-ink shadow-lg">
@@ -109,7 +109,7 @@ export function AcademicsPage() {
             </Reveal>
           </div>
 
-          <div className="mt-8 sm:mt-16 grid gap-6 md:grid-cols-3">
+          <div className="mt-8 sm:mt-10 grid gap-6 md:grid-cols-3">
             {SUBJECT_STREAMS.map((s, i) => {
               const t = TONE[s.tone];
               return (
@@ -138,7 +138,7 @@ export function AcademicsPage() {
             })}
           </div>
         </div>
-        <Wave className="block h-7 w-full sm:h-16" fill="#f7fafd" />
+        <Wave className="block h-7 w-full sm:h-10" fill="#f7fafd" />
       </section>
 
       {/* ══ TEACHING & LEARNING — ruled columns, a coloured rule over each ═ */}
@@ -152,7 +152,7 @@ export function AcademicsPage() {
 
         {/* Nothing filled: a thick rule in the approach's colour, then the text.
             The rule lengthens on hover and the icon takes the same colour. */}
-        <div className="mt-7 sm:mt-12 grid gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-7 sm:mt-8 grid gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
           {TEACHING.map((a, i) => {
             const t = TONE[a.tone];
             return (

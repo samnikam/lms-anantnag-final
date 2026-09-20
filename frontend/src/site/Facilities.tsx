@@ -14,6 +14,7 @@ export function FacilitiesPage() {
         subtitle="The spaces and equipment supporting teaching across the district's schools."
         image="/images/school-corridor.jpg"
         imageAlt="A long covered corridor along a row of classrooms"
+        focus="object-[center_68%]"
       />
 
       {/* ══ THE FACILITIES — alternating photo and text ════════════════ */}

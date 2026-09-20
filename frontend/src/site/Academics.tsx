@@ -26,9 +26,8 @@ export function AcademicsPage() {
       <PageBanner
         title="Academics"
         subtitle="The curriculum, how it is taught, how learning is assessed, and the year it runs across."
-        image="/images/school-building.jpg"
+        image="/images/school-building-wide.jpg"
         imageAlt="A school building with a green roof behind tall trees and a lawn"
-        focus="object-[center_26%]"
       />
 
       {/* ══ ACADEMIC STRUCTURE — a progression, not four boxes ═════════ */}

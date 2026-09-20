@@ -230,28 +230,27 @@ export function AboutPage() {
         </Reveal>
       </Section>
 
-      {/* ══ OBJECTIVES ═════════════════════════════════════════════════ */}
-      <section className="relative overflow-hidden bg-brand-800">
+      {/* ══ OBJECTIVES — on a pale ground, with the photograph faint behind ═ */}
+      <section className="relative overflow-hidden bg-accent-amber-soft/60">
         <img
           src={HERO_SLIDES[1].src}
           alt=""
           aria-hidden
           loading="lazy"
-          className="absolute inset-0 h-full w-full object-cover opacity-[0.13]"
+          className="absolute inset-0 h-full w-full object-cover opacity-[0.08]"
         />
-        <div className="relative mx-auto max-w-6xl px-5 py-20 sm:px-8">
+        <div className="relative mx-auto max-w-6xl px-5 py-10 sm:px-8 sm:py-14">
           <SectionHeading
             kicker="Objectives"
             title="What the programme is meant to achieve"
             align="left"
-            light
           />
           <ul className="mt-7 sm:mt-8 grid gap-4 md:grid-cols-2">
             {OBJECTIVES.map((o, i) => (
               <Reveal key={o} variant={i % 2 === 0 ? 'left' : 'right'} delay={(i % 2) * 90}>
-                <li className="flex h-full items-start gap-3.5 rounded-xl bg-white/[0.07] p-5 ring-1 ring-white/10 transition-colors hover:bg-white/[0.12]">
-                  <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-accent-amber" aria-hidden />
-                  <span className="text-[14.5px] leading-relaxed text-white/80">{o}</span>
+                <li className="flex h-full items-start gap-3.5 rounded-xl bg-surface p-5 shadow-sm ring-1 ring-rule transition-shadow hover:shadow-md">
+                  <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-accent-mint-deep" aria-hidden />
+                  <span className="text-[14.5px] leading-relaxed text-ink-soft">{o}</span>
                 </li>
               </Reveal>
             ))}

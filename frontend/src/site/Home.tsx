@@ -104,15 +104,17 @@ export function HomePage() {
                 loading={i === 0 ? 'eager' : 'lazy'}
               />
               {/* Weighted to the left, and clear of the subject on the right. */}
-              <div className="absolute inset-0 bg-gradient-to-r from-brand-900/72 via-brand-900/38 via-42% to-transparent" />
-              <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-brand-900/35 to-transparent" />
+              {/* Phones: the darkening rises from the foot, where the text sits.
+                  Wider screens: it comes in from the left, beside the text. */}
+              <div className="absolute inset-0 bg-gradient-to-t from-brand-900/90 via-brand-900/55 to-brand-900/20 sm:bg-gradient-to-r sm:from-brand-900/72 sm:via-brand-900/38 sm:via-42% sm:to-transparent" />
+              <div className="absolute inset-x-0 bottom-0 hidden h-1/3 bg-gradient-to-t from-brand-900/35 to-transparent sm:block" />
             </div>
           ))}
 
-          <div className="relative mx-auto flex h-full max-w-6xl items-center px-5 pb-8 sm:pb-10 sm:px-8">
+          <div className="relative mx-auto flex h-full max-w-6xl items-end px-5 pb-24 sm:items-center sm:px-8 sm:pb-10">
             <div className="max-w-xl" key={slide}>
               <p
-                className="over-photo reveal is-in text-[12px] font-extrabold uppercase tracking-[0.18em] text-accent-amber"
+                className="over-photo reveal is-in text-[11px] font-extrabold uppercase tracking-[0.16em] text-accent-amber sm:text-[12px]"
                 style={{ animationDelay: '80ms' }}
               >
                 {HERO_SLIDES[slide].kicker}
@@ -120,31 +122,31 @@ export function HomePage() {
 
               {/* Three parts: a quiet line, the word, a quiet line. */}
               <p
-                className="over-photo reveal is-in mt-6 text-[20px] font-medium leading-snug text-white sm:text-[24px]"
+                className="over-photo reveal is-in mt-4 text-[18px] font-medium leading-snug text-white sm:mt-6 sm:text-[24px]"
                 style={{ animationDelay: '180ms' }}
               >
                 {HERO_SLIDES[slide].lead}
               </p>
               <h1
-                className="over-photo reveal is-in mt-1 text-[40px] font-extrabold leading-[1.05] tracking-[0.12em] text-white sm:text-[58px] lg:text-[66px]"
+                className="over-photo reveal is-in mt-1 text-[38px] font-extrabold leading-[1.05] tracking-[0.08em] text-white sm:text-[58px] sm:tracking-[0.12em] lg:text-[66px]"
                 style={{ animationDelay: '260ms' }}
               >
                 {HERO_SLIDES[slide].word}
               </h1>
               <p
-                className="over-photo reveal is-in mt-2 max-w-md text-[16px] font-medium leading-snug text-white sm:text-[19px]"
+                className="over-photo reveal is-in mt-2 max-w-md text-[15px] font-medium leading-snug text-white/90 sm:text-[19px]"
                 style={{ animationDelay: '340ms' }}
               >
                 {HERO_SLIDES[slide].tail}
               </p>
 
               <div
-                className="reveal is-in mt-9 flex flex-wrap items-center gap-3"
+                className="reveal is-in mt-6 flex flex-wrap items-center gap-3 sm:mt-9"
                 style={{ animationDelay: '440ms' }}
               >
                 <Link
                   to="/login"
-                  className="btn-sheen group inline-flex items-center gap-2 rounded-lg bg-brand-700 px-7 py-3.5 text-[14px] font-extrabold uppercase tracking-[0.06em] text-white shadow-lg transition-all hover:-translate-y-0.5 hover:bg-brand-600"
+                  className="btn-sheen group inline-flex items-center gap-2 rounded-lg bg-brand-700 px-6 py-3 text-[13px] font-extrabold uppercase tracking-[0.06em] text-white shadow-lg transition-all hover:-translate-y-0.5 hover:bg-brand-600 sm:px-7 sm:py-3.5 sm:text-[14px]"
                 >
                   Access the Portal
                   <ArrowRight
@@ -154,7 +156,7 @@ export function HomePage() {
                 </Link>
                 <Link
                   to="/about"
-                  className="inline-flex items-center gap-2 rounded-lg bg-brand-900/70 px-7 py-3.5 text-[14px] font-bold text-white ring-1 ring-white/30 backdrop-blur-md transition-colors hover:bg-brand-900/85"
+                  className="inline-flex items-center gap-2 rounded-lg bg-white/10 px-6 py-3 text-[13px] font-bold text-white ring-1 ring-white/40 backdrop-blur-md transition-colors hover:bg-white/20 sm:px-7 sm:py-3.5 sm:text-[14px]"
                 >
                   About the Programme
                 </Link>

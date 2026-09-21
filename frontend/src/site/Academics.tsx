@@ -136,188 +136,72 @@ export function AcademicsPage() {
         imageAlt="A school building with a green roof behind tall trees and a lawn"
       />
 
-      {/* ══ ACADEMIC STRUCTURE ═════════════════════════════════════════ */}
+      {/* ══ ONE ROW PER TOPIC — a photograph, a heading, a few lines ═══ */}
       <Section className="!pb-16">
         <SectionHeading
-          kicker="Academic structure"
-          title="Learning at every stage"
+          kicker="Academics"
+          title="Our approach"
+          description="What is taught, how it is taught, and how learning is checked."
         />
-        <div className="mt-12 space-y-16 sm:mt-16 sm:space-y-20">
+
+        <div className="mt-12 space-y-16 sm:mt-16 sm:space-y-24">
           <EditorialRow photo={ABOUT.welcome}>
-            <RowHeading>
-              From the first years to the examination classes
-            </RowHeading>
+            <RowHeading>Academic structure</RowHeading>
             <p className="mt-5 text-[15.5px] leading-relaxed text-ink-soft">
-              The schools in the programme run across four stages. Not every
-              school offers every stage, so what follows is the shape of the
-              whole, and your own school office can confirm which classes it
-              runs this session.
+              From the first years of school through to the examination classes. {STRUCTURE_NOTE}
             </p>
             <Bullets items={STAGES.map((s) => `${s.stage} — ${s.grades}`)} />
           </EditorialRow>
 
-          {STAGES.map((st, i) => (
-            <EditorialRow
-              key={st.stage}
-              photo={
-                [
-                  ABOUT.projectorLesson,
-                  HERO_SLIDES[1],
-                  ABOUT.computerClass,
-                  ABOUT.library,
-                ][i]
-              }
-              flip={i % 2 === 0}
-            >
-              <RowHeading align={i % 2 === 0 ? "right" : "left"}>
-                {st.stage}
-              </RowHeading>
-              <p
-                className={clsx(
-                  "mt-3 text-[12.5px] font-extrabold uppercase tracking-[0.12em] text-accent-amber-deep",
-                  i % 2 === 0 && "lg:text-right",
-                )}
-              >
-                {st.grades}
-              </p>
-              <p
-                className={clsx(
-                  "mt-4 text-[15.5px] leading-relaxed text-ink-soft",
-                  i % 2 === 0 && "lg:text-right",
-                )}
-              >
-                {st.body}
-              </p>
-            </EditorialRow>
-          ))}
-        </div>
-
-        <Reveal delay={200}>
-          <p className="mx-auto mt-16 flex max-w-2xl items-start gap-3 rounded-xl bg-accent-amber-soft p-5 text-[13.5px] leading-relaxed text-ink-soft">
-            <Info
-              className="mt-0.5 h-4.5 w-4.5 shrink-0 text-accent-amber-deep"
-              aria-hidden
-            />
-            {STRUCTURE_NOTE}
-          </p>
-        </Reveal>
-      </Section>
-
-      {/* ══ CURRICULUM ═════════════════════════════════════════════════ */}
-      <Section className="bg-surface !pb-16">
-        <SectionHeading kicker="Curriculum" title="What is taught" />
-        <div className="mt-12 space-y-16 sm:mt-16 sm:space-y-20">
-          <EditorialRow photo={ABOUT.projectorLesson}>
-            <RowHeading>The prescribed curriculum</RowHeading>
-            <p className="mt-5 text-[15.5px] leading-relaxed text-ink-soft">
+          <EditorialRow photo={ABOUT.projectorLesson} flip>
+            <RowHeading align="right">Curriculum</RowHeading>
+            <p className="mt-5 text-[15.5px] leading-relaxed text-ink-soft lg:text-right">
               {CURRICULUM_STATEMENT}
             </p>
-            <p className="mt-4 text-[15.5px] leading-relaxed text-ink-soft">
-              The subjects fall into three groups, set out below. The medium of
-              instruction and the languages offered differ between schools.
-            </p>
-          </EditorialRow>
-
-          {SUBJECT_STREAMS.map((s, i) => (
-            <EditorialRow
-              key={s.title}
-              photo={[ABOUT.computerLab, ABOUT.library, ROLE_PHOTOS.teacher][i]}
-              flip={i % 2 === 0}
-            >
-              <RowHeading align={i % 2 === 0 ? "right" : "left"}>
-                {s.title}
-              </RowHeading>
-              <Bullets
-                items={s.subjects}
-                align={i % 2 === 0 ? "right" : "left"}
-              />
-            </EditorialRow>
-          ))}
-        </div>
-      </Section>
-
-      {/* ══ TEACHING & LEARNING ════════════════════════════════════════ */}
-      <Section className="!pb-16">
-        <SectionHeading kicker="Teaching & learning" title="Our approach" />
-        <div className="mt-12 space-y-16 sm:mt-16 sm:space-y-20">
-          <EditorialRow photo={ABOUT.projectorLesson}>
-            <RowHeading>How lessons are actually taught</RowHeading>
-            <p className="mt-5 text-[15.5px] leading-relaxed text-ink-soft">
-              Seven approaches are used side by side, rather than one method
-              applied to everything. The teacher in the room remains the centre
-              of the school day; the panel, the studio and the portal extend
-              what that teacher can reach.
-            </p>
-            <Bullets items={TEACHING.slice(0, 4).map((t) => t.title)} />
-          </EditorialRow>
-
-          <EditorialRow photo={ROLE_PHOTOS.teacher} flip>
-            <RowHeading align="right">Beyond the lesson</RowHeading>
-            <p className="mt-5 text-[15.5px] leading-relaxed text-ink-soft lg:text-right">
-              Practical work, regular checks on understanding and extra help for
-              anyone who needs more time on a topic — so that no learner is
-              carried past something they have not yet grasped.
-            </p>
             <Bullets
-              items={TEACHING.slice(4).map((t) => `${t.title} — ${t.body}`)}
+              items={SUBJECT_STREAMS.map((s) => `${s.title}: ${s.subjects.join(', ')}`)}
               align="right"
             />
           </EditorialRow>
-        </div>
-      </Section>
 
-      {/* ══ DIGITAL LEARNING ═══════════════════════════════════════════ */}
-      <Section className="bg-surface !pb-16">
-        <SectionHeading
-          kicker="Digital learning"
-          title="Learning that continues outside the lesson"
-        />
-        <div className="mt-12 space-y-16 sm:mt-16 sm:space-y-20">
-          <EditorialRow photo={ABOUT.computerClass}>
-            <RowHeading>The learning platform</RowHeading>
+          <EditorialRow photo={CLASSROOM}>
+            <RowHeading>Teaching &amp; learning</RowHeading>
             <p className="mt-5 text-[15.5px] leading-relaxed text-ink-soft">
+              Seven approaches used side by side, rather than one method applied to everything.
+              The teacher in the room remains the centre of the school day.
+            </p>
+            <Bullets items={TEACHING.map((t) => t.title)} />
+          </EditorialRow>
+
+          <EditorialRow photo={ABOUT.computerClass} flip>
+            <RowHeading align="right">Digital learning</RowHeading>
+            <p className="mt-5 text-[15.5px] leading-relaxed text-ink-soft lg:text-right">
               {DIGITAL_STATEMENT}
             </p>
-            <Bullets items={DIGITAL_ITEMS.map((d) => d.label)} />
-            <Link
-              to="/login"
-              className="btn-sheen group mt-7 inline-flex items-center gap-2 rounded-lg bg-brand-700 px-6 py-3 text-[14px] font-bold text-white shadow-pill transition-all hover:-translate-y-0.5 hover:bg-brand-600"
-            >
-              Access the learning platform
-              <ArrowRight
-                className="h-4 w-4 transition-transform group-hover:translate-x-1"
-                aria-hidden
-              />
-            </Link>
+            <Bullets items={DIGITAL_ITEMS.map((d) => d.label)} align="right" />
+            <div className="mt-7 lg:text-right">
+              <Link
+                to="/login"
+                className="btn-sheen group inline-flex items-center gap-2 rounded-lg bg-brand-700 px-6 py-3 text-[14px] font-bold text-white shadow-pill transition-all hover:-translate-y-0.5 hover:bg-brand-600"
+              >
+                Access the learning platform
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden />
+              </Link>
+            </div>
           </EditorialRow>
-        </div>
-      </Section>
 
-      {/* ══ ASSESSMENT ═════════════════════════════════════════════════ */}
-      <Section className="!pb-16">
-        <SectionHeading kicker="Assessment" title="How progress is measured" />
-        <div className="mt-12 space-y-16 sm:mt-16 sm:space-y-20">
           <EditorialRow photo={HERO_SLIDES[1]}>
-            <RowHeading>Five kinds of check</RowHeading>
+            <RowHeading>Assessment</RowHeading>
             <p className="mt-5 text-[15.5px] leading-relaxed text-ink-soft">
-              Running through the year rather than gathering at the end of it,
-              so that difficulty is found early.
+              Five kinds of check, running through the year rather than gathering at the end of it.
+              Learners are expected to maintain <strong className="text-ink">75% attendance</strong>;
+              the portal calculates it continuously and alerts guardians when a learner falls below it.
             </p>
-            <Bullets items={ASSESSMENT.map((a) => `${a.title} — ${a.body}`)} />
-          </EditorialRow>
-
-          <EditorialRow photo={ABOUT.library} flip>
-            <RowHeading align="right">Attendance</RowHeading>
-            <p className="mt-5 text-[15.5px] leading-relaxed text-ink-soft lg:text-right">
-              Learners are expected to maintain{" "}
-              <strong className="text-ink">75% attendance</strong>. The portal
-              calculates it continuously and alerts guardians automatically when
-              a learner falls below it, so that a problem is noticed while there
-              is still time to put it right.
-            </p>
+            <Bullets items={ASSESSMENT.map((a) => a.title)} />
           </EditorialRow>
         </div>
       </Section>
+
     </>
   );
 }

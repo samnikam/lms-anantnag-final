@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   ArrowRight,
@@ -47,20 +47,8 @@ const TICKER = [
 export function HomePage() {
   const [slide, setSlide] = useState(0);
 
-  // The hero advances on its own, and stops the moment anyone steers it.
-  const [auto, setAuto] = useState(true);
-  useEffect(() => {
-    if (!auto) return;
-    const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-    if (reduced) return;
-    const t = setInterval(() => setSlide((s) => (s + 1) % HERO_SLIDES.length), 6500);
-    return () => clearInterval(t);
-  }, [auto]);
-
-  const go = (n: number) => {
-    setAuto(false);
-    setSlide((n + HERO_SLIDES.length) % HERO_SLIDES.length);
-  };
+  // The hero moves only when someone steers it, by the rail or the dots.
+  const go = (n: number) => setSlide((n + HERO_SLIDES.length) % HERO_SLIDES.length);
 
   // The digital band's photograph drifts more slowly than the page.
   const parallax = useParallax(0.16);
@@ -207,11 +195,7 @@ export function HomePage() {
                   i === slide ? 'w-10 bg-brand-200' : 'w-4 bg-brand-200 hover:bg-brand-400',
                 )}
               >
-                {/* Fills across in the time the slide stays up. */}
-                {i === slide && auto && (
-                  <span key={slide} className="slide-timer absolute inset-0 rounded-full bg-brand-700" />
-                )}
-                {i === slide && !auto && <span className="absolute inset-0 rounded-full bg-brand-700" />}
+                {i === slide && <span className="absolute inset-0 rounded-full bg-brand-700" />}
               </button>
             ))}
           </div>

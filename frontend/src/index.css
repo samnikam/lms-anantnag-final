@@ -498,14 +498,6 @@ svg.lucide {
     opacity: 0.5;
   }
 }
-@keyframes slide-timer {
-  from {
-    transform: scaleX(0);
-  }
-  to {
-    transform: scaleX(1);
-  }
-}
 @keyframes strip-drift {
   from {
     transform: translateX(0);
@@ -523,10 +515,6 @@ svg.lucide {
     animation: cue-bounce 1.8s ease-in-out infinite;
   }
   /* Fills across in the time the slide is on screen. */
-  .slide-timer {
-    transform-origin: left;
-    animation: slide-timer 6.5s linear both;
-  }
   .strip-track {
     display: flex;
     width: max-content;
@@ -556,7 +544,6 @@ svg.lucide {
   .pulse-ring,
   .spin-slow,
   .cue-bounce,
-  .slide-timer,
   .strip-track,
   .orb,
   .float-y,

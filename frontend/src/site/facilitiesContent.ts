@@ -65,7 +65,6 @@ export const FACILITY_BLOCKS: Facility[] = [
     title: 'Science laboratory',
     body: 'Practical work supporting the science curriculum — experiments, demonstrations and the habits of careful observation.',
     ...SCHOOL.scienceLab,
-    varies: true,
   },
   {
     icon: Volleyball,
@@ -73,7 +72,6 @@ export const FACILITY_BLOCKS: Facility[] = [
     title: 'Sports facilities',
     body: 'Encouraging physical fitness, teamwork, discipline and sportsmanship, through games, athletics and physical education.',
     ...SCHOOL.playground,
-    varies: true,
   },
 ];
 

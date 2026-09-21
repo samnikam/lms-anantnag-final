@@ -418,7 +418,7 @@ svg.lucide {
     position: absolute;
     inset: 0 0 auto 0;
     height: 3px;
-    background: linear-gradient(90deg, #d1714f, #d9a52c, #4aa17c);
+    background: #ec6607;
     transform: scaleX(0);
     transform-origin: left;
     transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);

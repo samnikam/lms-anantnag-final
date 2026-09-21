@@ -8,7 +8,7 @@ export default {
            the page itself is never quite white. */
         paper: '#f7fafd',
         surface: '#ffffff',
-        ink: { DEFAULT: '#16233f', soft: '#44557a' },
+        ink: { DEFAULT: '#33302f', soft: '#4d4a48' },
         slate: {
           ...{ 50: '#f6f9fc', 100: '#eef3f9', 200: '#e3eaf3', 300: '#c8d4e4' },
           400: '#93a1b8',
@@ -27,41 +27,41 @@ export default {
         /* Navy carries the institution — masthead, footers, headings and
            every solid button. */
         brand: {
-          50: '#eef3fb',
-          100: '#dbe6f7',
-          200: '#b7cbee',
-          300: '#86a7de',
-          400: '#5580c9',
-          500: '#2f5bb0',
-          600: '#1f4496',
-          700: '#16357e',
-          800: '#102657',
-          900: '#0a1a3c',
+          50: '#eef1f9',
+          100: '#dbe1f3',
+          200: '#b9c4e6',
+          300: '#8c9dd3',
+          400: '#5d74bd',
+          500: '#3a52a6',
+          600: '#2a4499',
+          700: '#203a8f',
+          800: '#182c6e',
+          900: '#101e4d',
         },
         /* Bright blue and fresh green do the accent work, gold and orange
            the warmth. The names are unchanged so no markup had to move. */
         accent: {
           sky: { DEFAULT: '#4a90d9', deep: '#15538f', soft: '#e8f2fb' },
           mint: { DEFAULT: '#2f9e63', deep: '#167a4a', soft: '#e3f5ea' },
-          amber: { DEFAULT: '#f5b731', deep: '#8a6104', soft: '#fdf3dc' },
+          amber: { DEFAULT: '#f18723', deep: '#b34a00', soft: '#ffe9d3' },
           violet: { DEFAULT: '#2a8a9e', deep: '#125565', soft: '#e4f2f5' },
-          coral: { DEFAULT: '#d06b2a', deep: '#a84e15', soft: '#fcefe4' },
+          coral: { DEFAULT: '#ec6607', deep: '#b34a00', soft: '#fdeadb' },
         },
         // The soft tints those accents sit on inside icon tiles.
         tint: {
-          coral: '#fcefe4',
+          coral: '#fdeadb',
           mint: '#e3f5ea',
           sky: '#e8f2fb',
-          amber: '#fdf3dc',
+          amber: '#ffe9d3',
           violet: '#e4f2f5',
-          brand: '#e8eff9',
+          brand: '#eef1f9',
         },
       },
       fontFamily: {
-        sans: ['"Plus Jakarta Sans"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        sans: ['Montserrat', 'ui-sans-serif', 'system-ui', 'sans-serif'],
         // Headings share the display face. Kept under the `serif` key so the
         // existing `font-serif` headings pick the new face up untouched.
-        serif: ['"Plus Jakarta Sans"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        serif: ['Montserrat', 'ui-sans-serif', 'system-ui', 'sans-serif'],
         mono: ['"IBM Plex Mono"', 'ui-monospace', 'monospace'],
       },
       borderRadius: {

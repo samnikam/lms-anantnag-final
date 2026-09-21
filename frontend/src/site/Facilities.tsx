@@ -69,7 +69,7 @@ export function FacilitiesPage() {
                     <h3 className="mt-6 text-[24px] font-extrabold tracking-[-0.025em] text-ink">
                       {f.title}
                     </h3>
-                    <span className="rule-grow is-in mt-4 block h-1 w-14 rounded-full bg-gradient-to-r from-accent-amber to-accent-coral" />
+                    <span className="rule-grow is-in mt-4 block h-[3px] w-14 bg-accent-coral" />
                     <p className="mt-5 text-[15px] leading-relaxed text-muted">{f.body}</p>
                     {/* Never state a facility as universal when it is not. */}
                     {f.varies && (

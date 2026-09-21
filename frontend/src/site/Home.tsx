@@ -1,11 +1,9 @@
 import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import {
   ArrowRight,
   Award,
   ChevronDown,
-  Loader2,
-  LogIn,
   CalendarDays,
   ChevronRight,
   ExternalLink,
@@ -15,8 +13,6 @@ import {
   Video,
 } from 'lucide-react';
 import clsx from 'clsx';
-import { useAuth } from '../lib/auth';
-import { errorMessage } from '../lib/api';
 import { Backdrop, DIVISION, FIGURES, Section, SectionHeading } from './PublicLayout';
 import { CountUp, Reveal, Tilt, useParallax } from './motion';
 import { TONE } from './tone';
@@ -47,93 +43,6 @@ const TICKER = [
   'Certificates can be verified by anyone, without an account',
   'The portal is available in English, Hindi, Urdu and Kashmiri',
 ];
-
-/**
- * The frosted sign-in panel in the hero. It signs a user straight into the
- * portal; the full login page stays for anyone who lands there directly.
- */
-function HeroSignIn() {
-  const { signIn } = useAuth();
-  const navigate = useNavigate();
-  const [identifier, setIdentifier] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [busy, setBusy] = useState(false);
-
-  async function onSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setError('');
-    setBusy(true);
-    try {
-      await signIn(identifier.trim(), password);
-      navigate('/', { replace: true });
-    } catch (err) {
-      setError(errorMessage(err, 'Sign-in failed. Check your credentials and try again.'));
-    } finally {
-      setBusy(false);
-    }
-  }
-
-  const field =
-    'w-full rounded-lg border border-white/60 bg-white/90 px-4 py-3 text-[14px] text-ink placeholder:text-muted focus:border-brand-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-500/30';
-
-  return (
-    <form
-      onSubmit={onSubmit}
-      className="reveal is-in w-full max-w-[400px] rounded-2xl bg-white/25 p-6 shadow-2xl ring-1 ring-white/40 backdrop-blur-md sm:p-7"
-      style={{ animationDelay: '120ms' }}
-    >
-      <h2 className="over-photo text-center text-[17px] font-extrabold uppercase tracking-[0.06em] text-white">
-        Portal sign-in
-      </h2>
-      <span className="mx-auto mt-4 block h-px w-full bg-white/40" />
-
-      {error && (
-        <p role="alert" className="mt-4 rounded-lg bg-white/90 px-3 py-2 text-[12.5px] font-semibold text-seal">
-          {error}
-        </p>
-      )}
-
-      <div className="mt-5 space-y-3">
-        <input
-          className={field}
-          placeholder="Email, username or mobile"
-          value={identifier}
-          onChange={(e) => setIdentifier(e.target.value)}
-          autoComplete="username"
-          required
-        />
-        <input
-          className={field}
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          autoComplete="current-password"
-          required
-        />
-      </div>
-
-      <div className="mt-4 flex items-center justify-between gap-3 text-[12px] font-semibold">
-        <Link to="/kiosk-login" className="text-white/85 hover:text-white">
-          Classroom panel sign-in
-        </Link>
-        <Link to="/forgot-password" className="text-white/85 hover:text-white">
-          Forgotten password?
-        </Link>
-      </div>
-
-      <button
-        type="submit"
-        disabled={busy}
-        className="btn-sheen mt-5 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-brand-700 px-6 py-3 text-[14px] font-extrabold text-white shadow-lg transition-all hover:-translate-y-0.5 hover:bg-brand-600 disabled:opacity-70"
-      >
-        {busy ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> : <LogIn className="h-4 w-4" aria-hidden />}
-        {busy ? 'Signing in…' : 'Sign in'}
-      </button>
-    </form>
-  );
-}
 
 export function HomePage() {
   const [slide, setSlide] = useState(0);
@@ -173,32 +82,30 @@ export function HomePage() {
     <>
       {/* ══ HERO CAROUSEL ══════════════════════════════════════════════ */}
       <section className="relative overflow-hidden bg-brand-900">
-        <div className="relative min-h-[520px] overflow-hidden sm:min-h-[580px] lg:h-[640px]">
-          {HERO_SLIDES.map((sl, i) => (
-            <div
-              key={sl.src}
-              className={clsx(
-                'absolute inset-0 transition-opacity duration-1000',
-                i === slide ? 'opacity-100' : 'pointer-events-none opacity-0',
-              )}
-              aria-hidden={i !== slide}
-            >
-              <img
-                key={`${sl.src}-${i === slide}`}
-                src={sl.src}
-                alt={sl.alt}
-                className={clsx(
-                  'h-full w-full object-cover',
-                  sl.focus ?? 'object-center',
-                  i === slide && 'ken-burns',
-                )}
-                loading={i === 0 ? 'eager' : 'lazy'}
-              />
-              {/* A light veil only: the panel and the headline box carry
-                  their own backgrounds, so the photograph stays clear. */}
-              <div className="absolute inset-0 bg-brand-900/25" />
-            </div>
-          ))}
+        <div className="relative h-[520px] overflow-hidden sm:h-[580px] lg:h-[640px]">
+          {/* One track, three frames wide, slid sideways to the current one. */}
+          <div
+            className="absolute inset-0 flex transition-transform duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
+            style={{ transform: `translateX(-${slide * 100}%)` }}
+          >
+            {HERO_SLIDES.map((sl, i) => (
+              <div key={sl.src} className="relative h-full w-full shrink-0" aria-hidden={i !== slide}>
+                <img
+                  key={`${sl.src}-${i === slide}`}
+                  src={sl.src}
+                  alt={sl.alt}
+                  className={clsx(
+                    'h-full w-full object-cover',
+                    sl.focus ?? 'object-center',
+                    i === slide && 'ken-burns',
+                  )}
+                  loading={i === 0 ? 'eager' : 'lazy'}
+                />
+                {/* The lightest of veils: the box carries its own ground. */}
+                <div className="absolute inset-0 bg-brand-900/10" />
+              </div>
+            ))}
+          </div>
 
           {/* The slide number, down the left edge. */}
           <ol className="absolute left-4 top-1/2 z-20 hidden -translate-y-1/2 flex-col gap-3 lg:flex">
@@ -220,19 +127,17 @@ export function HomePage() {
             ))}
           </ol>
 
-          <div className="relative mx-auto grid h-full max-w-6xl items-center gap-6 px-5 pb-24 pt-8 sm:px-8 lg:grid-cols-[400px_1fr] lg:gap-12 lg:pb-20">
-            <HeroSignIn />
-
-            {/* The slide's line, set in a dark box at the lower right. */}
-            <div className="flex lg:h-full lg:items-end lg:justify-end lg:pb-6" key={slide}>
+          <div className="relative mx-auto flex h-full max-w-6xl items-center px-5 pb-24 pt-8 sm:px-8 lg:pb-20">
+            {/* The slide's line, set in a dark box at the left. */}
+            <div key={slide}>
               <div
-                className="reveal is-in max-w-md rounded-xl bg-brand-900/70 p-6 backdrop-blur-sm sm:p-8"
+                className="reveal is-in max-w-lg rounded-xl bg-brand-900/70 p-6 backdrop-blur-sm sm:p-8"
                 style={{ animationDelay: '200ms' }}
               >
                 <p className="text-[11px] font-extrabold uppercase tracking-[0.16em] text-accent-amber">
                   {HERO_SLIDES[slide].kicker}
                 </p>
-                <h1 className="mt-3 text-[24px] font-extrabold uppercase leading-[1.15] tracking-[-0.01em] text-white sm:text-[30px]">
+                <h1 className="mt-3 text-[26px] font-extrabold uppercase leading-[1.15] tracking-[-0.01em] text-white sm:text-[34px]">
                   {HERO_SLIDES[slide].lead} {HERO_SLIDES[slide].word}
                 </h1>
                 <p className="mt-2 text-[14.5px] leading-relaxed text-white/85">
@@ -248,16 +153,6 @@ export function HomePage() {
               </div>
             </div>
           </div>
-
-          {/* The single control sits on the edge, as the reference's does. */}
-          <button
-            type="button"
-            onClick={() => go(slide + 1)}
-            aria-label="Next slide"
-            className="absolute right-4 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white text-brand-700 shadow-lg transition-transform hover:scale-110 sm:flex lg:right-8"
-          >
-            <ChevronRight className="h-5 w-5" />
-          </button>
 
           {/* A quiet cue that there is more below. */}
           <a

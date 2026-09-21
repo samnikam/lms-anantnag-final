@@ -1,11 +1,9 @@
-import { Link } from 'react-router-dom';
 import { useState } from 'react';
-import { BookOpen, ChevronDown, Info, LogIn } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { ArrowRight, Info } from 'lucide-react';
 import clsx from 'clsx';
 import { Reveal } from './motion';
-import { DECOR, Shape, Wave } from './decor';
-import { TONE } from './tone';
-import { ABOUT } from './media';
+import { ABOUT, HERO_SLIDES, ROLE_PHOTOS, type Photo } from './media';
 import {
   ASSESSMENT,
   CURRICULUM_STATEMENT,
@@ -16,11 +14,95 @@ import {
   SUBJECT_STREAMS,
   TEACHING,
 } from './academicsContent';
-import { Backdrop, PageBanner, Section, SectionHeading } from './PublicLayout';
+import { PageBanner, Section, SectionHeading } from './PublicLayout';
+
+/** The tabs under the banner, in the order they are read. */
+const TABS = [
+  'Academic Structure',
+  'Curriculum',
+  'Teaching & Learning',
+  'Digital Learning',
+  'Assessment',
+] as const;
+
+/* ── The pieces every tab is built from ────────────────────────────────── */
+
+/** A heading with the short accent rule beneath it. */
+function RowHeading({ children, align = 'left' }: { children: React.ReactNode; align?: 'left' | 'right' }) {
+  return (
+    <div className={clsx(align === 'right' && 'lg:text-right')}>
+      <h3 className="text-[24px] font-extrabold leading-[1.2] tracking-[-0.02em] text-brand-700 sm:text-[30px]">
+        {children}
+      </h3>
+      <span
+        className={clsx(
+          'rule-grow is-in mt-3 block h-[3px] w-24 bg-accent-amber',
+          align === 'right' && 'lg:ml-auto',
+        )}
+      />
+    </div>
+  );
+}
+
+/** A plain bulleted list, set in the running text size. */
+function Bullets({ items, align = 'left' }: { items: readonly string[]; align?: 'left' | 'right' }) {
+  return (
+    <ul className={clsx('mt-4 space-y-1.5 text-[15.5px] text-ink-soft', align === 'right' && 'lg:text-right')}>
+      {items.map((it) => (
+        <li key={it} className={clsx('flex gap-2.5', align === 'right' && 'lg:flex-row-reverse')}>
+          <span className="mt-[9px] h-1.5 w-1.5 shrink-0 rounded-full bg-ink-soft" aria-hidden />
+          <span>{it}</span>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+/**
+ * A photograph beside a block of text. The photograph sits on an offset
+ * grey slab, as the reference sets its pictures; `flip` puts it on the
+ * right and ranges the text against it.
+ */
+function EditorialRow({
+  photo,
+  flip = false,
+  children,
+}: {
+  photo: Photo;
+  flip?: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <div
+      className={clsx(
+        'grid items-center gap-10 lg:grid-cols-[400px_1fr] lg:gap-16',
+        flip && 'lg:grid-cols-[1fr_400px]',
+      )}
+    >
+      <Reveal variant={flip ? 'right' : 'left'} className={clsx(flip && 'lg:order-2')}>
+        <figure className="relative mx-auto max-w-[400px]">
+          {/* The slab behind, offset down and to the right. */}
+          <span aria-hidden className="absolute inset-0 translate-x-3 translate-y-3 rounded-xl bg-slate-200" />
+          <img
+            src={photo.src}
+            alt={photo.alt}
+            loading="lazy"
+            className="relative aspect-[4/3] w-full rounded-xl object-cover"
+          />
+        </figure>
+      </Reveal>
+      <Reveal variant={flip ? 'left' : 'right'} delay={120} className={clsx(flip && 'lg:order-1')}>
+        {children}
+      </Reveal>
+    </div>
+  );
+}
+
+/* ── The page ──────────────────────────────────────────────────────────── */
 
 export function AcademicsPage() {
-  // Which assessment is open in the accordion; -1 closes them all.
-  const [check, setCheck] = useState(0);
+  const [tab, setTab] = useState<(typeof TABS)[number]>(TABS[0]);
+
   return (
     <>
       <PageBanner
@@ -30,279 +112,187 @@ export function AcademicsPage() {
         imageAlt="A school building with a green roof behind tall trees and a lawn"
       />
 
-      {/* ══ ACADEMIC STRUCTURE — a progression, not four boxes ═════════ */}
-      <Section className="relative overflow-hidden bg-gradient-to-b from-accent-amber-soft/50 to-white">
-        <Backdrop variant="warm" grid />
-        <SectionHeading
-          kicker="Academic structure"
-          title="Learning at every stage"
-          description="From the first years of school through to the examination classes."
-        />
-
-        {/* A rail the stages sit along, so they read as a sequence. */}
-        <Reveal className="relative mt-8 sm:mt-10">
-          <span
-            className="rule-grow absolute inset-x-0 top-7 hidden h-0.5 bg-gradient-to-r from-accent-coral via-accent-violet via-accent-mint to-accent-amber lg:block"
-            aria-hidden
-          />
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-            {STAGES.map((st, i) => {
-              const t = TONE[st.tone];
-              return (
-                <Reveal key={st.stage} variant="zoom" delay={i * 110}>
-                  <div className="group relative text-center">
-                    <span
-                      className={`num relative z-10 mx-auto flex h-14 w-14 items-center justify-center rounded-full ${t.solid} ${t.on} text-[15px] font-extrabold shadow-lg ring-4 ring-white transition-transform duration-300 group-hover:scale-110`}
-                    >
-                      {String(i + 1).padStart(2, '0')}
-                    </span>
-                    <h3 className="mt-6 text-[19px] font-extrabold tracking-[-0.02em] text-ink">
-                      {st.stage}
-                    </h3>
-                    <span
-                      className={`mt-2.5 inline-block rounded-full ${t.soft} px-3 py-1 text-[11.5px] font-extrabold uppercase tracking-[0.08em] ${t.text}`}
-                    >
-                      {st.grades}
-                    </span>
-                    <p className="mt-4 text-[13.5px] leading-relaxed text-muted">{st.body}</p>
-                  </div>
-                </Reveal>
-              );
-            })}
-          </div>
-        </Reveal>
-
-        <Reveal delay={200}>
-          <p className="mx-auto mt-8 sm:mt-10 flex max-w-2xl items-start gap-3 rounded-xl bg-accent-amber-soft p-5 text-[13.5px] leading-relaxed text-ink-soft">
-            <Info className="mt-0.5 h-4.5 w-4.5 shrink-0 text-accent-amber-deep" aria-hidden />
-            {STRUCTURE_NOTE}
-          </p>
-        </Reveal>
-      </Section>
-
-      {/* ══ CURRICULUM — one statement, then the subjects ══════════════ */}
-      <section className="relative overflow-hidden bg-accent-mint-soft">
-        <Wave className="block h-7 w-full rotate-180 sm:h-10" fill="#ffffff" />
-        <Shape
-          kind="triangle"
-          className="absolute left-[5%] top-[22%] hidden h-10 w-10 opacity-60 lg:block"
-          color={DECOR.gold}
-        />
-        <Shape
-          kind="dots"
-          className="absolute right-[4%] top-[14%] hidden h-24 w-24 opacity-50 lg:block"
-          color={DECOR.blue}
-        />
-        <div className="relative mx-auto max-w-6xl px-5 pb-8 sm:pb-10 pt-3 sm:pt-6 sm:px-8">
-          <div className="mx-auto max-w-3xl text-center">
-            <Reveal>
-              <span className="float-y inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-accent-amber text-ink shadow-lg">
-                <BookOpen className="h-7 w-7" aria-hidden />
-              </span>
-              <p className="mt-7 text-[12px] font-extrabold uppercase tracking-[0.18em] text-accent-mint-deep">
-                Curriculum
-              </p>
-              <blockquote className="mt-6 text-[20px] font-semibold leading-[1.45] tracking-[-0.015em] text-brand-800 sm:text-[26px]">
-                {CURRICULUM_STATEMENT}
-              </blockquote>
-              <span className="rule-grow is-in mx-auto mt-8 block h-1 w-20 rounded-full bg-gradient-to-r from-accent-amber to-accent-coral" />
-            </Reveal>
-          </div>
-
-          <div className="mt-8 sm:mt-10 grid gap-6 md:grid-cols-3">
-            {SUBJECT_STREAMS.map((s, i) => {
-              const t = TONE[s.tone];
-              return (
-                <Reveal key={s.title} variant="zoom" delay={i * 110}>
-                  <article className="lift-card h-full rounded-2xl bg-surface p-7 shadow-md ring-1 ring-rule">
-                    <span className={`mb-6 block h-1.5 w-full rounded-full ${t.solid}`} aria-hidden />
-                    <span
-                      className={`inline-block rounded-lg ${t.solid} ${t.on} px-4 py-1.5 text-[11.5px] font-extrabold uppercase tracking-[0.08em]`}
-                    >
-                      {s.title}
-                    </span>
-                    <ul className="mt-6 space-y-3">
-                      {s.subjects.map((sub) => (
-                        <li
-                          key={sub}
-                          className="flex items-center gap-3 text-[15px] font-semibold text-ink-soft"
-                        >
-                          <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${t.solid}`} aria-hidden />
-                          {sub}
-                        </li>
-                      ))}
-                    </ul>
-                  </article>
-                </Reveal>
-              );
-            })}
-          </div>
-        </div>
-        <Wave className="block h-7 w-full sm:h-10" fill="#f7fafd" />
-      </section>
-
-      {/* ══ TEACHING & LEARNING — ruled columns, a coloured rule over each ═ */}
-      <Section className="relative overflow-hidden bg-paper">
-        <Backdrop variant="cool" />
-        <SectionHeading
-          kicker="Teaching & learning"
-          title="How lessons are actually taught"
-          description="Seven approaches used side by side, rather than one method applied to everything."
-        />
-
-        {/* Nothing filled: a thick rule in the approach's colour, then the text.
-            The rule lengthens on hover and the icon takes the same colour. */}
-        <div className="mt-7 sm:mt-8 grid gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
-          {TEACHING.map((a, i) => {
-            const t = TONE[a.tone];
+      {/* ══ TABS — one filled, the rest outlined, in a single bar ══════ */}
+      <div className="mx-auto max-w-6xl px-5 pt-10 sm:px-8 sm:pt-14">
+        <div
+          role="tablist"
+          aria-label="Academics sections"
+          className="flex overflow-x-auto rounded-xl border-2 border-accent-amber bg-surface"
+        >
+          {TABS.map((t) => {
+            const active = t === tab;
             return (
-              <Reveal key={a.title} delay={(i % 4) * 80}>
-                <article className="group">
-                  <span className={`block h-1 w-10 rounded-full ${t.solid} transition-all duration-500 group-hover:w-full`} />
-                  <span
-                    className={`mt-6 inline-flex h-12 w-12 items-center justify-center rounded-full ${t.soft} ${t.text} transition-transform duration-300 group-hover:scale-110`}
-                  >
-                    <a.icon className="h-5.5 w-5.5" strokeWidth={1.75} aria-hidden />
-                  </span>
-                  <h3 className="mt-4 text-[17px] font-extrabold tracking-[-0.02em] text-ink">
-                    {a.title}
-                  </h3>
-                  <p className="mt-2 text-[14px] leading-relaxed text-muted">{a.body}</p>
-                </article>
-              </Reveal>
+              <button
+                key={t}
+                role="tab"
+                aria-selected={active}
+                onClick={() => setTab(t)}
+                className={clsx(
+                  'flex-1 whitespace-nowrap px-5 py-3.5 text-[14.5px] font-semibold transition-colors',
+                  active ? 'bg-accent-amber text-ink' : 'text-ink hover:bg-accent-amber-soft',
+                )}
+              >
+                {t}
+              </button>
             );
           })}
         </div>
-      </Section>
+      </div>
 
-      {/* ══ DIGITAL LEARNING — a green band, with a way into the portal ═ */}
-      <Section className="relative overflow-hidden bg-gradient-to-br from-accent-mint-deep to-[#125f3a] text-white">
-        <Shape kind="ring" className="absolute -right-16 -top-16 h-64 w-64 opacity-20" color="#ffffff" />
-        <Shape
-          kind="plus"
-          className="absolute bottom-10 left-[4%] hidden h-10 w-10 opacity-30 lg:block"
-          color="#ffffff"
-        />
-        <div className="grid items-center gap-14 lg:grid-cols-2">
-          <Reveal variant="left">
-            <img
-              src={ABOUT.welcome.src}
-              alt={ABOUT.welcome.alt}
-              loading="lazy"
-              className="aspect-[4/3] w-full rounded-2xl object-cover shadow-2xl ring-4 ring-white/15"
-            />
-          </Reveal>
-
-          <Reveal variant="right" delay={120}>
-            <SectionHeading
-              kicker="Digital learning"
-              title="Learning that continues outside the lesson"
-              align="left"
-              light
-            />
-            <p className="mt-6 text-[15.5px] leading-relaxed text-white/85">{DIGITAL_STATEMENT}</p>
-
-            <ul className="mt-8 grid gap-3 sm:grid-cols-2">
-              {DIGITAL_ITEMS.map((d, i) => (
-                <Reveal key={d.label} variant="right" delay={i * 60} as="li">
-                  <li className="group flex items-center gap-3 rounded-xl bg-white/10 p-3.5 ring-1 ring-white/20 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:bg-white/15">
-                    <span className="icon-pop inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-accent-amber text-ink">
-                      <d.icon className="h-4.5 w-4.5" aria-hidden />
-                    </span>
-                    <span className="text-[13.5px] font-bold text-white">{d.label}</span>
-                  </li>
-                </Reveal>
-              ))}
-            </ul>
-
-            <Link
-              to="/login"
-              className="btn-sheen group mt-8 inline-flex items-center gap-2 rounded-lg bg-white px-7 py-3.5 text-[14.5px] font-bold text-accent-mint-deep shadow-lg transition-all hover:-translate-y-0.5 hover:bg-accent-amber-soft"
-            >
-              <LogIn className="h-4 w-4" aria-hidden />
-              Access the learning platform
-            </Link>
-          </Reveal>
-        </div>
-      </Section>
-
-      {/* ══ ASSESSMENT — a large figure beside an accordion ════════════ */}
-      <Section className="relative overflow-hidden bg-surface">
-        <Backdrop variant="warm" grid />
-        <div className="grid gap-12 lg:grid-cols-[0.8fr_1fr] lg:gap-20">
-          <div className="lg:sticky lg:top-28 lg:self-start">
-            <Reveal variant="left">
-              <SectionHeading kicker="Assessment" title="How progress is measured" align="left" />
-              <p className="mt-5 text-[15px] leading-relaxed text-muted">
-                Five kinds of check, running through the year rather than gathering at the end of
-                it.
+      {/* ══ ACADEMIC STRUCTURE ═════════════════════════════════════════ */}
+      {tab === 'Academic Structure' && (
+        <Section className="!pb-16">
+          <SectionHeading kicker="Academic structure" title="Learning at every stage" />
+          <div className="mt-12 space-y-16 sm:mt-16 sm:space-y-20">
+            <EditorialRow photo={ABOUT.welcome}>
+              <RowHeading>From the first years to the examination classes</RowHeading>
+              <p className="mt-5 text-[15.5px] leading-relaxed text-ink-soft">
+                The schools in the programme run across four stages. Not every school offers every
+                stage, so what follows is the shape of the whole, and your own school office can
+                confirm which classes it runs this session.
               </p>
-              {/* The one number a family needs to know, set large. */}
-              <div className="mt-10 flex items-end gap-5 border-l-4 border-accent-amber pl-6">
-                <span className="num bg-gradient-to-br from-brand-700 to-accent-sky bg-clip-text text-[64px] font-extrabold leading-none tracking-[-0.04em] text-transparent sm:text-[80px]">
-                  75%
-                </span>
-                <div className="pb-2">
-                  <p className="text-[15px] font-extrabold text-ink">Attendance required</p>
-                  <p className="mt-1 max-w-[16rem] text-[13px] leading-relaxed text-muted">
-                    Calculated continuously by the portal, which alerts guardians when a learner
-                    falls below it.
-                  </p>
-                </div>
-              </div>
-            </Reveal>
+              <Bullets items={STAGES.map((s) => `${s.stage} — ${s.grades}`)} />
+            </EditorialRow>
+
+            {STAGES.map((st, i) => (
+              <EditorialRow
+                key={st.stage}
+                photo={[ABOUT.projectorLesson, HERO_SLIDES[1], ABOUT.computerClass, ABOUT.library][i]}
+                flip={i % 2 === 0}
+              >
+                <RowHeading align={i % 2 === 0 ? 'right' : 'left'}>{st.stage}</RowHeading>
+                <p
+                  className={clsx(
+                    'mt-3 text-[12.5px] font-extrabold uppercase tracking-[0.12em] text-accent-amber-deep',
+                    i % 2 === 0 && 'lg:text-right',
+                  )}
+                >
+                  {st.grades}
+                </p>
+                <p
+                  className={clsx(
+                    'mt-4 text-[15.5px] leading-relaxed text-ink-soft',
+                    i % 2 === 0 && 'lg:text-right',
+                  )}
+                >
+                  {st.body}
+                </p>
+              </EditorialRow>
+            ))}
           </div>
 
-          {/* One check open at a time; the rest sit as single ruled lines. */}
-          <div className="divide-y divide-rule border-y border-rule">
-            {ASSESSMENT.map((a, i) => {
-              const open = i === check;
-              return (
-                <Reveal key={a.title} variant="right" delay={i * 60}>
-                  <div>
-                    <button
-                      type="button"
-                      aria-expanded={open}
-                      onClick={() => setCheck(open ? -1 : i)}
-                      className="flex w-full items-center gap-4 py-5 text-left"
-                    >
-                      <span
-                        className={clsx(
-                          'inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg transition-colors',
-                          open ? 'bg-accent-amber text-ink shadow-md' : 'bg-tint-brand text-brand-600',
-                        )}
-                      >
-                        <a.icon className="h-5 w-5" aria-hidden />
-                      </span>
-                      <span className="flex-1 text-[17px] font-extrabold tracking-[-0.02em] text-ink">
-                        {a.title}
-                      </span>
-                      <ChevronDown
-                        className={clsx(
-                          'h-5 w-5 shrink-0 text-faint transition-transform duration-300',
-                          open && 'rotate-180 text-accent-amber-deep',
-                        )}
-                        aria-hidden
-                      />
-                    </button>
-                    <div
-                      className={clsx(
-                        'grid transition-[grid-template-rows] duration-300 ease-out',
-                        open ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]',
-                      )}
-                    >
-                      <p className="overflow-hidden pl-14 text-[14.5px] leading-relaxed text-muted">
-                        <span className="block pb-5">{a.body}</span>
-                      </p>
-                    </div>
-                  </div>
-                </Reveal>
-              );
-            })}
-          </div>
-        </div>
-      </Section>
+          <Reveal delay={200}>
+            <p className="mx-auto mt-16 flex max-w-2xl items-start gap-3 rounded-xl bg-accent-amber-soft p-5 text-[13.5px] leading-relaxed text-ink-soft">
+              <Info className="mt-0.5 h-4.5 w-4.5 shrink-0 text-accent-amber-deep" aria-hidden />
+              {STRUCTURE_NOTE}
+            </p>
+          </Reveal>
+        </Section>
+      )}
 
+      {/* ══ CURRICULUM ═════════════════════════════════════════════════ */}
+      {tab === 'Curriculum' && (
+        <Section className="!pb-16">
+          <SectionHeading kicker="Curriculum" title="What is taught" />
+          <div className="mt-12 space-y-16 sm:mt-16 sm:space-y-20">
+            <EditorialRow photo={ABOUT.projectorLesson}>
+              <RowHeading>The prescribed curriculum</RowHeading>
+              <p className="mt-5 text-[15.5px] leading-relaxed text-ink-soft">{CURRICULUM_STATEMENT}</p>
+              <p className="mt-4 text-[15.5px] leading-relaxed text-ink-soft">
+                The subjects fall into three groups, set out below. The medium of instruction and
+                the languages offered differ between schools.
+              </p>
+            </EditorialRow>
+
+            {SUBJECT_STREAMS.map((s, i) => (
+              <EditorialRow
+                key={s.title}
+                photo={[ABOUT.computerLab, ABOUT.library, ROLE_PHOTOS.teacher][i]}
+                flip={i % 2 === 0}
+              >
+                <RowHeading align={i % 2 === 0 ? 'right' : 'left'}>{s.title}</RowHeading>
+                <Bullets items={s.subjects} align={i % 2 === 0 ? 'right' : 'left'} />
+              </EditorialRow>
+            ))}
+          </div>
+        </Section>
+      )}
+
+      {/* ══ TEACHING & LEARNING ════════════════════════════════════════ */}
+      {tab === 'Teaching & Learning' && (
+        <Section className="!pb-16">
+          <SectionHeading kicker="Teaching & learning" title="Our approach" />
+          <div className="mt-12 space-y-16 sm:mt-16 sm:space-y-20">
+            <EditorialRow photo={ABOUT.projectorLesson}>
+              <RowHeading>How lessons are actually taught</RowHeading>
+              <p className="mt-5 text-[15.5px] leading-relaxed text-ink-soft">
+                Seven approaches are used side by side, rather than one method applied to
+                everything. The teacher in the room remains the centre of the school day; the
+                panel, the studio and the portal extend what that teacher can reach.
+              </p>
+              <Bullets items={TEACHING.slice(0, 4).map((t) => t.title)} />
+            </EditorialRow>
+
+            <EditorialRow photo={ROLE_PHOTOS.teacher} flip>
+              <RowHeading align="right">Beyond the lesson</RowHeading>
+              <p className="mt-5 text-[15.5px] leading-relaxed text-ink-soft lg:text-right">
+                Practical work, regular checks on understanding and extra help for anyone who needs
+                more time on a topic — so that no learner is carried past something they have not
+                yet grasped.
+              </p>
+              <Bullets items={TEACHING.slice(4).map((t) => `${t.title} — ${t.body}`)} align="right" />
+            </EditorialRow>
+          </div>
+        </Section>
+      )}
+
+      {/* ══ DIGITAL LEARNING ═══════════════════════════════════════════ */}
+      {tab === 'Digital Learning' && (
+        <Section className="!pb-16">
+          <SectionHeading kicker="Digital learning" title="Learning that continues outside the lesson" />
+          <div className="mt-12 space-y-16 sm:mt-16 sm:space-y-20">
+            <EditorialRow photo={ABOUT.computerClass}>
+              <RowHeading>The learning platform</RowHeading>
+              <p className="mt-5 text-[15.5px] leading-relaxed text-ink-soft">{DIGITAL_STATEMENT}</p>
+              <Bullets items={DIGITAL_ITEMS.map((d) => d.label)} />
+              <Link
+                to="/login"
+                className="btn-sheen group mt-7 inline-flex items-center gap-2 rounded-lg bg-brand-700 px-6 py-3 text-[14px] font-bold text-white shadow-pill transition-all hover:-translate-y-0.5 hover:bg-brand-600"
+              >
+                Access the learning platform
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden />
+              </Link>
+            </EditorialRow>
+          </div>
+        </Section>
+      )}
+
+      {/* ══ ASSESSMENT ═════════════════════════════════════════════════ */}
+      {tab === 'Assessment' && (
+        <Section className="!pb-16">
+          <SectionHeading kicker="Assessment" title="How progress is measured" />
+          <div className="mt-12 space-y-16 sm:mt-16 sm:space-y-20">
+            <EditorialRow photo={HERO_SLIDES[1]}>
+              <RowHeading>Five kinds of check</RowHeading>
+              <p className="mt-5 text-[15.5px] leading-relaxed text-ink-soft">
+                Running through the year rather than gathering at the end of it, so that difficulty
+                is found early.
+              </p>
+              <Bullets items={ASSESSMENT.map((a) => `${a.title} — ${a.body}`)} />
+            </EditorialRow>
+
+            <EditorialRow photo={ABOUT.library} flip>
+              <RowHeading align="right">Attendance</RowHeading>
+              <p className="mt-5 text-[15.5px] leading-relaxed text-ink-soft lg:text-right">
+                Learners are expected to maintain <strong className="text-ink">75% attendance</strong>.
+                The portal calculates it continuously and alerts guardians automatically when a
+                learner falls below it, so that a problem is noticed while there is still time to
+                put it right.
+              </p>
+            </EditorialRow>
+          </div>
+        </Section>
+      )}
     </>
   );
 }

@@ -105,7 +105,7 @@ export function AcademicsPage() {
               <blockquote className="mt-6 text-[20px] font-semibold leading-[1.45] tracking-[-0.015em] text-brand-800 sm:text-[26px]">
                 {CURRICULUM_STATEMENT}
               </blockquote>
-              <span className="rule-grow is-in mx-auto mt-8 block h-[3px] w-20 bg-accent-coral" />
+              <span className="rule-grow is-in mx-auto mt-8 block h-1 w-20 rounded-full bg-gradient-to-r from-accent-amber to-accent-coral" />
             </Reveal>
           </div>
 

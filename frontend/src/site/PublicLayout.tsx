@@ -109,7 +109,7 @@ export function SectionHeading({
       <h2
         style={step(1)}
         className={clsx(
-          'reveal text-[22px] font-bold uppercase leading-[1.2] tracking-[0.04em] sm:text-[30px]',
+          'reveal text-[27px] font-extrabold leading-[1.15] tracking-[-0.025em] sm:text-[36px]',
           light ? 'text-white' : 'text-ink',
           seen && 'is-in',
         )}
@@ -119,7 +119,7 @@ export function SectionHeading({
       {/* The short rule under a heading, drawn in as the section arrives. */}
       <span
         className={clsx(
-          'rule-grow mt-4 block h-[3px] w-16 bg-accent-coral',
+          'rule-grow mt-5 block h-1 w-16 rounded-full bg-gradient-to-r from-accent-amber to-accent-coral',
           align === 'center' && 'mx-auto',
           seen && 'is-in',
         )}
@@ -128,7 +128,7 @@ export function SectionHeading({
         <p
           style={step(2)}
           className={clsx(
-            'reveal mt-4 text-[15px] leading-relaxed',
+            'reveal mt-5 text-[15.5px] leading-relaxed',
             light ? 'text-white/70' : 'text-muted',
             seen && 'is-in',
           )}
@@ -439,7 +439,7 @@ export function PageBanner({
           <span className="text-accent-amber">{title}</span>
         </nav>
         <h1
-          className="over-photo reveal is-in text-[26px] font-bold uppercase leading-[1.1] tracking-[0.05em] text-white sm:text-[38px]"
+          className="over-photo reveal is-in text-[30px] font-extrabold leading-[1.1] tracking-[-0.03em] text-white sm:text-[42px]"
           style={{ animationDelay: '180ms' }}
         >
           {title}
@@ -452,7 +452,7 @@ export function PageBanner({
             {subtitle}
           </p>
         )}
-        <span className="rule-grow is-in mt-5 block h-[3px] w-16 bg-accent-coral" />
+        <span className="rule-grow is-in mt-5 block h-1 w-16 rounded-full bg-accent-amber" />
       </div>
     </section>
   );

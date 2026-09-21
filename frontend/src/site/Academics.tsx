@@ -1,8 +1,8 @@
-import { Link } from "react-router-dom";
-import { ArrowRight, Info } from "lucide-react";
-import clsx from "clsx";
-import { Reveal } from "./motion";
-import { ABOUT, HERO_SLIDES, ROLE_PHOTOS, type Photo } from "./media";
+import { Link } from 'react-router-dom';
+import { ArrowRight } from 'lucide-react';
+import clsx from 'clsx';
+import { Reveal } from './motion';
+import { ABOUT, HERO_SLIDES, type Photo } from './media';
 import {
   ASSESSMENT,
   CURRICULUM_STATEMENT,
@@ -12,28 +12,34 @@ import {
   STRUCTURE_NOTE,
   SUBJECT_STREAMS,
   TEACHING,
-} from "./academicsContent";
-import { PageBanner, Section, SectionHeading } from "./PublicLayout";
+} from './academicsContent';
+import { PageBanner, Section, SectionHeading } from './PublicLayout';
+
+/** The teacher at the lectern, for the row on how lessons are taught. */
+const CLASSROOM: Photo = {
+  src: '/images/classroom-lesson.jpg',
+  alt: 'A teacher at the lectern in front of a full classroom',
+};
 
 /* ── The pieces every section is built from ─────────────────────────────── */
 
 /** A heading with the short accent rule beneath it. */
 function RowHeading({
   children,
-  align = "left",
+  align = 'left',
 }: {
   children: React.ReactNode;
-  align?: "left" | "right";
+  align?: 'left' | 'right';
 }) {
   return (
-    <div className={clsx(align === "right" && "lg:text-right")}>
+    <div className={clsx(align === 'right' && 'lg:text-right')}>
       <h3 className="text-[24px] font-extrabold leading-[1.2] tracking-[-0.02em] text-brand-700 sm:text-[30px]">
         {children}
       </h3>
       <span
         className={clsx(
-          "rule-grow is-in mt-3 block h-[3px] w-24 bg-accent-amber",
-          align === "right" && "lg:ml-auto",
+          'rule-grow is-in mt-3 block h-[3px] w-24 bg-accent-amber',
+          align === 'right' && 'lg:ml-auto',
         )}
       />
     </div>
@@ -43,30 +49,21 @@ function RowHeading({
 /** A plain bulleted list, set in the running text size. */
 function Bullets({
   items,
-  align = "left",
+  align = 'left',
 }: {
   items: readonly string[];
-  align?: "left" | "right";
+  align?: 'left' | 'right';
 }) {
   return (
     <ul
       className={clsx(
-        "mt-4 space-y-1.5 text-[15.5px] text-ink-soft",
-        align === "right" && "lg:text-right",
+        'mt-4 space-y-1.5 text-[15.5px] text-ink-soft',
+        align === 'right' && 'lg:text-right',
       )}
     >
       {items.map((it) => (
-        <li
-          key={it}
-          className={clsx(
-            "flex gap-2.5",
-            align === "right" && "lg:flex-row-reverse",
-          )}
-        >
-          <span
-            className="mt-[9px] h-1.5 w-1.5 shrink-0 rounded-full bg-ink-soft"
-            aria-hidden
-          />
+        <li key={it} className={clsx('flex gap-2.5', align === 'right' && 'lg:flex-row-reverse')}>
+          <span className="mt-[9px] h-1.5 w-1.5 shrink-0 rounded-full bg-ink-soft" aria-hidden />
           <span>{it}</span>
         </li>
       ))}
@@ -91,14 +88,11 @@ function EditorialRow({
   return (
     <div
       className={clsx(
-        "grid items-center gap-10 lg:grid-cols-[400px_1fr] lg:gap-16",
-        flip && "lg:grid-cols-[1fr_400px]",
+        'grid items-center gap-10 lg:grid-cols-[400px_1fr] lg:gap-16',
+        flip && 'lg:grid-cols-[1fr_400px]',
       )}
     >
-      <Reveal
-        variant={flip ? "right" : "left"}
-        className={clsx(flip && "lg:order-2")}
-      >
+      <Reveal variant={flip ? 'right' : 'left'} className={clsx(flip && 'lg:order-2')}>
         <figure className="relative mx-auto max-w-[400px]">
           {/* The slab behind, offset down and to the right. */}
           <span
@@ -113,11 +107,7 @@ function EditorialRow({
           />
         </figure>
       </Reveal>
-      <Reveal
-        variant={flip ? "left" : "right"}
-        delay={120}
-        className={clsx(flip && "lg:order-1")}
-      >
+      <Reveal variant={flip ? 'left' : 'right'} delay={120} className={clsx(flip && 'lg:order-1')}>
         {children}
       </Reveal>
     </div>
@@ -167,8 +157,8 @@ export function AcademicsPage() {
           <EditorialRow photo={CLASSROOM}>
             <RowHeading>Teaching &amp; learning</RowHeading>
             <p className="mt-5 text-[15.5px] leading-relaxed text-ink-soft">
-              Seven approaches used side by side, rather than one method applied to everything.
-              The teacher in the room remains the centre of the school day.
+              Seven approaches used side by side, rather than one method applied to everything. The
+              teacher in the room remains the centre of the school day.
             </p>
             <Bullets items={TEACHING.map((t) => t.title)} />
           </EditorialRow>
@@ -185,7 +175,10 @@ export function AcademicsPage() {
                 className="btn-sheen group inline-flex items-center gap-2 rounded-lg bg-brand-700 px-6 py-3 text-[14px] font-bold text-white shadow-pill transition-all hover:-translate-y-0.5 hover:bg-brand-600"
               >
                 Access the learning platform
-                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden />
+                <ArrowRight
+                  className="h-4 w-4 transition-transform group-hover:translate-x-1"
+                  aria-hidden
+                />
               </Link>
             </div>
           </EditorialRow>
@@ -194,14 +187,14 @@ export function AcademicsPage() {
             <RowHeading>Assessment</RowHeading>
             <p className="mt-5 text-[15.5px] leading-relaxed text-ink-soft">
               Five kinds of check, running through the year rather than gathering at the end of it.
-              Learners are expected to maintain <strong className="text-ink">75% attendance</strong>;
-              the portal calculates it continuously and alerts guardians when a learner falls below it.
+              Learners are expected to maintain <strong className="text-ink">75% attendance</strong>
+              ; the portal calculates it continuously and alerts guardians when a learner falls
+              below it.
             </p>
             <Bullets items={ASSESSMENT.map((a) => a.title)} />
           </EditorialRow>
         </div>
       </Section>
-
     </>
   );
 }

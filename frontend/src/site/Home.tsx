@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   ArrowRight,
@@ -47,8 +47,18 @@ const TICKER = [
 export function HomePage() {
   const [slide, setSlide] = useState(0);
 
-  // The hero moves only when someone steers it, by the rail or the dots.
-  const go = (n: number) => setSlide((n + HERO_SLIDES.length) % HERO_SLIDES.length);
+  // The hero advances every six seconds; steering it restarts the clock.
+  const [tick, setTick] = useState(0);
+  useEffect(() => {
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
+    const t = setInterval(() => setSlide((n) => (n + 1) % HERO_SLIDES.length), 6000);
+    return () => clearInterval(t);
+  }, [tick]);
+
+  const go = (n: number) => {
+    setSlide((n + HERO_SLIDES.length) % HERO_SLIDES.length);
+    setTick((t) => t + 1);
+  };
 
   // The digital band's photograph drifts more slowly than the page.
   const parallax = useParallax(0.16);

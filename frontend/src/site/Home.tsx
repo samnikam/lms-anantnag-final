@@ -80,7 +80,7 @@ export function HomePage() {
     <>
       {/* ══ HERO CAROUSEL ══════════════════════════════════════════════ */}
       <section className="relative overflow-hidden bg-brand-900">
-        <div className="relative h-[520px] overflow-hidden sm:h-[580px] lg:h-[640px]">
+        <div className="relative h-[380px] overflow-hidden sm:h-[580px] lg:h-[640px]">
           {/* One track, three frames wide, slid sideways to the current one. */}
           <div
             className="absolute inset-0 flex transition-transform duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
@@ -125,7 +125,7 @@ export function HomePage() {
             ))}
           </ol>
 
-          <div className="relative mx-auto flex h-full max-w-6xl items-end px-5 pb-20 pt-8 sm:items-center sm:px-8 sm:pb-24 lg:pb-20">
+          <div className="relative mx-auto flex h-full max-w-6xl items-end px-5 pb-14 pt-8 sm:items-center sm:px-8 sm:pb-24 lg:pb-20">
             {/* The slide's line, set in a dark box at the left. */}
             <div key={slide}>
               <div
@@ -162,7 +162,7 @@ export function HomePage() {
           </a>
 
           <DoubleWave
-            className="pointer-events-none absolute inset-x-0 bottom-0 h-14 w-full sm:h-20"
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-10 w-full sm:h-20"
             fill="#e8f2fb"
             behind="#ffffff"
           />

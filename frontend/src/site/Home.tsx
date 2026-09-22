@@ -125,17 +125,17 @@ export function HomePage() {
             ))}
           </ol>
 
-          <div className="relative mx-auto flex h-full max-w-6xl items-center px-5 pb-24 pt-8 sm:px-8 lg:pb-20">
+          <div className="relative mx-auto flex h-full max-w-6xl items-end px-5 pb-20 pt-8 sm:items-center sm:px-8 sm:pb-24 lg:pb-20">
             {/* The slide's line, set in a dark box at the left. */}
             <div key={slide}>
               <div
-                className="reveal is-in max-w-lg rounded-xl bg-brand-900/70 p-6 backdrop-blur-sm sm:p-8"
+                className="reveal is-in max-w-lg rounded-xl bg-brand-900/70 p-5 backdrop-blur-sm sm:p-8"
                 style={{ animationDelay: '200ms' }}
               >
                 <p className="text-[11px] font-extrabold uppercase tracking-[0.16em] text-accent-amber">
                   {HERO_SLIDES[slide].kicker}
                 </p>
-                <h1 className="mt-3 text-[26px] font-extrabold uppercase leading-[1.15] tracking-[-0.01em] text-white sm:text-[34px]">
+                <h1 className="mt-2 text-[22px] font-extrabold uppercase leading-[1.15] tracking-[-0.01em] text-white sm:mt-3 sm:text-[34px]">
                   {HERO_SLIDES[slide].lead} {HERO_SLIDES[slide].word}
                 </h1>
                 <p className="mt-2 text-[14.5px] leading-relaxed text-white/85">

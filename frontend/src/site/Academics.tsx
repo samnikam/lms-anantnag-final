@@ -15,6 +15,12 @@ import {
 } from './academicsContent';
 import { PageBanner, Section, SectionHeading } from './PublicLayout';
 
+/** Four girls walking to school with their books, for the structure row. */
+const STUDENTS_WALKING: Photo = {
+  src: '/images/students-walking.jpg',
+  alt: 'Four schoolgirls in uniform walking along a wall with their books',
+};
+
 /** The teacher at the lectern, for the row on how lessons are taught. */
 const CLASSROOM: Photo = {
   src: '/images/classroom-lesson.jpg',
@@ -135,7 +141,7 @@ export function AcademicsPage() {
         />
 
         <div className="mt-12 space-y-16 sm:mt-16 sm:space-y-24">
-          <EditorialRow photo={ABOUT.welcome}>
+          <EditorialRow photo={STUDENTS_WALKING}>
             <RowHeading>Academic structure</RowHeading>
             <p className="mt-5 text-[15.5px] leading-relaxed text-ink-soft">
               From the first years of school through to the examination classes. {STRUCTURE_NOTE}

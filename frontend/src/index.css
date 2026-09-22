@@ -558,11 +558,22 @@ svg.lucide {
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .reveal,
-  .reveal.is-in {
+@keyframes reveal-fade {
+  from {
+    opacity: 0;
+  }
+  to {
     opacity: 1;
-    animation: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Reduced, not removed: sections still fade in, but nothing moves. */
+  .reveal {
+    opacity: 0;
+  }
+  .reveal.is-in {
+    animation: reveal-fade 0.6s ease-out both !important;
   }
   .ken-burns,
   .ticker-track,

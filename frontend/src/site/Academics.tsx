@@ -33,12 +33,12 @@ function RowHeading({
 }) {
   return (
     <div className={clsx(align === 'right' && 'lg:text-right')}>
-      <h3 className="text-[24px] font-extrabold leading-[1.2] tracking-[-0.02em] text-brand-700 sm:text-[30px]">
+      <h3 className="text-[23px] font-bold leading-[1.25] tracking-[-0.01em] text-title sm:text-[27px]">
         {children}
       </h3>
       <span
         className={clsx(
-          'rule-grow is-in mt-3 block h-[3px] w-24 bg-accent-amber',
+          'rule-grow is-in mt-4 block h-1 w-36 bg-underline',
           align === 'right' && 'lg:ml-auto',
         )}
       />

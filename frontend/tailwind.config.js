@@ -18,6 +18,9 @@ export default {
           800: '#24345a',
           900: '#16233f',
         },
+        // Sub-headings within a page, and the rule drawn under them.
+        title: '#363f90',
+        underline: '#ec6607',
         muted: '#5c6b85',
         faint: '#93a1b8',
         rule: '#e3eaf3',

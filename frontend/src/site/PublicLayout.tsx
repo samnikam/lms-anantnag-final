@@ -109,8 +109,8 @@ export function SectionHeading({
       <h2
         style={step(1)}
         className={clsx(
-          'reveal text-[27px] font-extrabold leading-[1.15] tracking-[-0.025em] sm:text-[36px]',
-          light ? 'text-white' : 'text-ink',
+          'reveal text-[23px] font-bold leading-[1.25] tracking-[-0.01em] sm:text-[27px]',
+          light ? 'text-white' : 'text-title',
           seen && 'is-in',
         )}
       >
@@ -119,7 +119,7 @@ export function SectionHeading({
       {/* The short rule under a heading, drawn in as the section arrives. */}
       <span
         className={clsx(
-          'rule-grow mt-5 block h-1 w-16 rounded-full bg-gradient-to-r from-accent-amber to-accent-coral',
+          'rule-grow mt-4 block h-1 w-36 bg-underline',
           align === 'center' && 'mx-auto',
           seen && 'is-in',
         )}

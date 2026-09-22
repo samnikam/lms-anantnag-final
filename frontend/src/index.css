@@ -533,6 +533,31 @@ svg.lucide {
 }
 
 /* Anyone who has asked their system for less movement gets none of it. */
+/* No hover on a touch screen, so the same effects answer a tap. */
+@media (hover: none) {
+  .lift-card:active {
+    transform: translateY(-4px);
+  }
+  .lift-card:active::before {
+    transform: scaleX(1);
+  }
+  .group:active .icon-pop {
+    transform: scale(1.12) rotate(-7deg);
+  }
+  .group:active .photo-drift {
+    transform: scale(1.06);
+  }
+  .group:active .photo-zoom {
+    transform: scale(1.08);
+  }
+  .wobble:active {
+    animation: wobble 0.6s ease-in-out;
+  }
+  .btn-sheen:active::after {
+    animation: sheen-sweep 0.85s ease-out;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .reveal,
   .reveal.is-in {

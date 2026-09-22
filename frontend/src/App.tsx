@@ -70,14 +70,14 @@ export function App() {
           <Route path="facilities" element={<FacilitiesPage />} />
           <Route path="gallery" element={<GalleryPage />} />
           <Route path="contact" element={<ContactPage />} />
+          <Route path="verify/:token" element={<VerifyCertificatePage />} />
+          <Route path="verify" element={<VerifyCertificatePage />} />
         </Route>
 
         <Route path="/login" element={<LoginPage />} />
         <Route path="/kiosk-login" element={<KioskLoginPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/reset-password" element={<ResetPasswordPage />} />
-        <Route path="/verify/:token" element={<VerifyCertificatePage />} />
-        <Route path="/verify" element={<VerifyCertificatePage />} />
         {/* An unknown address belongs on the front page, not at a dead end. */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

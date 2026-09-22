@@ -94,10 +94,10 @@ export function VerifyCertificatePage() {
   });
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-100 p-4">
+    <div className="flex justify-center px-4 py-14 sm:py-20">
       <div className="w-full max-w-lg">
         <div className="mb-6 text-center">
-          <h1 className="text-xl font-semibold text-ink">Certificate verification</h1>
+          <h1 className="text-[23px] font-bold text-title sm:text-[27px]">Certificate verification</h1>
           <p className="mt-1 text-sm text-ink-soft">
             Anantnag Smart Classrooms — PWD J&amp;K, R&amp;B Division Pahalgam
           </p>
@@ -165,8 +165,8 @@ export function VerifyCertificatePage() {
         </Card>
 
         <p className="mt-4 text-center text-sm">
-          <Link to="/login" className="text-brand-700 hover:underline">
-            Back to sign in
+          <Link to="/" className="text-brand-700 hover:underline">
+            Back to the website
           </Link>
         </p>
       </div>

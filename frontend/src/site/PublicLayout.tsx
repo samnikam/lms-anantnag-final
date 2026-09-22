@@ -1,13 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
-import {
-  ChevronUp,
-  LogIn,
-  MapPin,
-  Menu,
-  Phone,
-  X,
-} from 'lucide-react';
+import { Building2, ChevronRight, LogIn, MapPin, Menu, Phone, X } from 'lucide-react';
 import clsx from 'clsx';
 import { BackToTop, ScrollProgress, useInView } from './motion';
 
@@ -183,6 +176,43 @@ function Crest({
   );
 }
 
+/** A footer column: an amber heading over a plain list. */
+function FooterColumn({
+  title,
+  wide = false,
+  children,
+}: {
+  title: string;
+  /** Takes the full width on phones, where a narrow column would wrap badly. */
+  wide?: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className={clsx(wide && 'col-span-2 lg:col-span-1')}>
+      <p className="text-[12px] font-extrabold uppercase tracking-[0.14em] text-accent-amber">{title}</p>
+      <span className="mt-3 block h-0.5 w-8 bg-accent-amber/60" aria-hidden />
+      <ul className="mt-5 space-y-3 text-[13.5px]">{children}</ul>
+    </div>
+  );
+}
+
+function FooterLink({ to, children }: { to: string; children: React.ReactNode }) {
+  return (
+    <li>
+      <Link
+        to={to}
+        className="group inline-flex items-center gap-2 text-white/65 transition-colors hover:text-white"
+      >
+        <ChevronRight
+          className="h-3.5 w-3.5 text-accent-amber/70 transition-transform group-hover:translate-x-0.5"
+          aria-hidden
+        />
+        {children}
+      </Link>
+    </li>
+  );
+}
+
 export function PublicLayout() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -302,93 +332,68 @@ export function PublicLayout() {
       </main>
 
       {/* ── Footer ──────────────────────────────────────────────────── */}
-      <footer className="bg-brand-900 text-white">
-        <div className="mx-auto grid max-w-6xl gap-10 px-5 py-14 sm:px-8 md:grid-cols-2 lg:grid-cols-4">
-          <div className="lg:col-span-1">
+      <footer className="border-t-4 border-accent-amber bg-brand-900 text-white">
+        <div className="mx-auto grid max-w-6xl grid-cols-2 gap-x-6 gap-y-10 px-5 py-12 sm:px-8 sm:py-14 lg:grid-cols-[1.4fr_1fr_1fr_1.3fr] lg:gap-x-8">
+          {/* Who we are */}
+          <div className="col-span-2 lg:col-span-1">
             <Crest light />
-            <p className="mt-5 text-[13px] leading-relaxed text-white/55">
-              A government school programme bringing specialist teaching to classrooms across
+            <p className="mt-5 max-w-sm text-[13.5px] leading-relaxed text-white/60">
+              A government school programme bringing specialist teaching to classrooms across{' '}
               {DIVISION.district} — taught live from two studios, received on the panel in the
               room, and recorded so no lesson is lost.
             </p>
+            <Link
+              to="/login"
+              className="mt-6 inline-flex items-center gap-2 rounded-lg bg-accent-amber px-5 py-2.5 text-[13px] font-bold text-ink transition-colors hover:bg-white"
+            >
+              <LogIn className="h-4 w-4" aria-hidden />
+              Login to the Portal
+            </Link>
           </div>
 
-          <div>
-            <p className="text-[12px] font-extrabold uppercase tracking-[0.14em] text-accent-amber">
-              Quick Links
-            </p>
-            <ul className="mt-5 space-y-2.5 text-[13.5px]">
-              {NAV_LINKS.map((l) => (
-                <li key={l.to}>
-                  <Link to={l.to} className="draw-underline text-white/60 transition-colors hover:text-white">
-                    {l.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <FooterColumn title="Quick Links">
+            {NAV_LINKS.map((l) => (
+              <FooterLink key={l.to} to={l.to}>
+                {l.label}
+              </FooterLink>
+            ))}
+          </FooterColumn>
 
-          <div>
-            <p className="text-[12px] font-extrabold uppercase tracking-[0.14em] text-accent-amber">
-              Portal
-            </p>
-            <ul className="mt-5 space-y-2.5 text-[13.5px]">
-              <li>
-                <Link to="/login" className="draw-underline text-white/60 transition-colors hover:text-white">
-                  Student &amp; Parent Login
-                </Link>
-              </li>
-              <li>
-                <Link to="/login" className="draw-underline text-white/60 transition-colors hover:text-white">
-                  Teacher Login
-                </Link>
-              </li>
-              <li>
-                <Link to="/kiosk-login" className="draw-underline text-white/60 transition-colors hover:text-white">
-                  Classroom Panel Sign-in
-                </Link>
-              </li>
-              <li>
-                <Link to="/verify" className="draw-underline text-white/60 transition-colors hover:text-white">
-                  Verify a Certificate
-                </Link>
-              </li>
-              <li>
-                <Link to="/forgot-password" className="draw-underline text-white/60 transition-colors hover:text-white">
-                  Forgotten Password
-                </Link>
-              </li>
-            </ul>
-          </div>
+          <FooterColumn title="Portal">
+            <FooterLink to="/login">Student &amp; Parent Login</FooterLink>
+            <FooterLink to="/login">Teacher Login</FooterLink>
+            <FooterLink to="/kiosk-login">Classroom Panel Sign-in</FooterLink>
+            <FooterLink to="/verify">Verify a Certificate</FooterLink>
+            <FooterLink to="/forgot-password">Forgotten Password</FooterLink>
+          </FooterColumn>
 
-          <div>
-            <p className="text-[12px] font-extrabold uppercase tracking-[0.14em] text-accent-amber">
-              Division Office
-            </p>
-            <address className="mt-5 space-y-2.5 text-[13.5px] not-italic leading-relaxed text-white/60">
-              <div className="font-semibold text-white/85">{DIVISION.department}</div>
-              <div>{DIVISION.division}</div>
-              <div>{DIVISION.district}, Jammu &amp; Kashmir</div>
-              <div className="pt-2 text-[12.5px] text-white/50">
-                Enquiries are handled by your school office in the first instance.
-              </div>
-            </address>
-          </div>
+          <FooterColumn title="Division Office" wide>
+            <li className="flex gap-3">
+              <Building2 className="mt-0.5 h-4 w-4 shrink-0 text-accent-amber" aria-hidden />
+              <address className="not-italic leading-relaxed">
+                <span className="block font-semibold text-white/90">{DIVISION.department}</span>
+                <span className="block text-white/60">{DIVISION.division}</span>
+              </address>
+            </li>
+            <li className="flex gap-3">
+              <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-accent-amber" aria-hidden />
+              <span className="text-white/60">{DIVISION.district}, Jammu &amp; Kashmir</span>
+            </li>
+            <li className="flex gap-3">
+              <Phone className="mt-0.5 h-4 w-4 shrink-0 text-accent-amber" aria-hidden />
+              <span className="text-white/60">Enquiries through your school office</span>
+            </li>
+          </FooterColumn>
         </div>
 
         <div className="border-t border-white/10">
-          <div className="mx-auto flex max-w-6xl flex-col gap-3 px-5 py-5 text-[12px] text-white/45 sm:flex-row sm:items-center sm:justify-between sm:px-8">
+          <div className="mx-auto flex max-w-6xl flex-col gap-3 px-5 py-5 text-[12.5px] text-white/50 sm:flex-row sm:items-center sm:justify-between sm:px-8">
             <p>
               © {new Date().getFullYear()} {DIVISION.shortDept}. All rights reserved.
             </p>
-            <button
-              type="button"
-              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-              className="inline-flex items-center gap-1.5 font-semibold text-white/60 transition-colors hover:text-accent-amber"
-            >
-              Back to top
-              <ChevronUp className="h-3.5 w-3.5" aria-hidden />
-            </button>
+            <p className="text-white/40">
+              {DIVISION.programme} · Session {DIVISION.session}
+            </p>
           </div>
         </div>
       </footer>

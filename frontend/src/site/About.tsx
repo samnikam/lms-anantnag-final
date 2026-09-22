@@ -218,7 +218,7 @@ export function AboutPage() {
                       <P.icon className="h-6 w-6" aria-hidden />
                     </span>
                     <div>
-                      <h3 className="text-[22px] font-extrabold tracking-[-0.01em] text-ink">{P.title}</h3>
+                      <h3 className="text-[22px] font-bold tracking-[-0.01em] text-title">{P.title}</h3>
                       <p className="mt-2 max-w-xl text-[15px] leading-relaxed text-muted">{P.body}</p>
                     </div>
                   </>

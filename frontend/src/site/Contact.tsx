@@ -124,7 +124,7 @@ export function ContactPage() {
                 >
                   <r.icon className="h-6 w-6" aria-hidden />
                 </span>
-                <h2 className="mt-6 text-[20px] font-extrabold tracking-[-0.02em] text-ink">
+                <h2 className="mt-6 text-[20px] font-bold tracking-[-0.01em] text-title">
                   {r.title}
                 </h2>
                 <p className="mt-3 flex-1 text-[14.5px] leading-relaxed text-ink-soft">{r.body}</p>

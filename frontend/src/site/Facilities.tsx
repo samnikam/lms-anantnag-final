@@ -66,10 +66,10 @@ export function FacilitiesPage() {
                     >
                       <f.icon className="h-6 w-6" aria-hidden />
                     </span>
-                    <h3 className="mt-6 text-[24px] font-extrabold tracking-[-0.025em] text-ink">
+                    <h3 className="mt-6 text-[23px] font-bold tracking-[-0.01em] text-title">
                       {f.title}
                     </h3>
-                    <span className="rule-grow is-in mt-4 block h-1 w-14 rounded-full bg-gradient-to-r from-accent-amber to-accent-coral" />
+                    <span className="rule-grow is-in mt-4 block h-1 w-28 bg-underline" />
                     <p className="mt-5 text-[15px] leading-relaxed text-muted">{f.body}</p>
                     {/* Never state a facility as universal when it is not. */}
                     {f.varies && (

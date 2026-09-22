@@ -164,7 +164,7 @@ export function ContactPage() {
                       aria-expanded={isOpen}
                       className="flex w-full items-center justify-between gap-4 p-5 text-left"
                     >
-                      <span className="text-[15px] font-bold text-ink">{q}</span>
+                      <span className="text-[15px] font-bold text-title">{q}</span>
                       <ChevronDown
                         className={clsx(
                           'h-5 w-5 shrink-0 text-brand-700 transition-transform duration-300',

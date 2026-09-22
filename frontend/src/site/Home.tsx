@@ -226,7 +226,7 @@ export function HomePage() {
                   <q.icon className="h-5 w-5" aria-hidden />
                 </span>
                 <span className="min-w-0">
-                  <span className="block text-[15px] font-extrabold text-ink">{q.title}</span>
+                  <span className="block text-[15px] font-extrabold text-title">{q.title}</span>
                   <span className="block text-[12.5px] text-muted">{q.body}</span>
                 </span>
               </Link>
@@ -279,7 +279,7 @@ export function HomePage() {
                   <span className={`icon-pop inline-flex h-11 w-11 items-center justify-center rounded-xl ${t.soft} ${t.text}`}>
                     <q.icon className="h-5 w-5" aria-hidden />
                   </span>
-                  <h3 className="mt-5 text-[16px] font-extrabold tracking-[-0.02em] text-ink">
+                  <h3 className="mt-5 text-[16px] font-extrabold tracking-[-0.02em] text-title">
                     {q.title}
                   </h3>
                   <p className="mt-2 text-[13px] leading-relaxed text-muted">{q.body}</p>
@@ -487,7 +487,7 @@ export function HomePage() {
                       <w.icon className="h-5 w-5" aria-hidden />
                     </span>
                     <div className="min-w-0">
-                      <h3 className="text-[17px] font-extrabold tracking-[-0.02em] text-ink">
+                      <h3 className="text-[17px] font-extrabold tracking-[-0.02em] text-title">
                         {w.title}
                       </h3>
                       <p className="mt-1.5 text-[14px] leading-relaxed text-muted">{w.body}</p>
@@ -575,7 +575,7 @@ export function HomePage() {
                   >
                     <f.icon className="h-5 w-5" aria-hidden />
                   </span>
-                  <h3 className="mt-5 text-[17px] font-extrabold tracking-[-0.02em] text-ink">
+                  <h3 className="mt-5 text-[17px] font-extrabold tracking-[-0.02em] text-title">
                     {f.title}
                   </h3>
                   <p className="mt-1.5 text-[13px] leading-relaxed text-ink-soft">{f.body}</p>
@@ -633,7 +633,7 @@ export function HomePage() {
                     <g.icon className="h-6 w-6" aria-hidden />
                   </span>
                   <div className="min-w-0 flex-1">
-                    <h3 className="text-[16.5px] font-extrabold tracking-[-0.02em] text-ink">
+                    <h3 className="text-[16.5px] font-extrabold tracking-[-0.02em] text-title">
                       {g.title}
                     </h3>
                     <p className="mt-1 text-[13px] leading-relaxed text-ink-soft">{g.body}</p>

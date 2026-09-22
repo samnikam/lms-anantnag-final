@@ -111,7 +111,7 @@ export function AboutPage() {
                   <span className="icon-pop inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-tint-brand text-brand-600 transition-colors group-hover:bg-brand-700 group-hover:text-white">
                     <m.icon className="h-5 w-5" aria-hidden />
                   </span>
-                  <p className="text-[16px] font-bold text-ink">{m.text}</p>
+                  <p className="text-[16px] font-bold text-title">{m.text}</p>
                 </li>
               </Reveal>
             ))}

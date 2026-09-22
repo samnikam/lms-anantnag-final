@@ -177,21 +177,12 @@ function Crest({
 }
 
 /** A footer column: an amber heading over a plain list. */
-function FooterColumn({
-  title,
-  wide = false,
-  children,
-}: {
-  title: string;
-  /** Takes the full width on phones, where a narrow column would wrap badly. */
-  wide?: boolean;
-  children: React.ReactNode;
-}) {
+function FooterColumn({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className={clsx(wide && 'col-span-2 lg:col-span-1')}>
+    <div>
       <p className="text-[12px] font-extrabold uppercase tracking-[0.14em] text-accent-amber">{title}</p>
       <span className="mt-3 block h-0.5 w-8 bg-accent-amber/60" aria-hidden />
-      <ul className="mt-5 space-y-3 text-[13.5px]">{children}</ul>
+      <ul className="mt-4 space-y-2 text-[13.5px] sm:mt-5 sm:space-y-2.5">{children}</ul>
     </div>
   );
 }
@@ -333,18 +324,18 @@ export function PublicLayout() {
 
       {/* ── Footer ──────────────────────────────────────────────────── */}
       <footer className="border-t-4 border-accent-amber bg-brand-900 text-white">
-        <div className="mx-auto grid max-w-6xl grid-cols-2 gap-x-6 gap-y-10 px-5 py-12 sm:px-8 sm:py-14 lg:grid-cols-[1.4fr_1fr_1fr_1.3fr] lg:gap-x-8">
+        <div className="mx-auto grid max-w-6xl grid-cols-2 gap-x-6 gap-y-8 px-5 py-10 sm:px-8 sm:py-14 lg:grid-cols-[1.5fr_1fr_1.3fr] lg:gap-x-10">
           {/* Who we are */}
           <div className="col-span-2 lg:col-span-1">
             <Crest light />
-            <p className="mt-5 max-w-sm text-[13.5px] leading-relaxed text-white/60">
+            <p className="mt-5 hidden max-w-sm text-[13.5px] leading-relaxed text-white/60 sm:block">
               A government school programme bringing specialist teaching to classrooms across{' '}
               {DIVISION.district} — taught live from two studios, received on the panel in the
               room, and recorded so no lesson is lost.
             </p>
             <Link
               to="/login"
-              className="mt-6 inline-flex items-center gap-2 rounded-lg bg-accent-amber px-5 py-2.5 text-[13px] font-bold text-ink transition-colors hover:bg-white"
+              className="mt-4 inline-flex items-center gap-2 rounded-lg bg-accent-amber px-5 py-2.5 text-[13px] font-bold text-ink transition-colors hover:bg-white sm:mt-6"
             >
               <LogIn className="h-4 w-4" aria-hidden />
               Login to the Portal
@@ -359,19 +350,11 @@ export function PublicLayout() {
             ))}
           </FooterColumn>
 
-          <FooterColumn title="Portal">
-            <FooterLink to="/login">Student &amp; Parent Login</FooterLink>
-            <FooterLink to="/login">Teacher Login</FooterLink>
-            <FooterLink to="/kiosk-login">Classroom Panel Sign-in</FooterLink>
-            <FooterLink to="/verify">Verify a Certificate</FooterLink>
-            <FooterLink to="/forgot-password">Forgotten Password</FooterLink>
-          </FooterColumn>
-
-          <FooterColumn title="Division Office" wide>
+          <FooterColumn title="Division Office">
             <li className="flex gap-3">
               <Building2 className="mt-0.5 h-4 w-4 shrink-0 text-accent-amber" aria-hidden />
               <address className="not-italic leading-relaxed">
-                <span className="block font-semibold text-white/90">{DIVISION.department}</span>
+                <span className="block font-semibold text-white/90">{DIVISION.shortDept}</span>
                 <span className="block text-white/60">{DIVISION.division}</span>
               </address>
             </li>

@@ -129,21 +129,21 @@ export function HomePage() {
             {/* The slide's line, set in a dark box at the left. */}
             <div key={slide}>
               <div
-                className="reveal is-in max-w-lg rounded-xl bg-brand-900/70 p-5 backdrop-blur-sm sm:p-8"
+                className="reveal is-in max-w-lg rounded-xl bg-brand-900/70 px-4 py-3.5 backdrop-blur-sm sm:p-8"
                 style={{ animationDelay: '200ms' }}
               >
-                <p className="text-[11px] font-extrabold uppercase tracking-[0.16em] text-accent-amber">
+                <p className="hidden text-[11px] font-extrabold uppercase tracking-[0.16em] text-accent-amber sm:block">
                   {HERO_SLIDES[slide].kicker}
                 </p>
-                <h1 className="mt-2 text-[22px] font-extrabold uppercase leading-[1.15] tracking-[-0.01em] text-white sm:mt-3 sm:text-[34px]">
+                <h1 className="text-[18px] font-extrabold uppercase leading-[1.2] tracking-[-0.01em] text-white sm:mt-3 sm:text-[34px]">
                   {HERO_SLIDES[slide].lead} {HERO_SLIDES[slide].word}
                 </h1>
-                <p className="mt-2 text-[14.5px] leading-relaxed text-white/85">
+                <p className="mt-1 text-[13px] leading-snug text-white/85 sm:mt-2 sm:text-[14.5px] sm:leading-relaxed">
                   {HERO_SLIDES[slide].tail}
                 </p>
                 <Link
                   to="/about"
-                  className="group mt-5 inline-flex items-center gap-2 text-[13px] font-bold text-accent-amber transition-colors hover:text-white"
+                  className="group mt-2.5 inline-flex items-center gap-2 text-[12.5px] font-bold text-accent-amber transition-colors hover:text-white sm:mt-5 sm:text-[13px]"
                 >
                   About the programme
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden />
